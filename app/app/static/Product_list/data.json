@@ -1,0 +1,30 @@
+{
+    "typeid1": {
+        "type_id": "idtype1",
+        "type_name": "xinchoa",
+        "description": " Description deafaut ",
+        "len": 0,
+        "xyz": [
+            1,
+            2,
+            3
+        ],
+        "path_img_product": "static/Product_Photo/IMG_xinchoa.png",
+        "path_img_master": "static/Master_Photo/Master_xinchoa",
+        "point_check": []
+    },
+    "typeid2": {
+        "type_id": "typeid2",
+        "type_name": "xinchoa2",
+        "description": " Description deafaut ",
+        "len": 0,
+        "xyz": [
+            1,
+            2,
+            3
+        ],
+        "path_img_product": "static/Product_Photo/IMG_xinchoa2.png",
+        "path_img_master": "static/Master_Photo/Master_xinchoa2",
+        "point_check": []
+    }
+}

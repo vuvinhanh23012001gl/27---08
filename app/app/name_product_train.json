@@ -1,0 +1,18 @@
+{
+    "data": {
+        "device_id": "1",
+        "device_name": "1",
+        "number_of_training": "1",
+        "shif_x": 1,
+        "shif_y": 1,
+        "shif_z": 1,
+        "points": [
+            {
+                "x": 20,
+                "y": 20,
+                "z": 10,
+                "k": 80
+            }
+        ]
+    }
+}

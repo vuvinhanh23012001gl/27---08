@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../static/img/image.png">
+    <link rel="stylesheet" href="../static/css/show_main.css">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <title>Kiểm tra dầu</title>
+</head>
+<body>
+    <div class = "header">
+        <ul class ="header-ul">
+            <li class="header-ul-li " id = "choose-product">Chọn loại sản phẩm</li>
+            <li class="header-ul-li " id = "add-product">Thêm sản phẩm mới</li>
+            <li class="header-ul-li">Cấu hình master
+                <img id = "preview">
+                 <ul class = "header-ul-li-master">
+                    <li>Thêm master</li>
+                    <li>Chỉnh sửa master</li>
+                    <li id="header-ul-li-master-take">Lấy master</li>
+                    <li>Xóa master</li>
+                 </ul>
+            </li>
+            <li class="header-ul-li">Log
+                 <ul class="header-ul-li-log">
+                    <li>Log hình ảnh dầu</li>
+                    <li>Log sản phẩm</li>
+                    <li>Log thiết bị</li>
+                 </ul>
+            </li>
+            <li class="header-ul-li">Thông tin
+                 <ul class = "header-ul-li-infomation">
+                    <li>Thông tin camera</li>
+                    <li>Thông tin sản phẩm</li>
+                    <li>Thông tin cổng COM</li>
+                    <li>Thông tin phầm mềm</li>
+                    <li>Hướng dẫn sử dụng </li>
+                    <li>Hướng dẫn training sản phẩm mới</li>
+                 </ul>
+            </li>
+            <li id="api-training" class="header-ul-li training">Traning sản phẩm mới</li>
+            <li id="api-run" class="header-ul-li ">Chạy</li>   
+            <li class="header-ul-li close" style="text-align: center;padding-left: 70px;" id="out-app">Thoát</li>
+        </ul>
+    </div>
+    <div class="split-frame">
+        <div class = "show-screen">
+                <div class = "show-img-master">
+                      <button class="scroll-up">◀️</button>
+                      <div class = "scroll-container">
+                           <div id = "scroll-content" data-img='{{ path_arr_img | tojson | safe }}'>
+                               <!-- Noi dung duoc chen o day -->
+                           </div>
+                      </div>
+                      <button class="scroll-down">▶️</button>
+                </div>
+                <div class = "show-img">
+                      <!-- <img id="show-img-preview" src="" alt="Ảnh preview" /> -->
+                      <canvas id = "canvas-img"></canvas>   <!--Vẽ Ảnh-->
+                      <canvas id = "canvas-img-preview"></canvas> <!--nét tren vẽ -->
+                </div>
+                <div class = "show-satus">
+                    <p id = "coordinate"></p>
+                    <div class="header-show-item-conect item1">
+                        <p class="header-show-circle on"></p>    
+                        <h2  id="header-show-status">Chờ kết nối....</h2>
+                    </div>
+                    <div class="header-show-item-conect item2">
+                        <p class="header-show-circle off "></p>    
+                        <h2  id="header-show-status">Chờ kết nối....</h2>
+                    </div>
+                </div>
+        </div>
+        <div class = "show-option">
+                <div id="paner-main" class = "paner active">
+                    <div class = "paner-main-status-product ">   <!--chon run ok eg tuy vao trang thai phan dinh -->
+                        --
+                    </div>
+                    <div class = "paner-main-table-show-point">
+                         <p>Đây là bảng show point</p>     
+                    </div>
+                    <div class="paner-main-show-log ">
+                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores voluptate, quam eius inventore libero, quidem odio molestias eveniet minima, nemo molestiae totam modi ipsum sequi nulla nihil iste error explicabo.
+                    </div>
+                </div>
+                <div id="paner-take-master" class="paner take-master">
+                        <div id="part-table-log">
+                            <!-- Bảng table sẽ hiển thị bằng JS -->
+                            <div class="log"></div>
+                            <table class="table">
+                                <tbody id="table"></tbody>
+                            </table>
+                        </div>
+                        <div class="part-controler">
+                            <div class="contour-select">
+                                <label for="list-contour" >Chọn biên dạng</label>
+                                <div id="list-contour">
+                                    <img id ="btn-square" src="../static/img/rectangle.png" alt="Hình Vuông" style="margin-left:33px;">
+                                    <img id = "btn-circle" src="../static/img/circle.png" alt="Hình Tròn">
+                                </div>
+                            </div>
+                            <button id = "btn-select-max"><img src="../static/img/scan.png" alt="icon vẽ đường bao lơn ">Vẽ đường bao khối</button>
+                            <button id = "btn-select-min"><img src="../static/img/stop.png" alt="icon vẽ đường bao nhỏ nhất"> Vẽ đường bao điểm</button>
+                            <button id = "btn-undo"><img src="../static/img/eraser.png" alt="icon xóa hình"> Xóa hình trước</button>
+                            <button id = "btn-erase"><img src="../static/img/clean-up.png" alt="icon xóa tất cả"></i> Xóa tất cả các hình</button>
+                            <button id = "btn-check"><img src="../static/img/check.png" alt="icon kiểm tra tính hợp lệ">Kiểm tra hợp lệ</button>
+                            <button id = "btn-accept-and-send-server"><img src="../static/img/apply.png" alt="Áp dụng và thoát"> Áp dụng và thoát</button>
+                        </div>
+                </div>
+                <div id ="paner-edit-master" class="paner edit-master">6
+                         <p>paner-edit-master</p>
+                        
+                </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/show_main.js') }}"></script>
+    <script src = "../static/js/show_main_suport.js"></script>          
+</body>
+        
+</html>

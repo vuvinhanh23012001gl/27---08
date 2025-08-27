@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../static/img/image.png">
+  <link rel="stylesheet" href="../static/css/chose_product.css">
+  <title>Chọn Loại Sản Phẩm</title>
+
+</head>
+<body>
+   <h1 id ="header" >Hãy chọn một loại sản phẩm muốn kiểm tra</h1>
+   </div>
+   <div id="container-chose-product">
+   </div>
+   
+   <script type="application/json" id="data-json">
+   {{ data | tojson | safe }}
+   </script>
+   <script>
+   const data = JSON.parse(document.getElementById("data-json").textContent);
+   for (let key in data) {
+     const container = document.getElementById("container-chose-product");
+     const new_div = document.createElement("div");
+     new_div.className = "div-product";
+     const img = document.createElement("img");
+     img.src =`/${data[key].path_img_product}`;// Lấy từ /static/ trở đi
+     img.alt = data[key].type_name;
+     img.style.width = "100%";
+     img.style.height = "250px";
+     img.style.objectFit = "cover";
+     img.style.borderRadius = "8px";
+
+     const product_name = document.createElement("h3");
+     product_name.innerText = `${data[key].type_id}: ${data[key].type_name}`;
+
+     const description = document.createElement("h4");
+     description.innerText = data[key].description || "Không có mô tả";
+
+     new_div.appendChild(img);
+     new_div.appendChild(product_name);
+     new_div.appendChild(description);
+     container.appendChild(new_div);
+     new_div.addEventListener("click",()=>{
+    fetch('/api_choose_master/get_show_main', {
+      method: 'POST', // Hoặc GET tùy theo yêu cầu của bạn
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data: key}) // Bạn có thể gửi dữ liệu ở đây
+    })
+    .then(response => response.json()) // Xử lý dữ liệu trả về từ server
+    .then(data => {
+       console.log(data);
+       if (data.redirect_url){
+        window.location.href = data.redirect_url;
+       }
+    })
+    .catch(error => {
+      console.error('Lỗi:', error);
+    });
+     })
+   }
+   </script>
+</body>
+</html>
