@@ -96,23 +96,21 @@ button:hover {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-  max-height: 500px;
+  height: 82vh;
+}
+
+#log-entry {
+  white-space: pre-wrap;  overflow-y: auto; 
+  height: 90%;
+  border: 2px solid rgb(142, 142, 126);
+  padding: 8px;
+  font-family: monospace;
+  font-size: 20px;
+  color: #ccc;
+  border-radius:10px;
   overflow-y: auto;
 }
 
-.log-box h2 {
-  margin-top: 0;
-  color: #f5f5f5;
-}
-
-.log-entry {
-  padding: 8px;
-  border-bottom: 1px solid #444;
-  font-family: monospace;
-  font-size: 13px;
-  color: #ccc;
-}
-
-.log-entry:nth-child(odd) {
+log-entry:nth-child(odd) {
   background: #242437;
 }

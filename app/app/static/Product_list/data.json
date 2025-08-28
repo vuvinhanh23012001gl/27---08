@@ -1,30 +1,100 @@
 {
-    "typeid1": {
-        "type_id": "idtype1",
-        "type_name": "xinchoa",
+    "SP001": {
+        "type_id": "SP001",
+        "type_name": "STM32F103C8T6",
         "description": " Description deafaut ",
         "len": 0,
         "xyz": [
-            1,
-            2,
-            3
+            110,
+            75,
+            12
         ],
-        "path_img_product": "static/Product_Photo/IMG_xinchoa.png",
-        "path_img_master": "static/Master_Photo/Master_xinchoa",
+        "path_img_product": "static/Product_Photo/IMG_SP001.png",
+        "path_img_master": "static/Master_Photo/Master_SP001",
         "point_check": []
     },
-    "typeid2": {
-        "type_id": "typeid2",
-        "type_name": "xinchoa2",
+    "SP002": {
+        "type_id": "SP002",
+        "type_name": "SDSDASD",
         "description": " Description deafaut ",
         "len": 0,
         "xyz": [
-            1,
-            2,
-            3
+            110,
+            80,
+            10
         ],
-        "path_img_product": "static/Product_Photo/IMG_xinchoa2.png",
-        "path_img_master": "static/Master_Photo/Master_xinchoa2",
+        "path_img_product": "static/Product_Photo/IMG_SP002.png",
+        "path_img_master": "static/Master_Photo/Master_SP002",
+        "point_check": []
+    },
+    "SP0012": {
+        "type_id": "SP0012",
+        "type_name": "121",
+        "description": " Description deafaut ",
+        "len": 0,
+        "xyz": [
+            2312,
+            323,
+            321
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP0012.png",
+        "path_img_master": "static/Master_Photo/Master_SP0012",
+        "point_check": []
+    },
+    "SP2001": {
+        "type_id": "SP2001",
+        "type_name": "Vinhanh",
+        "description": " Description deafaut ",
+        "len": 0,
+        "xyz": [
+            110,
+            70,
+            80
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP2001.png",
+        "path_img_master": "static/Master_Photo/Master_SP2001",
+        "point_check": []
+    },
+    "SP2003": {
+        "type_id": "SP2003",
+        "type_name": "DUONGYEUPHUONG5",
+        "description": " Description deafaut ",
+        "len": 0,
+        "xyz": [
+            12,
+            12,
+            12
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP2003.png",
+        "path_img_master": "static/Master_Photo/Master_SP2003",
+        "point_check": []
+    },
+    "SP000": {
+        "type_id": "SP000",
+        "type_name": "SP123",
+        "description": " Description deafaut ",
+        "len": 0,
+        "xyz": [
+            32,
+            2,
+            32
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP000.png",
+        "path_img_master": "static/Master_Photo/Master_SP000",
+        "point_check": []
+    },
+    "SP005": {
+        "type_id": "SP005",
+        "type_name": "Nhincaichogi",
+        "description": "Khong muon nhin",
+        "len": 0,
+        "xyz": [
+            100,
+            80,
+            12
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP005.png",
+        "path_img_master": "static/Master_Photo/Master_SP005",
         "point_check": []
     }
 }

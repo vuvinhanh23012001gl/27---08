@@ -42,10 +42,11 @@ class ProductType:
         os.makedirs(path_product, exist_ok=True)  #tao ra 2 thu muc path_product va path_master
         os.makedirs(path_master, exist_ok=True)
         os.makedirs(path_img_retraining, exist_ok=True)
-        path_img_master = os.path.join(path_master,f"Master_{self.type_name}")
-        path_img_retraining = os.path.join(path_img_retraining,f"IMG_Retraining_{self.type_name}")
+        path_img_master = os.path.join(path_master,f"Master_{self.type_id}")
+        path_img_retraining = os.path.join(path_img_retraining,f"IMG_Retraining_{self.type_id}")
         self.path_img_master = path_img_master
         self.path_img_retraining = path_img_retraining
+        self.Path_Product = path_product
         os.makedirs(path_img_master, exist_ok=True)
         os.makedirs(path_img_retraining, exist_ok=True)
         return {"Path_Product":path_product,
@@ -78,26 +79,12 @@ class ProductType:
         else:
             print("❌ 'type_id' hoặc 'type_name' chưa được khởi tạo.")
             return False
-    def capture_image_for_point(self, point_index, image):
-        if point_index >= len(self.list_point):
-            print(f"❌ Không có điểm {point_index}")
-            return
-
-        point_folder = os.path.join(self.folder_path, f"point_{point_index}")
-        os.makedirs(point_folder, exist_ok=True)
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f"img_{timestamp}.jpg"
-        file_path = os.path.join(point_folder, file_name)
-
-        cv2.imwrite(file_path, image)
-        print(f"📸 Ảnh đã lưu: {file_path}")
-        
     def show_product_type(self):
         print("🛠️ Thông tin sản phẩm:")
         print("🔹 ID Type     :", self.type_id)
         print("🔹 Type Name   :", self.type_name)
         print("🔹Desception product :",self.description)
+        print("🔹XYZ :",self.xyz )
         [print(i) for i in self.list_point]
     def return_lent_poit_of_product(self):
         return len(self.list_point)
@@ -116,7 +103,7 @@ class ProductType:
                 file_path = os.path.abspath(__file__)
                 path_static = os.path.join(file_path,ProductType.NAME_FILE_STATIC)
                 path_Product_Photo = os.path.join(path_static,ProductType.NAME_FILE_PRODUCT_PHOTO )
-                path_img = os.path.join(path_Product_Photo,f"IMG_{self.type_name}.png".replace(" ", ""))
+                path_img = os.path.join(path_Product_Photo,f"IMG_{self.type_id}.png".replace(" ", ""))
                 path_img_ok = self.get_path_from_static(path_img)
                 return path_img_ok.replace('\\', '/')
     def get_path_name_folder_master_img(self):
@@ -141,20 +128,35 @@ class ProductType:
     def get_type_name(self):
         """ Trả về tên loại sản phẩm"""
         return self.type_name
+    # Getter
+    def get_Path_Product(self):
+        """Trả về đường dẫn ảnh của sản phẩm"""
+        return self.Path_Product    
+    def get_path_img_master(self):
+        """Trả về đường dẫn tuyệt đối của sản IMG Master"""
+        return self.path_img_master
 
          
-# Loai_1  = ProductType("1", "Loại A")
-
-# # # data = Loai_1.get_path_name_folder_product_img()
-# # # print(data)
-# # # # Loai_1.description_product("San pham duoc san xuat nam 2024")  
-# # Loai_1.add_list_point(1, 2, 3, 10)
-# # # print(Loai_1.protype_to_dict())
-# # # # #print(Loai_1.Init_path()) #tra ve duong dan den master va product
+# Loai_1  = ProductType("1", "Loại A",[1,2,3])
+# Loai_1.add_list_point(1, 2, 3, 10)
 # Loai_1.add_list_point(1, 2, 3, 10)
 # Loai_1.add_list_point(1, 2, 3, 10)
 # Loai_1.add_list_point(3, 2, 5, 10)
-# # # # Loai_1.show_product_type()
+# Loai_1.show_product_type()
+
+
+
+
+
+
+
+# data = Loai_1.get_path_name_folder_product_img()
+# # # print(data)
+# # # # Loai_1.description_product("San pham duoc san xuat nam 2024")  
+
+# # # print(Loai_1.protype_to_dict())
+# # # # #print(Loai_1.Init_path()) #tra ve duong dan den master va product
+
 # # # # print(Loai_1.return_lent_poit_of_product())
 # # # # # Loai_1.get_list_images_by_type_name()
 # # # # # # print("-------------xoa-----------------")

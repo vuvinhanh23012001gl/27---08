@@ -406,3 +406,20 @@ def get_image_paths_from_folder(folder_path: str) -> list:
                 normalized_path = os.path.join(folder_path, file).replace("\\", "/")
                 image_paths.append(normalized_path)
     return image_paths
+def convert_dict_to_string(data: dict) -> str:
+    """
+    Ghép list_id và list_name trong dict thành một chuỗi hiển thị rõ ràng.
+    
+    Args:
+        data (dict): {"list_id": [...], "list_name": [...]}
+    
+    Returns:
+        str: Chuỗi dạng 'SP001 có XXX\nSP002 có YYY...'
+    """
+    if not data or "list_id" not in data or "list_name" not in data:
+        return ""
+    
+    result_lines = [
+        f"-- ID:{i}  --Tên sản phẩm: {n} ---X_Y_Z:{k}" for i, n,k in zip(data["list_id"], data["list_name"],data["xyz"])
+    ]
+    return "\n".join(result_lines)

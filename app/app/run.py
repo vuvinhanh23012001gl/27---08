@@ -63,7 +63,15 @@ def stream_logs():
             socketio.emit("log_message_product", {"manage_product_type": main_pc.manage_product_type.return_data_dict_all()}, namespace='/log')
         # queue_tx_web_log.put("🔔 Thông báo từ server")   #cab gui gi thi gui vao log nay
         if not queue_tx_web_log.empty():
-            socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')
+            match main_pc.click_page_html:
+                case 4: 
+                    list_name_id = manage_product.get_all_ids_and_names()
+                    if list_name_id:
+                        socketio.emit("log_message", {"log_create_product": func.convert_dict_to_string(list_name_id)}, namespace='/log')
+                case 2:
+                    socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')
+        print(main_pc.click_page_html)
+        queue_tx_web_log.put("🔔 Thông báo từ server")      
         time.sleep(1)
 
 # Blueprint main---------------------------------------------------------------------------------
@@ -90,7 +98,7 @@ def show_main():
     if data_strip in  arr_type_id:
         print(f"gui data master co ten {choose_master_index}")
         path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
-        # print(path_arr_img)
+        print(path_arr_img)
         return render_template("show_main.html",path_arr_img = path_arr_img)
     return render_template("show_main.html",path_arr_img = None)
 @main_html.route('/out_app', methods=['GET'])
@@ -143,49 +151,47 @@ def config_master():
 import os
 @api_new_product.route("/add")
 def add():
-     return render_template("save_product_new.html")
-# @api_new_product.route("/upload", methods=["POST"])
-# def upload():
-#     try:
-#         product_id = request.form.get("product_id",-1)
-#         product_name = request.form.get("product_name",-1)
-#         limit_x = request.form.get("limit_x",-1)
-#         limit_y = request.form.get("limit_y",-1)
-#         limit_z = request.form.get("limit_z",-1)
-#         print(product_id,product_name,limit_x,limit_y,limit_z)
-#         if product_id  == -1 or product_name  == -1 or limit_x == -1 or limit_y == -1 or limit_z == -1:
-#               print("1 trong ca cacs gias tri server gui Khong co")
-#         return jsonify({"success": True, "msg": "Đã chọn ảnh "})
-#     except:
-#         return jsonify({"success": False, "msg": "Chưa chọn ảnh"})
+     
+     main_pc.click_page_html = 4
 
+     return render_template("save_product_new.html")
 @api_new_product.route("/upload", methods=["POST"])
 def upload_product():
+ 
     # ---- Lấy dữ liệu text từ form ----
     product_id = request.form.get("product_id")
     product_name = request.form.get("product_name")
     limit_x = request.form.get("limit_x")
     limit_y = request.form.get("limit_y")
     limit_z = request.form.get("limit_z")
+    description = request.form.get("description")
     # ---- Lấy file từ form ----
-    file = request.files.get("file_upload")   # "file_upload" = name trong <input type="file">
-    #can viet ham kiem tra tren day 
-    if not file:
-        return jsonify({"success": False, "error": "Không có file được gửi"}), 400
-    UPLOAD_FOLDER = "uploads"
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    try:
-        product_id = int(product_id)
-        limit_x = int(limit_x.strip())
-        limit_y = int(limit_y.strip())
-        limit_z = int(limit_z.strip())
-    except:
+    file = request.files.get("file_upload")
+    try: 
+        product_id = str(product_id) 
+        limit_x = int(limit_x.strip()) 
+        limit_y = int(limit_y.strip()) 
+        limit_z = int(limit_z.strip()) 
+    except: 
         print("Dữ liệu gưi về lỗi")
-    manage_product.add_product_type(product_id,product_name,[limit_x,limit_y,limit_z])
-    # ---- Lưu file ----
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
+        return jsonify({"success": False, "ErrorDataIncorect": "Dữ liệu bị gửi sai"}), 400
+    if not file:
+        return jsonify({"success": False, "ErrorNotSendFile": "Không có file được gửi"}), 400
 
+    # ---- Thư mục và tên file muốn lưu ----
+    status_create_manage = manage_product.add_product_type(product_id,product_name,[limit_x,limit_y,limit_z],description)
+    print("status_create_manage la:............",status_create_manage)
+    if not status_create_manage:
+        return jsonify({"success": False, "ErroHasExitsed": "Sản phẩm loại này đã tồn tại .Hãy đặt ID khác hoặc tìm sản phẩm trong danh sách sản phẩm"}), 400
+    save_dir = manage_product.absolute_path(product_id)
+    if not save_dir:
+        return jsonify({"success": False, "ErroNotFileImg": "Tìm không ra sản link ảnh sản phẩm vừa tạo ra"}), 400
+    print("Đường dẫn tới ảnh",save_dir)
+    save_filename = f"Img_{product_id}.png"     # tên file mong muốn
+    print("Tên ảnh lưu là",save_filename)
+    save_path = os.path.join(save_dir, save_filename)
+    # ---- Lưu file ----
+    file.save(save_path)
     # ---- Trả kết quả về client ----
     return jsonify({
         "success": True,
@@ -194,10 +200,9 @@ def upload_product():
         "limit_x": limit_x,
         "limit_y": limit_y,
         "limit_z": limit_z,
-        "filename": file.filename,
-        "filepath": filepath
+        "saved_path": save_path,                 # đường dẫn trên server
+        "url": f"/static/Product_Photo/{save_filename}"  # đường dẫn để truy cập từ browser
     })
-
 #--------------------------------------------------------Api_choose_master---------------------------------------------
 @api_choose_master.route("/get_show_main",methods = ["POST"])
 def get_content():
@@ -296,7 +301,7 @@ def submit():
 def take_photo_trainning_model():
     threading.Thread(target = stream_frames,daemon=True).start()
     func.clear_queue(queue_rx_web_api)   #rst bufff nhan
-    main_pc.click_page_html = 2
+    main_pc.click_page_html = 2           #Training model
     return render_template("take_photo.html")
 #--------------------------------------------------------end Api----------------------------------------------
 app.register_blueprint(main_html)

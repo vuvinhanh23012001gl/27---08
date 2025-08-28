@@ -31,21 +31,23 @@
 
   // --- Xử lý submit form ---
   form.addEventListener("submit", function(e) {
-    
     e.preventDefault(); // chặn submit mặc định (reload trang)
     let formData = new FormData(form); // lấy toàn bộ dữ liệu form
-    let product_id = formData.get("product_id");
-    let product_name = formData.get("product_name");
+    let product_id = cleanVietnameseToAscii(String(formData.get("product_id")));
+    let product_name = cleanVietnameseToAscii(String(formData.get("product_name")));
     let limit_x = formData.get("limit_x");
     let limit_y = formData.get("limit_y");
     let limit_z = formData.get("limit_z");
-
+    
+    formData.set("product_id", product_id);
+    formData.set("product_name", product_name);
     // Kiểm tra rỗng
     if (!product_id || !product_name || !limit_x || !limit_y || !limit_z ) {
         alert("Vui lòng nhập đầy đủ thông tin và chọn file!");
         return; // dừng lại, không gửi fetch
     }
-    if (product_id < 0 || product_name < 0|| limit_x < 0 || limit_y < 0 || limit_z < 0 ) {
+    
+    if (limit_x < 0 || limit_y < 0 || limit_z < 0 ) {
         alert("Vui lòng nhập giá trị lớn hơn 0");
         return; // dừng lại, không gửi fetch
     }
@@ -59,8 +61,23 @@
     .then(data => {
       if (data.success == true) {
         alert("Lưu thành công!");
-      } else {
-        alert("Lưu thất bại!");
+      } 
+      else{
+          if (data?.ErrorDataIncorect) {
+              alert(data.ErrorDataIncorect);
+          }
+
+          if (data?.ErrorNotSendFile) {
+              alert(data.ErrorNotSendFile);
+          }
+
+          if (data?.ErroHasExitsed) {
+              alert(data.ErroHasExitsed);
+          }
+
+          if (data?.ErroNotFileImg) {
+              alert(data.ErroNotFileImg);
+          }
       }
     })
     .catch(err => {
@@ -68,3 +85,20 @@
       alert("Lỗi kết nối server!");
     });
   });
+  function cleanVietnameseToAscii(str) {
+  if (!str) return "";
+  str = String(str).trim().replace(/\s+/g, "");
+  str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return str;
+}
+const logSocket = io("/log");
+logSocket.on("log_message", function (data) {
+    console.log(data)
+    const logBox = document.getElementById("log-entry");
+    if (logBox) {
+        logBox.innerText =data.log_create_product + "\n";
+        logBox.scrollTop = logBox.scrollHeight; // auto scroll xuống cuối
+    } else {
+        console.warn("Không tìm thấy log box");
+    }
+});
