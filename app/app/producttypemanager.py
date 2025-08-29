@@ -52,7 +52,7 @@ class ProductTypeManager:
             print(f"✅ Đã lưu dữ liệu JSON vào: {data_file_path}")
         except Exception as e:
             print(f"❌ Lỗi khi lưu dữ liệu JSON: {e}")
-    def add_product_type(self,id,name:str,xyz:list,description:str="")->bool:
+    def add_product_type(self,id:str,name:str,xyz:list,description:str="")->bool:
         """Thêm đối tượng ProductType vào danh 1 loại sản phẩm mới vào danh sách các ProductType để quản lý
         Kiểm tra type nếu trùng rồi thì trả về  False
         Trả về True nếu thêm thành công và print lỗi

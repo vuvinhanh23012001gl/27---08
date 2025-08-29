@@ -9,11 +9,17 @@ import check_shape
 import threading
 import time
 import func
-import json
+import os
+
+# main_pc.click_page_html = 4  --> Là vào thêm sản phẩm mới
+# main_pc.click_page_html = 1  --> Là vào trang main chính
+# main_pc.click_page_html = 3  --> Là lấy master 
+# main_pc.click_page_html = 2  --> Training model
+# main_pc.click_page_html = 5  --> Choose master
+# main_pc.click_page_html = 6  --> Add master
 
 #static varialble--------------
 NAME_FILE_CHOOSE_MASTER = "choose_master"
-
 #Class -------------------------
 main_html = Blueprint("main",__name__)
 api = Blueprint("api",__name__)
@@ -22,6 +28,8 @@ api_choose_master = Blueprint("api_choose_master",__name__)
 api_take_master = Blueprint("api_take_master",__name__)
 api_run_application = Blueprint("api_run_application",__name__)
 api_new_product = Blueprint("api_new_product",__name__)
+api_add_master = Blueprint("api_add_master",__name__)
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 manage_product = ProductTypeManager()
@@ -32,6 +40,10 @@ OPEN_THREAD_LOG =  True
 OPEN_THREAD_STREAM =  True
 OPEN_THREAD_IMG = True
 #soket io
+@main_html.route("/empty_page.html")
+def already_open():
+    # Đây là trang báo lỗi khi user mở tab thứ 2
+    return render_template("empty_page.html")
 @socketio.on('connect', namespace='/video')
 def handle_video_connect():
     print("📡 Client connected to /video")
@@ -59,20 +71,17 @@ def stream_img():
     
 def stream_logs():
     while OPEN_THREAD_LOG:
-        with main_pc.manage_product_type_lock:
-            socketio.emit("log_message_product", {"manage_product_type": main_pc.manage_product_type.return_data_dict_all()}, namespace='/log')
-        # queue_tx_web_log.put("🔔 Thông báo từ server")   #cab gui gi thi gui vao log nay
-        if not queue_tx_web_log.empty():
             match main_pc.click_page_html:
                 case 4: 
-                    list_name_id = manage_product.get_all_ids_and_names()
+                    list_name_id = manage_product.get_all_ids_and_names()      # Gửi log cho thêm sản phẩm mới
                     if list_name_id:
-                        socketio.emit("log_message", {"log_create_product": func.convert_dict_to_string(list_name_id)}, namespace='/log')
+                        socketio.emit("log_message", {"log_create_product": list_name_id}, namespace='/log')
                 case 2:
-                    socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')
-        print(main_pc.click_page_html)
-        queue_tx_web_log.put("🔔 Thông báo từ server")      
-        time.sleep(1)
+                    if not queue_tx_web_log.empty():
+                        socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')    #Gửi log cho File Training
+            print(main_pc.click_page_html)
+    
+            time.sleep(1)
 
 # Blueprint main---------------------------------------------------------------------------------
 @main_html.route("/")
@@ -108,17 +117,10 @@ def out_app():
         raise RuntimeError("Server không hỗ trợ shutdown trực tiếp")
     func()
    
-    OPEN_THREAD_LOG =  False
+  
     
     print("Người dùng thoát tab")
     return jsonify({"status":"OK"})
-
-#chua dinh nghia
-@api.route("/master-setting")
-def master_setting():
-    # func.clear_queue(queue_rx_web_api)   #rst bufff nhan
-    main_pc.click_page_html = 3           # che do config master
-    return render_template("master_setting.html")
 #--------------------------------------------------------Api_run_application---------------------------------------------
 @api_run_application.route('/run_application',methods = ['GET'])
 def run_application():
@@ -128,8 +130,15 @@ def run_application():
     return jsonify({"status":"OK"})
 #--------------------------------------------------------Api_master_take---------------------------------------------
 
+@api_take_master.route("/master_close",methods=["POST"])
+def master_close():
+    main_pc.click_page_html = 1  #Ve lai main chinh 
+    data = request.get_json()
+    print(data)   
+    return jsonify({'status':"OKE"})
 @api_take_master.route("/master_take",methods=["POST"])
 def master_take():
+    main_pc.click_page_html = 3 
     data = request.get_json()
     print(data)   
     return jsonify({'status':"OKE"})
@@ -145,15 +154,11 @@ def config_master():
     #     print("--------------------------------dU LIEU CHUA CHUAN-------------------")
     # else :
     #     print("--------------------------------dU LIEU DA  CHUAN---------------------")
-    
     return jsonify({'status':"OKE"})
 #--------------------------------------------------------Api_new_product ---------------------------------------------
-import os
 @api_new_product.route("/add")
 def add():
-     
      main_pc.click_page_html = 4
-
      return render_template("save_product_new.html")
 @api_new_product.route("/upload", methods=["POST"])
 def upload_product():
@@ -168,7 +173,8 @@ def upload_product():
     # ---- Lấy file từ form ----
     file = request.files.get("file_upload")
     try: 
-        product_id = str(product_id) 
+        product_id = str(product_id)
+        product_name = str(product_name)
         limit_x = int(limit_x.strip()) 
         limit_y = int(limit_y.strip()) 
         limit_z = int(limit_z.strip()) 
@@ -176,15 +182,18 @@ def upload_product():
         print("Dữ liệu gưi về lỗi")
         return jsonify({"success": False, "ErrorDataIncorect": "Dữ liệu bị gửi sai"}), 400
     if not file:
-        return jsonify({"success": False, "ErrorNotSendFile": "Không có file được gửi"}), 400
+        print("Chưa nhận được File ảnh sản phẩm")
+        return jsonify({"success": False, "ErrorNotSendFile": "Hãy chọn hình ảnh sản phẩm"}), 400
 
     # ---- Thư mục và tên file muốn lưu ----
     status_create_manage = manage_product.add_product_type(product_id,product_name,[limit_x,limit_y,limit_z],description)
     print("status_create_manage la:............",status_create_manage)
     if not status_create_manage:
+        print("Sản phẩm loại này đã tồn tại .Hãy đặt ID khác hoặc tìm sản phẩm trong danh sách sản phẩm")
         return jsonify({"success": False, "ErroHasExitsed": "Sản phẩm loại này đã tồn tại .Hãy đặt ID khác hoặc tìm sản phẩm trong danh sách sản phẩm"}), 400
     save_dir = manage_product.absolute_path(product_id)
     if not save_dir:
+        print("Tìm không ra sản link ảnh sản phẩm vừa tạo ra")
         return jsonify({"success": False, "ErroNotFileImg": "Tìm không ra sản link ảnh sản phẩm vừa tạo ra"}), 400
     print("Đường dẫn tới ảnh",save_dir)
     save_filename = f"Img_{product_id}.png"     # tên file mong muốn
@@ -200,7 +209,7 @@ def upload_product():
         "limit_x": limit_x,
         "limit_y": limit_y,
         "limit_z": limit_z,
-        "saved_path": save_path,                 # đường dẫn trên server
+        "saved_path": save_path,                       # đường dẫn trên server
         "url": f"/static/Product_Photo/{save_filename}"  # đường dẫn để truy cập từ browser
     })
 #--------------------------------------------------------Api_choose_master---------------------------------------------
@@ -217,10 +226,24 @@ def get_content():
     return jsonify(response)
 @api_choose_master.route("/chose_product")
 def chose_product():
+    main_pc.click_page_html = 5
     data =  manage_product.get_file_data()
     print("DUONG Dan anh gui len laaaaaaaa",data)
     print(data)
     return render_template("chose_product.html",data = data)
+
+#----------------------------------------------api_add_master------------------------------------------------------
+@api_add_master.route("/",methods=["POST"],strict_slashes=False)
+def api_add_master_tree():
+       main_pc.click_page_html = 6  #Ve lai main chinh 
+       data = request.get_json()
+       print(data)   
+       return jsonify({'status':"OKE"})
+
+
+
+
+
 #--------------------------------------------------------Api_new_model----------------------------------------------
 
 @api_new_model.route('/stop-video', methods=['POST'])
@@ -311,6 +334,8 @@ app.register_blueprint(api_choose_master, url_prefix="/api_choose_master")
 app.register_blueprint(api_take_master, url_prefix="/api_take_master")  
 app.register_blueprint(api_run_application, url_prefix="/api_run_application") 
 app.register_blueprint(api_new_product, url_prefix="/api_new_product") 
+app.register_blueprint(api_add_master, url_prefix="/api_add_master") 
+
 from shared_queue import queue_accept_capture
 cam_basler = BaslerCamera(queue_accept_capture, socketio, config_file="Camera_25129678.pfs")
 if __name__ == "__main__":

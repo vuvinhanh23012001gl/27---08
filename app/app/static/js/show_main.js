@@ -1,9 +1,19 @@
 // ==========================
 // 1. DOM Elements
 // ==========================
+
+
+
 const chooseProductBtn = document.getElementById("choose-product");
 const current_panner_default = document.getElementById("paner-main");
-const headerMasterTake = document.getElementById("header-ul-li-master-take");
+const headerMasterTake = document.getElementById("header-ul-li-master-take");  //chuyen huong
+
+
+const btn_close        = document.getElementById("btn-close");
+
+const run_btn = document.getElementById("api-run");
+const add_product = document.getElementById("add-product");
+const out_app =  document.getElementById("out-app");
 
 const canvas_img_show = document.getElementById("canvas-img-preview");
 const ctx = canvas_img_show.getContext("2d");
@@ -82,14 +92,7 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getMousePositionInCanvas(event, canvas) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  let mouseX = Math.floor((event.clientX - rect.left) * scaleX);
-  let mouseY = Math.floor((event.clientY - rect.top) * scaleY);
-  return { x: Math.max(0, mouseX), y: Math.max(0, mouseY) };
-}
+
 
 function check_no_select_shape(c1, c2, c3) {
   return c1 === 0 && c2 === 0 && c3 === 0;
@@ -551,13 +554,26 @@ function writeLabelWitdthGet(shape, string, coordinate_x, coordinate_y) {
 // ==========================
 // 5. Event Listeners
 // ==========================
+btn_close.addEventListener("click",function(){
+   postData("api_take_master/master_close", { "status": "on" }).then(data => {
+    console.log("Master close :" + data);
+    window.location.href = "/";
+  });
+});
 chooseProductBtn.addEventListener("click", () => {
   window.location.href = "/api_choose_master/chose_product";
+  history.replaceState(null, "", "/api_choose_master/chose_product");
 });
-
 api_training.addEventListener("click", () => {
   window.location.href = "/api_new_model/training-model";
 });
+
+headerMasterAdd.addEventListener("click",function(){
+    postData("api_add_master", { "status": "on" }).then(data => {
+    console.log("Master Take :" + data);
+  });
+});
+
 headerMasterTake.addEventListener("click", () => {
   postData("api_take_master/master_take", { "status": "on" }).then(data => {
     console.log("Master Take :" + data);
@@ -737,6 +753,7 @@ function getMousePositionInCanvas(event, canvas) {
   return { x: mouseX, y: mouseY };
 
 }
+
 function getRotatedRectCorners(rect) {
   const x = Math.min(rect.x1, rect.x2);
   const y = Math.min(rect.y1, rect.y2);
@@ -1392,4 +1409,28 @@ function isShapeInside(a, b) {
   }
   return false;
 }
+
+run_btn.addEventListener('click',()=>{
+      fetch('/api_run_application/run_application')
+      .then(response => response.json())
+      .then(data => {
+        console.log("Dữ liệu nhận sau click Run"+ data);
+        if(data.status  == "OK"){
+          console.log("Gửi dữ liệu Run Thành công đến Server"+ data);
+        }
+      })
+      .catch(err => {
+        console.error('❌ Lỗi khi gửi Run GET:', err);
+      });
+});
+
+out_app.addEventListener('click',()=>{
+  window.close();
+
+});
+add_product.addEventListener("click",function(){
+    window.location.href = "/api_new_product/add";
+    history.replaceState(null, "", "/api_new_product/add");
+})
+import {headerMasterAdd} from "./show_main_add_master.js"
 

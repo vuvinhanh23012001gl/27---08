@@ -10,9 +10,9 @@ class ProductType:
     NAME_FILE_STATIC = "static"
     NAME_FILE_IMG_RETRAINING = "Product_Img_Retraining"
     NAME_FILE_MASTER_PHOTO = "Master_Photo"
-    def __init__(self, type_id, type_name:str,xyz:list):
+    def __init__(self, type_id:str, type_name:str,xyz:list):
         self.xyz = xyz
-        self.type_id = type_id
+        self.type_id = str(type_id)
         self.type_name = type_name
         self.list_point = []
         self.description =  " Description deafaut "    #se tao ra duong dan anh trong file static/Product_Photo

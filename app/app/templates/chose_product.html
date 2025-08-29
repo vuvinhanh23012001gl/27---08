@@ -18,6 +18,9 @@
    {{ data | tojson | safe }}
    </script>
    <script>
+      window.addEventListener("popstate", function(event) {
+          window.location.href = "/";
+      });
    const data = JSON.parse(document.getElementById("data-json").textContent);
    for (let key in data) {
      const container = document.getElementById("container-chose-product");

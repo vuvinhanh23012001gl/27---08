@@ -376,5 +376,38 @@
         }
       ]
     }
+  },
+  {
+    "state": null
+  },
+  {
+    "state": {
+      "page": "add_product"
+    }
+  },
+  {
+    "state": null
+  },
+  {
+    "state": null
+  },
+  {
+    "state": null
+  },
+  {
+    "state": null
+  },
+  {
+    "state": {
+      "page": "add_product"
+    }
+  },
+  {
+    "state": null
+  },
+  {
+    "0": {
+      "shapes": []
+    }
   }
 ]

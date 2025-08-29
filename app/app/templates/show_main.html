@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="../static/css/show_main.css">
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <title>Kiểm tra dầu</title>
+    <script>
+    if (localStorage.getItem("app_open") === "true") {   // kiem tra xem trinh duet mo hay chua 
+      window.location.href = "/empty_page.html";   
+    } else {
+      localStorage.setItem("app_open", "true");
+    }
+    window.addEventListener("beforeunload", () => {
+      localStorage.removeItem("app_open");
+    });
+    </script>
 </head>
 <body>
     <div class = "header">
@@ -16,10 +26,10 @@
             <li class="header-ul-li">Cấu hình master
                 <img id = "preview">
                  <ul class = "header-ul-li-master">
-                    <li>Thêm master</li>
-                    <li>Chỉnh sửa master</li>
-                    <li id="header-ul-li-master-take">Lấy master</li>
+                    <li id="header-ul-li-add-take">Thêm master</li>
                     <li>Xóa master</li>
+                    <li id="header-ul-li-master-take">Lấy master</li>
+                    
                  </ul>
             </li>
             <li class="header-ul-li">Log
@@ -105,17 +115,29 @@
                             <button id = "btn-undo"><img src="../static/img/eraser.png" alt="icon xóa hình"> Xóa hình trước</button>
                             <button id = "btn-erase"><img src="../static/img/clean-up.png" alt="icon xóa tất cả"></i> Xóa tất cả các hình</button>
                             <button id = "btn-check"><img src="../static/img/check.png" alt="icon kiểm tra tính hợp lệ">Kiểm tra hợp lệ</button>
-                            <button id = "btn-accept-and-send-server"><img src="../static/img/apply.png" alt="Áp dụng và thoát"> Áp dụng và thoát</button>
+                            <button id = "btn-accept-and-send-server"><img src="../static/img/apply.png" alt="Áp dụng và thoát"> Áp dụng</button>
+                            <button id = "btn-close"><img src="../static/img/apply.png" alt="Áp dụng và thoát"> Thoát</button>
                         </div>
                 </div>
-                <div id ="paner-edit-master" class="paner edit-master">6
+                <!-- <div id ="paner-edit-master" class="paner edit-master">6
                          <p>paner-edit-master</p>
                         
-                </div>
+                </div> -->
+                <!-- <div id="paner-main" class = "paner active">
+                        <div class = "paner-main-status-product ">   
+                            --
+                        </div>
+                        <div class = "paner-main-table-show-point">
+                            <p>Đây là bảng show point</p>     
+                        </div>
+                        <div class="paner-main-show-log ">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores voluptate, quam eius inventore libero, quidem odio molestias eveniet minima, nemo molestiae totam modi ipsum sequi nulla nihil iste error explicabo.
+                        </div>
+                </div> -->
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/show_main.js') }}"></script>
-    <script src = "../static/js/show_main_suport.js"></script>          
+    <script type="module" src="{{ url_for('static', filename='js/show_main.js') }}"></script>    
+     
 </body>
         
 </html>

@@ -287,7 +287,8 @@ html, body {
     padding: 12px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: inline-block; /* để zoom không phá layout */
+    display: flex; /* để zoom không phá layout */
+    flex-direction: column;
     transform-origin: center center;
 }
 /* Label + icon trên cùng một dòng */
@@ -326,7 +327,8 @@ html, body {
 
 /* Nút bấm to + icon */
 .part-controler button {
-    max-height: 10%;
+    padding: 2px;
+    max-height: 9.2%;
     display: flex;
     align-items: center;
     gap: 6px;
