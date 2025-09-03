@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../static/img/image.png">
     <link rel="stylesheet" href="../static/css/show_main.css">
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <title>Kiểm tra dầu</title>
     <script>
     if (localStorage.getItem("app_open") === "true") {   // kiem tra xem trinh duet mo hay chua 
@@ -26,8 +26,7 @@
             <li class="header-ul-li">Cấu hình master
                 <img id = "preview">
                  <ul class = "header-ul-li-master">
-                    <li id="header-ul-li-add-take">Thêm master</li>
-                    <li>Xóa master</li>
+                    <li id="header-ul-li-add-take">Chỉnh sửa master</li>
                     <li id="header-ul-li-master-take">Lấy master</li>
                     
                  </ul>
@@ -119,30 +118,42 @@
                             <button id = "btn-close"><img src="../static/img/apply.png" alt="Áp dụng và thoát"> Thoát</button>
                         </div>
                 </div>
-                <div id="panel-add-master">
+                <div id="panel-add-master" class="paner add-master">
                     <!-- Bảng thông tin loại sản phẩm -->
                     <div class="panel-table">
                         <table class="product-table">
-                            <caption>Thông tin loại sản phẩm</caption>
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    <th>Tên loại</th>
                                     <th>Max X</th>
                                     <th>Max Y</th>
                                     <th>Max Z</th>
                                     <th>Max K</th>
-                                </tr>  
+                                </tr> 
                             </thead>
                             <tbody>
                                 <!-- Dữ liệu sẽ được thêm vào đây -->
+                                  <tr>
+                                    <td>Sản</td>
+                                    <td>100</td>
+                                    <td>200</td>
+                                    <td>300</td>
+                                    <td>400</td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div class="log-area">
-                            <!-- Log hiển thị -->
-                        </div>
+                        <div class="log log-area"></div>
                     </div>
                     <!-- Nút điều khiển 1 điểm -->
                     <div class="controls-single-point">
+                        <!-- <label for="input-x">Nhập X</label>
+                        <input type="number" id="input-x" placeholder="Nhập X > 0" /> 
+                        <label for="input-y">Nhập Y</label>
+                        <input type="number" id="input-y" placeholder="Nhập Y > 0" /> 
+                        <label for="input-z">Nhập Z</label>
+                        <input type="number" id="input-z" placeholder="Nhập Z > 0" /> 
+                        <label for="input-k">Mức sáng</label>
+                        <input type="number" id="input-k" placeholder="Nhập độ sáng > 0" /> 
                         <button class="btn btn-increase-x"><img src="../static/img/scan.png" alt="Tăng X"> Tăng X</button>
                         <button class="btn btn-decrease-x"><img src="../static/img/stop.png" alt="Giảm X"> Giảm X</button>
                         <button class="btn btn-increase-y"><img src="../static/img/eraser.png" alt="Tăng Y"> Tăng Y</button>
@@ -150,47 +161,25 @@
                         <button class="btn btn-increase-z"><img src="../static/img/check.png" alt="Tăng Z"> Tăng Z</button>
                         <button class="btn btn-decrease-z"><img src="../static/img/apply.png" alt="Giảm Z"> Giảm Z</button>
                         <button class="btn btn-run"><img src="../static/img/apply.png" alt="Chạy"> Chạy</button>
-                    </div>
+                        <button class="btn btn-run"><img src="../static/img/apply.png" alt="Chạy"> Chạy hết</button>
+                        <button class="btn btn-run"><img src="../static/img/apply.png" alt="Chạy"> Lưu hình</button> -->
+                    </div> 
 
                     <!-- Nút điều khiển tất cả điểm -->
                     <div class="controls-all-points">
-                        <button class="btn btn-add-point"><img src="../static/img/scan.png" alt="Thêm điểm"> Thêm điểm</button>
-                        <button class="btn btn-delete-point"><img src="../static/img/scan.png" alt="Xóa điểm"> Xóa điểm</button>
-                        <button class="btn btn-save"><img src="../static/img/scan.png" alt="Lưu"> Lưu</button>
-                        <button class="btn btn-exit"><img src="../static/img/scan.png" alt="Thoát"> Thoát</button>
+                        <button class="btn btn-add-point"><img src="../static/img/gallery.png" alt="Thêm master"> Thêm master</button>
+                        <button class="btn btn-delete-point"><img src="../static/img/eraser_img.png" alt="Xóa master"> Xóa master</button>
+                        <button class="btn btn-save"><img src="../static/img/diskette.png" alt="Lưu master"> Lưu</button>
+                        <button class="btn btn-exit"><img src="../static/img/close.png" alt="Thoát master"> Thoát</button>
                     </div>                    
 
                 </div>
                                 
-
-
-
-
-
-
-
-
-
-
-                <!-- <div id ="paner-edit-master" class="paner edit-master">6
-                         <p>paner-edit-master</p>
-                        
-                </div> -->
-                <!-- <div id="paner-main" class = "paner active">
-                        <div class = "paner-main-status-product ">   
-                            --
-                        </div>
-                        <div class = "paner-main-table-show-point">
-                            <p>Đây là bảng show point</p>     
-                        </div>
-                        <div class="paner-main-show-log ">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores voluptate, quam eius inventore libero, quidem odio molestias eveniet minima, nemo molestiae totam modi ipsum sequi nulla nihil iste error explicabo.
-                        </div>
-                </div> -->
         </div>
     </div>
-    <script type="module" src="{{ url_for('static', filename='js/show_main.js') }}"></script>    
+   
      
 </body>
+ <script type="module" src="../static/js/show_main.js"></script>    
         
 </html>

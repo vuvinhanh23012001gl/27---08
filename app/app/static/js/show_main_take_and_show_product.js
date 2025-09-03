@@ -1,7 +1,6 @@
 
 import {
   chooseProductBtn,
-  current_panner_default,
   headerMasterTake,
   btn_close,
   run_btn,
@@ -28,7 +27,9 @@ import {
   select_max,
   btn_accept_and_send,
   api_training,
-  headerMasterAdd
+  postData,
+  current_panner,
+  setCurrentPanner,
 } from "./show_main_status.js";
 // CONSTANT
 const SCROLL_STEP = 300;
@@ -52,7 +53,6 @@ let isDraggingRectWithRightClick = false;
 let dragRectOffsetX = 0;
 let dragRectOffsetY = 0;
 let draggingRectIndex = -1;
-let current_panner = current_panner_default;
 let is_hover_square = false;
 let check_select = null;
 let check_Select_shape = null;
@@ -85,20 +85,7 @@ canvas_img_show.addEventListener("contextmenu", e => e.preventDefault());
 function check_no_select_shape(c1, c2, c3) {
   return c1 === 0 && c2 === 0 && c3 === 0;
 }
-async function postData(url = "", data = {}) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error("Lỗi khi POST:", error);
-    return null;
-  }
-}
+
 
 function deactivateAllButtons() {
   is_square_active = false;
@@ -558,21 +545,9 @@ api_training.addEventListener("click", () => {
   window.location.href = "/api_new_model/training-model";
 });
 
-headerMasterAdd.addEventListener("click",function(){
-    postData("api_add_master", { "status": "on" }).then(data => {
-    console.log("Master Take :" + data);
-  });
-  const take_master = document.getElementById("paner-take-master");
-  if (current_panner === take_master) return;
-  current_panner.classList.remove("active");
-  current_panner.style.zIndex = 1;
-  take_master.classList.add("active");
-  take_master.style.zIndex = 2;
-  current_panner = take_master;
-
-});
 
 headerMasterTake.addEventListener("click", () => {
+  console.log("current_panner",current_panner);
   postData("api_take_master/master_take", { "status": "on" }).then(data => {
     console.log("Master Take :" + data);
   });
@@ -582,7 +557,7 @@ headerMasterTake.addEventListener("click", () => {
   current_panner.style.zIndex = 1;
   take_master.classList.add("active");
   take_master.style.zIndex = 2;
-  current_panner = take_master;
+  setCurrentPanner(take_master);
 });
 
 btn_left.addEventListener("click", () => {
@@ -1444,4 +1419,4 @@ add_product.addEventListener("click",function(){
     window.location.href = "/api_new_product/add";
     history.replaceState(null, "", "/api_new_product/add");
 })
-// import {headerMasterAdd} from "./show_main_add_master.js"
+

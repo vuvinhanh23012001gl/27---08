@@ -1,4 +1,4 @@
-// show_main.js
+
 
 export const chooseProductBtn = document.getElementById("choose-product");
 export const current_panner_default = document.getElementById("paner-main");
@@ -38,3 +38,21 @@ export const btn_accept_and_send = document.getElementById("btn-accept-and-send-
 export const api_training = document.getElementById("api-training");
 export const headerMasterAdd = document.getElementById("header-ul-li-add-take");
 
+export let current_panner = current_panner_default;
+export function setCurrentPanner(panner) {
+  current_panner = panner;
+}
+export async function postData(url = "", data = {}) {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Lỗi khi POST:", error);
+    return null;
+  }
+}
