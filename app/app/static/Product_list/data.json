@@ -2,7 +2,7 @@
     "SP001": {
         "type_id": "SP001",
         "type_name": "Sản Phẩm Đầu Tiên",
-        "description": "29-08-2025",
+        "description": " Description deafaut ",
         "len": 0,
         "xyz": [
             110,
@@ -11,6 +11,20 @@
         ],
         "path_img_product": "static/Product_Photo/IMG_SP001.png",
         "path_img_master": "static/Master_Photo/Master_SP001",
+        "point_check": []
+    },
+    "SP002": {
+        "type_id": "SP002",
+        "type_name": "Sản Phẩm Đầu Tiên\t",
+        "description": "12",
+        "len": 0,
+        "xyz": [
+            2,
+            2,
+            2
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP002.png",
+        "path_img_master": "static/Master_Photo/Master_SP002",
         "point_check": []
     }
 }

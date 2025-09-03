@@ -140,6 +140,6 @@ def fuc_main_process():
             print("Xin chao")
             time.sleep(1)
        
-main_process = threading.Thread(target=fuc_main_process)
+main_process = threading.Thread(target=fuc_main_process,daemon=True)
 main_process.start()     
     

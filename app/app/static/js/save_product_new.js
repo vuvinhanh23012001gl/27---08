@@ -4,7 +4,6 @@
   const form = document.getElementById("productForm");
   const close = document.getElementById("close");
   let selectedFile = null;
-
   window.addEventListener("popstate", function(event) {
     // Khi người dùng nhấn Back
     window.location.href = "/";

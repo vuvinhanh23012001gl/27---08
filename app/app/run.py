@@ -51,11 +51,9 @@ def handle_video_connect():
 def handle_log_connect():
     print("📡 Client connected to /log")
 def stream_frames():
-    cam_basler.acc_run = True
-    global OPEN_THREAD_STREAM
-    OPEN_THREAD_STREAM = True
     while OPEN_THREAD_STREAM:
          cam_basler.run_cam_html()
+         time.sleep(1)
     cam_basler.release()
     print("Thoát luồng gửi video thành công")
  
@@ -80,7 +78,6 @@ def stream_logs():
                     if not queue_tx_web_log.empty():
                         socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')    #Gửi log cho File Training
             print(main_pc.click_page_html)
-    
             time.sleep(1)
 
 # Blueprint main---------------------------------------------------------------------------------
@@ -249,9 +246,6 @@ def api_add_master_tree():
 @api_new_model.route('/stop-video', methods=['POST'])
 def stop_video():
     main_pc.click_page_html = 1
-    global OPEN_THREAD_STREAM
-    OPEN_THREAD_STREAM = False
-    cam_basler.acc_run = False
     print("Người dùng đã thoát khỏi trang Training Model")
     return "ok"
 @api_new_model.route('/replay', methods=['GET'])
@@ -288,9 +282,6 @@ def run_all_points():
 @api_new_model.route("/exit-training")
 def exit_training():
     main_pc.click_page_html = 1
-    global OPEN_THREAD_STREAM
-    OPEN_THREAD_STREAM = False
-    cam_basler.acc_run = False
     print("Người dùng đã thoát khỏi trang Training Model")
     return redirect(url_for("main.show_main"))
 # @api_new_model.route("/get_status")
@@ -342,9 +333,10 @@ if __name__ == "__main__":
     import main_pc
     from shared_queue import queue_rx_web_api,queue_tx_web_log,queue_tx_web_main
     import threading
-    threading.Thread(target=stream_logs).start()
-    threading.Thread(target=stream_img).start()
+    threading.Thread(target=stream_logs,daemon = True).start()
+    threading.Thread(target=stream_img,daemon = True).start()
     socketio.run(app, host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    print("Đã thoát chương trình chính")
 
 
 

@@ -102,7 +102,9 @@ class BaslerCamera:
                         {'image': jpg_as_text},
                         namespace='/video'
                     )
-                time.sleep(0.05)
+
+     
+                time.sleep(0.01)
             except Exception as e:
                 print(f"Lỗi gửi ảnh: {e}")
 
@@ -163,7 +165,7 @@ class BaslerCamera:
                             img_one_frame = self.capture_one_frame()
                             return img_one_frame
                     self.last_emit_time = now
-            time.sleep(0.02)
+            time.sleep(0.01)
             grabResult.Release()
         time.sleep(0.02)
     def show_camera_window(self):
@@ -301,9 +303,8 @@ class BaslerCamera:
             self.initialize_camera()
     def run_cam_html(self):
         try:
-            # self.show_camera_info()
-            # self.start_stream()
-            time.sleep(2)
+            self.show_camera_info()
+            self.start_stream()
         except:
             print("Lỗi pylon:2")
             self.initialize_camera()
