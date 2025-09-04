@@ -132,43 +132,53 @@
                                 </tr> 
                             </thead>
                             <tbody>
-                                <!-- Dữ liệu sẽ được thêm vào đây -->
-                                  <tr>
-                                    <td>Sản</td>
-                                    <td>100</td>
-                                    <td>200</td>
-                                    <td>300</td>
-                                    <td>400</td>
-                                </tr>
                             </tbody>
                         </table>
-                        <div class="log log-area"></div>
+                        <div class="log log-area" id="log_add_master"></div>
                     </div>
                     <!-- Nút điều khiển 1 điểm -->
                     <div class="controls-single-point">
-                        <!-- <label for="input-x">Nhập X</label>
-                        <input type="number" id="input-x" placeholder="Nhập X > 0" /> 
-                        <label for="input-y">Nhập Y</label>
-                        <input type="number" id="input-y" placeholder="Nhập Y > 0" /> 
-                        <label for="input-z">Nhập Z</label>
-                        <input type="number" id="input-z" placeholder="Nhập Z > 0" /> 
-                        <label for="input-k">Mức sáng</label>
-                        <input type="number" id="input-k" placeholder="Nhập độ sáng > 0" /> 
-                        <button class="btn btn-increase-x"><img src="../static/img/scan.png" alt="Tăng X"> Tăng X</button>
-                        <button class="btn btn-decrease-x"><img src="../static/img/stop.png" alt="Giảm X"> Giảm X</button>
-                        <button class="btn btn-increase-y"><img src="../static/img/eraser.png" alt="Tăng Y"> Tăng Y</button>
-                        <button class="btn btn-decrease-y"><img src="../static/img/clean-up.png" alt="Giảm Y"> Giảm Y</button>
-                        <button class="btn btn-increase-z"><img src="../static/img/check.png" alt="Tăng Z"> Tăng Z</button>
-                        <button class="btn btn-decrease-z"><img src="../static/img/apply.png" alt="Giảm Z"> Giảm Z</button>
-                        <button class="btn btn-run"><img src="../static/img/apply.png" alt="Chạy"> Chạy</button>
-                        <button class="btn btn-run"><img src="../static/img/apply.png" alt="Chạy"> Chạy hết</button>
-                        <button class="btn btn-run"><img src="../static/img/apply.png" alt="Chạy"> Lưu hình</button> -->
+                        <div class="anonymous" >
+                            <div class = "Alight-items-x">    
+                                <label for="input-x">Nhập X</label>
+                                <input type="number" id="input-x" placeholder="Nhập X > 0" /> 
+                            </div>
+                            <div class = "Alight-items-x">   
+                                <label for="input-y">Nhập Y</label>
+                                <input type="number" id="input-y" placeholder="Nhập Y > 0" /> 
+                            </div>
+                                <div class = "Alight-items-x">   
+                            <label for="input-z">Nhập Z</label>
+                            <input type="number" id="input-z" placeholder="Nhập Z > 0" /> 
+                            </div>
+                            <div class = "Alight-items-x">   
+                                <label for="input-k">Mức sáng</label>
+                                <input type="number" id="input-k" placeholder="Nhập độ sáng > 0" />
+                            </div>
+                            <div class = "Alight-items-x">                           
+                                <button class="btn btn-increase-x"><img src="../static/img/add1.png" alt="Tăng X"> Tăng X</button>
+                                <button class="btn btn-decrease-x"><img src="../static/img/minus.png" alt="Giảm X"> Giảm X</button>
+                            </div>
+                            <div class = "Alight-items-x">   
+                                <button class="btn btn-increase-y"><img src="../static/img/add1.png" alt="Tăng Y"> Tăng Y</button>
+                                <button class="btn btn-decrease-y"><img src="../static/img/minus.png" alt="Giảm Y"> Giảm Y</button>
+                            </div>
+                            <div class = "Alight-items-x">   
+                                <button class="btn btn-increase-z"><img src="../static/img/add1.png" alt="Tăng Z"> Tăng Z</button>
+                                <button class="btn btn-decrease-z"><img src="../static/img/minus.png" alt="Giảm Z"> Giảm Z</button>
+                            </div>
+                            <div class = "Alight-items-x">   
+                                <button class="btn btn-run"><img src="../static/img/check.png" alt="Chạy"> Chạy</button>
+                                <button class="btn btn-run"><img src="../static/img/camera.png"alt="Chạy"> Chụp</button>
+                                <button class="btn btn-run"><img src="../static/img/running.png" alt="Chạy"> Chạy hết</button>
+                            </div>
+                        </div>
                     </div> 
 
                     <!-- Nút điều khiển tất cả điểm -->
                     <div class="controls-all-points">
-                        <button class="btn btn-add-point"><img src="../static/img/gallery.png" alt="Thêm master"> Thêm master</button>
-                        <button class="btn btn-delete-point"><img src="../static/img/eraser_img.png" alt="Xóa master"> Xóa master</button>
+                        <button class="btn btn-add-point" id = "btn-add-master"><img src="../static/img/gallery.png" alt="Thêm master"> Thêm master</button>
+                        <button class="btn btn-delete-point" id = "erase-master"><img src="../static/img/eraser_img.png" alt="Xóa master"> Xóa master</button>
                         <button class="btn btn-save"><img src="../static/img/diskette.png" alt="Lưu master"> Lưu</button>
                         <button class="btn btn-exit"><img src="../static/img/close.png" alt="Thoát master"> Thoát</button>
                     </div>                    

@@ -30,12 +30,14 @@ import {
   postData,
   current_panner,
   setCurrentPanner,
+  index_img_current,
+  set_index_img_current,
 } from "./show_main_status.js";
 // CONSTANT
 const SCROLL_STEP = 300;
 //
 
-let index_img_current = 0;
+
 let index_point_current = 0
 let flag_index_choose_last = 1 //giup gan gia tri lan dau cho index_choose_last
 let index_choose_last = null ; //
@@ -602,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
     div_create.appendChild(h_create);
     scroll_content.appendChild(div_create);
     div_create.addEventListener("click", () => {
-      index_img_current  = index;
+      set_index_img_current(index);
       log.textContent = "";
       hidden_table_and_button(table_write_data,part_table_log);
       console.log("number_img_receive",number_img_receive);
@@ -723,26 +725,6 @@ videoSocket.on("camera_frame", function(data) {
 // 2. HÀM TIỆN ÍCH (UTILITIES)
 // =========================
 
-function isInteger(str) {
-  if (str.trim() === "") return false; // loại bỏ chuỗi rỗng
-  const num = parseInt(str, 10);
-  return !isNaN(num) && num.toString() === str.trim();
-}
-function getMousePositionInCanvas(event, canvas) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-
-  let mouseX = Math.floor((event.clientX - rect.left) * scaleX);
-  let mouseY = Math.floor((event.clientY - rect.top) * scaleY);
-
-  // Giới hạn tọa độ không nhỏ hơn 0
-  mouseX = Math.max(0, mouseX);
-  mouseY = Math.max(0, mouseY);
-
-  return { x: mouseX, y: mouseY };
-
-}
 
 function getRotatedRectCorners(rect) {
   const x = Math.min(rect.x1, rect.x2);
@@ -789,17 +771,6 @@ function isMouseNearRectBorder(mouseX, mouseY, rect, threshold = 10) {
   const nearBottom = Math.abs(mouseY - bottom) <= threshold && mouseX >= left && mouseX <= right;
 
   return nearLeft || nearRight || nearTop || nearBottom;
-}
-
-function getArea(shape) {
-  if (shape.type === 'rect') {
-    return Math.abs((shape.x2 - shape.x1) * (shape.y2 - shape.y1));
-  } else if (shape.type === 'circle') {
-    return Math.PI * shape.r * shape.r;
-  } else if (shape.type === 'annulus') {
-    return Math.PI * (shape.rMax * shape.rMax - shape.rMin * shape.rMin);
-  }
-  return 0;
 }
 function undo_shapes() {
   if (shapes.length > 0) {
@@ -993,7 +964,14 @@ function handleMouseDown(event) {
   isDrawing = true;
   log.textContent = ".... đang vẽ ....";
 }
-
+function getMousePositionInCanvas(event, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  let mouseX = Math.floor((event.clientX - rect.left) * scaleX);
+  let mouseY = Math.floor((event.clientY - rect.top) * scaleY);
+  return { x: Math.max(0, mouseX), y: Math.max(0, mouseY) };
+}
 
 function handleMouseMove(event) {
   const { x, y } = getMousePositionInCanvas(event, canvas_img_show);

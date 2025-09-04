@@ -39,9 +39,15 @@ export const api_training = document.getElementById("api-training");
 export const headerMasterAdd = document.getElementById("header-ul-li-add-take");
 
 export let current_panner = current_panner_default;
+export let index_img_current  = 0 ;
 export function setCurrentPanner(panner) {
   current_panner = panner;
 }
+export function set_index_img_current(index) {
+  index_img_current = index;
+}
+
+
 export async function postData(url = "", data = {}) {
   try {
     const response = await fetch(url, {

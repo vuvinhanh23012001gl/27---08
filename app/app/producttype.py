@@ -1,6 +1,4 @@
 from point_oil import PointOil
-from datetime import datetime
-import cv2
 import os
 
 
@@ -143,10 +141,7 @@ class ProductType:
 # Loai_1.add_list_point(1, 2, 3, 10)
 # Loai_1.add_list_point(3, 2, 5, 10)
 # Loai_1.show_product_type()
-
-
-
-
+# print(type(Loai_1.list_point))
 
 
 

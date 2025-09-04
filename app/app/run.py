@@ -71,13 +71,20 @@ def stream_logs():
     while OPEN_THREAD_LOG:
             match main_pc.click_page_html:
                 case 4: 
-                    list_name_id = manage_product.get_all_ids_and_names()      # Gửi log cho thêm sản phẩm mới
-                    if list_name_id:
-                        socketio.emit("log_message", {"log_create_product": list_name_id}, namespace='/log')
+                    log_message = manage_product.get_all_ids_and_names()      # Gửi log cho thêm sản phẩm mới
+                    if log_message:
+                        socketio.emit("log_message", {"log_create_product": log_message}, namespace='/log')
+                case 6: 
+                    log_message = manage_product.get_all_ids_and_names()      # Gửi log cho thêm master mới
+                    if log_message:
+                        socketio.emit("log_message", {"log_add_master": log_message}, namespace='/log')
+                    if not queue_tx_web_log.empty():
+                        socketio.emit("log_data", {"log": f"{queue_tx_web_log.get()}"}, namespace='/log') 
                 case 2:
                     if not queue_tx_web_log.empty():
                         socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')    #Gửi log cho File Training
             print(main_pc.click_page_html)
+            queue_tx_web_log.put("Xin chao ban")
             time.sleep(1)
 
 # Blueprint main---------------------------------------------------------------------------------
@@ -236,6 +243,11 @@ def api_add_master_tree():
        data = request.get_json()
        print(data)   
        return jsonify({'status':"OKE"})
+@api_add_master.route("/erase_master",methods=["POST"],strict_slashes=False)
+def erase_master():
+       data = request.get_json()
+       print(data)   
+       return jsonify({'status':"200OK"})
 
 
 

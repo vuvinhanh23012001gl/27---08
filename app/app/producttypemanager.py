@@ -218,9 +218,43 @@ class ProductTypeManager:
                 return True
         else:
             print("Không tìm thấy ID trong danh sách")
-
-        
-        
+    
+    def add_list_point_to_product(self,type_id:str,x:int,y:int,z:int,brightness:int)->bool:
+        if type_id is None or x is None or y is None or z is None or brightness is None:
+            print("Giá trị đầu vào khác Null")
+            return False
+        isObject = self.find_by_id(type_id)
+        if isObject != -1:
+            #Kiem tra xem co diem nao giong diem cho truoc khong
+            arr_list_locations = self.get_list_point_find_id(type_id)
+            if arr_list_locations is None: return False
+            for arr_list_location in arr_list_locations:
+                x_location = arr_list_location.get_x()
+                y_location = arr_list_location.get_y()
+                z_location = arr_list_location.get_z()
+                if x_location == x and y_location == y and z_location == z:
+                     print("Điểm đã tồn tại, không thể thêm điểm trùng.")
+                     return False
+                # Kiem tra lon hon 0
+                if x < 0 or y < 0 or z < 0:
+                    print("Giá trị x, y, z phải lớn hơn hoặc bằng 0.")
+                    return False
+                # Kiem tra co nho hon xyz quy định
+                xyz = isObject.get_xyz()
+                if x > xyz[0] or y > xyz[1] or z > xyz[2]:
+                    print(f"Giá trị x, y, z phải nhỏ hơn hoặc bằng {xyz}.")
+                    return False
+            isObject.add_list_point(x, y, z, brightness)
+            self.update_data_json()
+            print("Thêm điểm thành công")
+            return True
+        print("Không tìm thấy ID trong danh sách")
+        return False
+    def update_data_json(self)->None:
+        self.save_json_data(self.path_product_list)
+        self.data = self.get_file_data()
+        self.load_from_file()
+        print("Cập nhật lại dữ liệu")
 #-------------------------------------------------------------------------
     def remove_product_type(self, type_id:str)->bool:
         print("Tiến Hành Xóa ID")
@@ -302,7 +336,8 @@ class ProductTypeManager:
 
 
 # quanly = ProductTypeManager()
-# print(quanly.get_list_point_find_id("SP1"))
+# for i in quanly.get_list_point_find_id("SP001"):
+#     print(i)
 
 # quanly = ProductTypeManager()
 # print(quanly.get_product_name_find_id("SP12"))
@@ -317,6 +352,11 @@ class ProductTypeManager:
 # print(quanly.get_file_data())
 
 # # # # # quanly.load_from_file()
+
+# quanly = ProductTypeManager()
+# quanly.add_list_point_to_product("SP01",1,41,8,80)
+# quanly.add_list_point_to_product("SP01",56,70,10,80)
+# quanly.add_list_point_to_product("SP01",80,60,12,80)
 
 # # # # # quanly = ProductTypeManager()
 # # # # # print(quanly.get_list_id_product())
@@ -381,3 +421,8 @@ class ProductTypeManager:
 
 
 
+# Loai_1  = ProductType("SP02", "Loại A",[1,2,3])
+# Loai_1.add_list_point(1, 2, 3, 10)
+# Loai_1.add_list_point(1, 2, 3, 10)
+# Loai_1.add_list_point(1, 2, 3, 10)
+# Loai_1.add_list_point(3, 2, 5, 10)
