@@ -10,12 +10,6 @@ export const run_btn = document.getElementById("api-run");
 export const add_product = document.getElementById("add-product");
 export const out_app = document.getElementById("out-app");
 
-export const canvas_img_show = document.getElementById("canvas-img-preview");
-export const ctx = canvas_img_show.getContext("2d");
-
-export const canvas_img_show_oke = document.getElementById("canvas-img");
-export const ctx_oke = canvas_img_show_oke.getContext("2d");
-
 export const coordinate = document.getElementById("coordinate");
 export const scroll_content = document.getElementById("scroll-content");
 export const scroll_container = document.querySelector(".scroll-container");
@@ -40,6 +34,20 @@ export const headerMasterAdd = document.getElementById("header-ul-li-add-take");
 
 export let current_panner = current_panner_default;
 export let index_img_current  = 0 ;
+
+export const canvas_img_show = document.getElementById("canvas-img-preview");
+export const ctx = canvas_img_show.getContext("2d");
+export const canvas_img_show_oke = document.getElementById("canvas-img");
+export const ctx_oke = canvas_img_show_oke.getContext("2d");
+
+
+
+export const canvas_show = document.getElementById("canvas-img-show-add-master");
+export const ctx_show = canvas_show.getContext("2d");
+export function set_Z_index_canvas_show(z_Index) {
+  canvas_show.style.zIndex = z_Index;
+}
+
 export function setCurrentPanner(panner) {
   current_panner = panner;
 }

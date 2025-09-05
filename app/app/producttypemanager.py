@@ -200,9 +200,12 @@ class ProductTypeManager:
     
     def return_data_dict(self,type_id):
         """Trả về dict của ID nhập"""
-        if(self.find_by_id(type_id)  is not None):
+        if(self.find_by_id(type_id)!= -1):
              return self.find_by_id(type_id).protype_to_dict()
-
+    def return_data_list_point(self,type_id:str)->list:
+        """Trả về list point cua id loại cần nhập trả về None nếu không tìm thấy ID"""
+        if(self.find_by_id(type_id)!= -1):
+             return [ i.dict_point_oil()  for i in self.find_by_id(type_id).get_list_point()]
     def remove_product_in_file_data(self,id:str):
         if id in self.get_all_id():
             status_pop = self.product_types.pop(id,None)
@@ -323,7 +326,10 @@ class ProductTypeManager:
 # quanly.remove_product_type("0")
 
 # quanly = ProductTypeManager()
-# print(quanly.return_data_dict("SP1"))
+# print(quanly.return_data_dict("SP01"))
+
+# quanly = ProductTypeManager()
+# print(quanly.return_data_list_point("SP1"))
 
 # quanly = ProductTypeManager()
 # print(quanly.get_all_ids())

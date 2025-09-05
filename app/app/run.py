@@ -75,44 +75,40 @@ def stream_logs():
                     if log_message:
                         socketio.emit("log_message", {"log_create_product": log_message}, namespace='/log')
                 case 6: 
-                    log_message = manage_product.get_all_ids_and_names()      # Gửi log cho thêm master mới
-                    if log_message:
-                        socketio.emit("log_message", {"log_add_master": log_message}, namespace='/log')
                     if not queue_tx_web_log.empty():
                         socketio.emit("log_data", {"log": f"{queue_tx_web_log.get()}"}, namespace='/log') 
                 case 2:
                     if not queue_tx_web_log.empty():
                         socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')    #Gửi log cho File Training
             print(main_pc.click_page_html)
-            queue_tx_web_log.put("Xin chao ban")
             time.sleep(1)
 
 # Blueprint main---------------------------------------------------------------------------------
 @main_html.route("/")
 def show_main():
     """Là hàm hiển thị giao diện chính trên Html"""
-    func.create_choose_master(NAME_FILE_CHOOSE_MASTER) #tạo file choose_master nếu tạo rồi thì thôi
-    choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)#đọc lại file choose master cũ xem lần trước  người dùng chọn gì
-    #------------------------------------------------ Thay the bang file kia nha
-    # choose_master_index =  choose_master_index.strip()
-    # test = manage_product.find_by_id(choose_master_index)
-    # print("test",test)
-    # if(test == -1):
-    #     print("Tim khong thanh cong")
-    # else:
-    #     print("Tim thanh cong")
-    # check_shape.check_shapes()
-    #------------------------------------------------------------
-    arr_type_id = manage_product.get_list_id_product()
-    # print("arr_type_id :",arr_type_id)
-    # print("choose_master_index :",choose_master_index)
-    main_pc.click_page_html = 1  # thong bao dang o trang web chinh
-    data_strip = choose_master_index.strip() 
-    if data_strip in  arr_type_id:
-        print(f"gui data master co ten {choose_master_index}")
-        path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
-        print(path_arr_img)
-        return render_template("show_main.html",path_arr_img = path_arr_img)
+    # func.create_choose_master(NAME_FILE_CHOOSE_MASTER) #tạo file choose_master nếu tạo rồi thì thôi
+    # choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)#đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+    # #------------------------------------------------ Thay the bang file kia nha
+    # # choose_master_index =  choose_master_index.strip()
+    # # test = manage_product.find_by_id(choose_master_index)
+    # # print("test",test)
+    # # if(test == -1):
+    # #     print("Tim khong thanh cong")
+    # # else:
+    # #     print("Tim thanh cong")
+    # # check_shape.check_shapes()
+    # #------------------------------------------------------------
+    # arr_type_id = manage_product.get_list_id_product()
+    # # print("arr_type_id :",arr_type_id)
+    # # print("choose_master_index :",choose_master_index)
+    # main_pc.click_page_html = 1  # thong bao dang o trang web chinh
+    # data_strip = choose_master_index.strip() 
+    # if data_strip in  arr_type_id:
+    #     print(f"gui data master co ten {choose_master_index}")
+    #     path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
+    #     print(path_arr_img)
+    #     return render_template("show_main.html",path_arr_img = path_arr_img)
     return render_template("show_main.html",path_arr_img = None)
 @main_html.route('/out_app', methods=['GET'])
 def out_app():
@@ -140,12 +136,32 @@ def master_close():
     data = request.get_json()
     print(data)   
     return jsonify({'status':"OKE"})
-@api_take_master.route("/master_take",methods=["POST"])
+
+
+@api_take_master.route("/master_take",methods=["POST"])  #Khi nhan vao take masster thi thuc hien gui anh len truoc
 def master_take():
     main_pc.click_page_html = 3 
-    data = request.get_json()
+    data = request.get_json() 
     print(data)   
-    return jsonify({'status':"OKE"})
+    func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
+    choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)# đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+    arr_type_id = manage_product.get_list_id_product()
+    data_strip = choose_master_index.strip() 
+    if data_strip in  arr_type_id:
+        print(f"gui data master co ten {choose_master_index}")
+        path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
+        print(path_arr_img)
+        return {"path_arr_img": path_arr_img} 
+    return {"path_arr_img": None}
+
+
+
+
+
+
+
+
+
 @api_take_master.route("/config_master",methods=["POST"])
 def config_master():
     data = request.get_json()
@@ -239,10 +255,40 @@ def chose_product():
 #----------------------------------------------api_add_master------------------------------------------------------
 @api_add_master.route("/",methods=["POST"],strict_slashes=False)
 def api_add_master_tree():
-       main_pc.click_page_html = 6  #Ve lai main chinh 
-       data = request.get_json()
-       print(data)   
-       return jsonify({'status':"OKE"})
+    main_pc.click_page_html = 6  #Ve lai main chinh 
+    data = request.get_json()
+    print(data)   
+    func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
+    choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)# đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+    arr_type_id = manage_product.get_list_id_product()
+    data_strip = choose_master_index.strip() 
+    if data_strip in  arr_type_id:
+        print(f"gui data master co ten {choose_master_index}")
+        path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
+        arr_point = manage_product.return_data_list_point(data_strip) 
+        print(path_arr_img)
+        inf_product = manage_product.get_all_ids_and_names() 
+        return {"path_arr_img": path_arr_img,"arr_point":arr_point,"inf_product":inf_product} 
+    return {"path_arr_img": None,"arr_point":None,"inf_product":inf_product}
+
+
+        
+                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @api_add_master.route("/erase_master",methods=["POST"],strict_slashes=False)
 def erase_master():
        data = request.get_json()

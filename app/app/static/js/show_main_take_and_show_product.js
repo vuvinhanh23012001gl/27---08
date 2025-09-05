@@ -6,10 +6,6 @@ import {
   run_btn,
   add_product,
   out_app,
-  canvas_img_show,
-  ctx,
-  canvas_img_show_oke,
-  ctx_oke,
   coordinate,
   scroll_content,
   scroll_container,
@@ -32,12 +28,11 @@ import {
   setCurrentPanner,
   index_img_current,
   set_index_img_current,
+  set_Z_index_canvas_show,canvas_img_show,ctx,canvas_img_show_oke,ctx_oke
 } from "./show_main_status.js";
 // CONSTANT
 const SCROLL_STEP = 300;
 //
-
-
 let index_point_current = 0
 let flag_index_choose_last = 1 //giup gan gia tri lan dau cho index_choose_last
 let index_choose_last = null ; //
@@ -549,17 +544,69 @@ api_training.addEventListener("click", () => {
 
 
 headerMasterTake.addEventListener("click", () => {
-  console.log("current_panner",current_panner);
-  postData("api_take_master/master_take", { "status": "on" }).then(data => {
-    console.log("Master Take :" + data);
-  });
-  const take_master = document.getElementById("paner-take-master");
-  if (current_panner === take_master) return;
-  current_panner.classList.remove("active");
-  current_panner.style.zIndex = 1;
-  take_master.classList.add("active");
-  take_master.style.zIndex = 2;
-  setCurrentPanner(take_master);
+  set_Z_index_canvas_show(-1);
+    const take_master = document.getElementById("paner-take-master");
+    if (current_panner === take_master) return;
+    current_panner.classList.remove("active");
+    current_panner.style.zIndex = 1;
+    take_master.classList.add("active");
+    take_master.style.zIndex = 2;
+    setCurrentPanner(take_master);
+    console.log("current_panner",current_panner);
+    postData("api_take_master/master_take", { "status": "on" }).then(data => {
+            console.log("Master Take :" + data);
+            const imgList = data.path_arr_img; 
+            scroll_content.innerHTML = ""; // Xóa hết ảnh cũ trước khi thêm mới
+            console.log("Danh sách ảnh:", imgList);
+            imgList.forEach((imgPath, index) => {
+                index_point_current =  index; 
+                number_img_receive = number_img_receive + 1;
+
+                const div_create = document.createElement("div");
+                div_create.className = "div-index-img-mater";
+                const h_create = document.createElement("p");
+                h_create.innerText = `Ảnh master ${index}`;
+                h_create.className = "p-index-img-master";
+
+                const img = document.createElement("img");
+                img.src = imgPath;
+                img.alt = "Ảnh sản phẩm";
+                img.style.width = "200px";
+                img.style.margin = "10px";
+
+                div_create.appendChild(img);
+                div_create.appendChild(h_create);
+                scroll_content.appendChild(div_create);
+                div_create.addEventListener("click", () => {
+                    set_index_img_current(index);
+                    log.textContent = "";
+                    hidden_table_and_button(table_write_data,part_table_log);
+                    console.log("number_img_receive",number_img_receive);
+                    document.querySelectorAll(".div-index-img-mater").forEach(d => {
+                      d.style.border = "none";
+                    });
+                    div_create.style.border ="5px solid green";
+                    if(flag_index_choose_last==1){
+                      index_choose_last = index;  //cai dat index lan dau
+                      flag_index_choose_last = 0;
+                    }
+                    console.log("btn_accept_and_send" + index_point_current);   // index dem tu so 0
+                    console.log("Bạn đã nhấn vào index thứ " + index);   // index dem tu so 0
+                    next_page_img(index,index_choose_last);
+                    index_choose_last = index;
+                    canvas_img_show.width = 1328;
+                    canvas_img_show.height = 830;
+                    canvas_img_show_oke.width = 1328;
+                    canvas_img_show_oke.height = 830;
+                    const show_img = new Image();
+                    show_img.src = imgPath;
+                    show_img.onload = () => {
+                      ctx_oke.drawImage(show_img, 0, 0, 1328, 830);
+                    };
+                    redrawAll();
+                });
+          });
+      });
 });
 
 btn_left.addEventListener("click", () => {
@@ -579,60 +626,60 @@ canvas_img_show.addEventListener("dblclick", handleCanvasDoubleClick);
 // ==========================
 // 6. Init (DOMContentLoaded)
 // ==========================
-document.addEventListener("DOMContentLoaded", () => {
-  const dataImg = scroll_content.dataset.img;
-  const imgList = JSON.parse(dataImg);
-  console.log("Danh sách ảnh:", imgList);
+// document.addEventListener("DOMContentLoaded", () => {
+//   const dataImg = scroll_content.dataset.img;
+//   const imgList = JSON.parse(dataImg);
+//   console.log("Danh sách ảnh:", imgList);
 
-  imgList.forEach((imgPath, index) => {
-    index_point_current =  index; 
-    number_img_receive = number_img_receive + 1;
-    const div_create = document.createElement("div");
-    div_create.className = "div-index-img-mater";
+//   imgList.forEach((imgPath, index) => {
+//     index_point_current =  index; 
+//     number_img_receive = number_img_receive + 1;
+//     const div_create = document.createElement("div");
+//     div_create.className = "div-index-img-mater";
 
-    const h_create = document.createElement("p");
-    h_create.innerText = `Ảnh master ${index}`;
-    h_create.className = "p-index-img-master";
+//     const h_create = document.createElement("p");
+//     h_create.innerText = `Ảnh master ${index}`;
+//     h_create.className = "p-index-img-master";
 
-    const img = document.createElement("img");
-    img.src = imgPath;
-    img.alt = "Ảnh sản phẩm";
-    img.style.width = "200px";
-    img.style.margin = "10px";
+//     const img = document.createElement("img");
+//     img.src = imgPath;
+//     img.alt = "Ảnh sản phẩm";
+//     img.style.width = "200px";
+//     img.style.margin = "10px";
 
-    div_create.appendChild(img);
-    div_create.appendChild(h_create);
-    scroll_content.appendChild(div_create);
-    div_create.addEventListener("click", () => {
-      set_index_img_current(index);
-      log.textContent = "";
-      hidden_table_and_button(table_write_data,part_table_log);
-      console.log("number_img_receive",number_img_receive);
-      document.querySelectorAll(".div-index-img-mater").forEach(d => {
-        d.style.border = "none";
-      });
-      div_create.style.border ="5px solid green";
-      if(flag_index_choose_last==1){
-        index_choose_last = index;  //cai dat index lan dau
-        flag_index_choose_last = 0;
-      }
-       console.log("btn_accept_and_send" + index_point_current);   // index dem tu so 0
-      console.log("Bạn đã nhấn vào index thứ " + index);   // index dem tu so 0
-      next_page_img(index,index_choose_last);
-      index_choose_last = index;
-      canvas_img_show.width = 1328;
-      canvas_img_show.height = 830;
-      canvas_img_show_oke.width = 1328;
-      canvas_img_show_oke.height = 830;
-      const show_img = new Image();
-      show_img.src = imgPath;
-      show_img.onload = () => {
-        ctx_oke.drawImage(show_img, 0, 0, 1328, 830);
-      };
-      redrawAll();
-    });
-  });
-});
+//     div_create.appendChild(img);
+//     div_create.appendChild(h_create);
+//     scroll_content.appendChild(div_create);
+//     div_create.addEventListener("click", () => {
+//       set_index_img_current(index);
+//       log.textContent = "";
+//       hidden_table_and_button(table_write_data,part_table_log);
+//       console.log("number_img_receive",number_img_receive);
+//       document.querySelectorAll(".div-index-img-mater").forEach(d => {
+//         d.style.border = "none";
+//       });
+//       div_create.style.border ="5px solid green";
+//       if(flag_index_choose_last==1){
+//         index_choose_last = index;  //cai dat index lan dau
+//         flag_index_choose_last = 0;
+//       }
+//        console.log("btn_accept_and_send" + index_point_current);   // index dem tu so 0
+//       console.log("Bạn đã nhấn vào index thứ " + index);   // index dem tu so 0
+//       next_page_img(index,index_choose_last);
+//       index_choose_last = index;
+//       canvas_img_show.width = 1328;
+//       canvas_img_show.height = 830;
+//       canvas_img_show_oke.width = 1328;
+//       canvas_img_show_oke.height = 830;
+//       const show_img = new Image();
+//       show_img.src = imgPath;
+//       show_img.onload = () => {
+//         ctx_oke.drawImage(show_img, 0, 0, 1328, 830);
+//       };
+//       redrawAll();
+//     });
+//   });
+// });
 function delete_page_img(index) {
     if (shapes_all.hasOwnProperty(`${index}`)) {
         delete shapes_all[`${index}`]; // Xóa key trong dict
@@ -1341,40 +1388,6 @@ function addShape(shape) {
   shapes.push(shape);
   return true;
 }
-function isShapeInside(a, b) {
-  if (a.type === "rect" && b.type === "rect") {
-    return a.x1 >= b.x1 && a.x2 <= b.x2 && a.y1 >= b.y1 && a.y2 <= b.y2;
-  }
-  if (a.type === "circle" && b.type === "circle") {
-    const dx = a.cx - b.cx;
-    const dy = a.cy - b.cy;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    return dist + a.r <= b.r;
-  }
-  if (a.type === "rect" && b.type === "circle") {
-    const corners = [
-      {x: a.x1, y: a.y1},
-      {x: a.x2, y: a.y1},
-      {x: a.x2, y: a.y2},
-      {x: a.x1, y: a.y2}
-    ];
-    return corners.every(pt => {
-      const dx = pt.x - b.cx;
-      const dy = pt.y - b.cy;
-      return Math.sqrt(dx*dx + dy*dy) <= b.r;
-    });
-  }
-  if (a.type === "circle" && b.type === "rect") {
-    return (
-      a.cx - a.r >= Math.min(b.x1, b.x2) &&
-      a.cx + a.r <= Math.max(b.x1, b.x2) &&
-      a.cy - a.r >= Math.min(b.y1, b.y2) &&
-      a.cy + a.r <= Math.max(b.y1, b.y2)
-    );
-  }
-  return false;
-}
-
 run_btn.addEventListener('click',()=>{
       fetch('/api_run_application/run_application')
       .then(response => response.json())

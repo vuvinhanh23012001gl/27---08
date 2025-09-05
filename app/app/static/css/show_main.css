@@ -547,6 +547,13 @@ button.active{
     transform: translate(-50%, -50%);
     z-index: 1; /* nằm trên */
   }
+  #canvas-img-show-add-master{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1; /* nằm trên */
+  }
 .table {
   width: 100%;
   border-collapse: separate; /* Cho phép bo góc */
