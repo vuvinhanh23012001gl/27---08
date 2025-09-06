@@ -323,7 +323,7 @@ def run_point():
     brightness = data.get('brightness')
     data_send = f"cmd:{x},{y},{z},{brightness}"
     print(f'x ={x}, y = {y}, z = {z} brightness ={brightness}')
-    queue_rx_web_api.put(data_send)
+    # queue_rx_web_api.put(data_send)   //Can than Request nhieu de bi day
     return jsonify({"message": "Ok"})
 
 @api_new_model.route("/run_all_points", methods=["POST"])

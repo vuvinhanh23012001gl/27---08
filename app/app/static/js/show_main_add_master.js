@@ -1,13 +1,16 @@
 import {
     postData,headerMasterAdd,current_panner,setCurrentPanner,
-    index_img_current,scroll_content,set_Z_index_canvas_show,canvas_show,ctx_show,ctx
+    index_img_current,scroll_content,set_Z_index_canvas_show,canvas_show,ctx_show,ctx,
+    log
 } from "./show_main_status.js";
 
 const logSocket = io("/log");
 const erase_master = document.getElementById("erase-master");
 const btn_add_master = document.getElementById("btn-add-master");
 const log_master =  document.getElementById("log_add_master");
+const anonymous =  document.getElementById("anonymous");
 
+let isSending = false;
 let Max_X = 0;
 let Max_Y = 0;
 let Max_Z = 0;
@@ -38,9 +41,59 @@ btn_add_master.addEventListener("click",function(){
     div_create.addEventListener("click",function(){
       console.log("Đã nhấn vào ảnh master mới để thêm master");
       const index = Array.from(scroll_content.children).indexOf(this);
-      console.log("Ảnh master đang chỉ tới là",index);
+      console.log("Ảnh master đang chỉ tới là 2",index);
       //Tao ra cac nut nhan
+      create_table_controler(index);
       
+
+
+                      const input_x = document.getElementById(`input-x-${index}`);input_x.type = "number";
+                      const input_y = document.getElementById(`input-y-${index}`);input_y.type = "number";
+                      const input_z = document.getElementById(`input-z-${index}`);input_z.type = "number";
+                      const input_k = document.getElementById(`input-k-${index}`);input_k.type = "number";
+
+                      const btn_increase_x = document.getElementById(`btn-inc-x-${index}`);
+                      const btn_decrease_x = document.getElementById(`btn-dec-x-${index}`);
+                      const btn_increase_y = document.getElementById(`btn-inc-y-${index}`);
+                      const btn_decrease_y = document.getElementById(`btn-dec-y-${index}`);
+                      const btn_increase_z = document.getElementById(`btn-inc-z-${index}`);
+                      const btn_decrease_z = document.getElementById(`btn-dec-z-${index}`);
+                      const btn_increase_k = document.getElementById(`btn-inc-k-${index}`);
+                      const btn_decrease_k = document.getElementById(`btn-dec-k-${index}`);
+
+                      const btn_run          = document.getElementById(`btn-run-${index}`);
+                      const btn_capture      = document.getElementById(`btn-capture-${index}`);
+                      const btn_run_all      = document.getElementById(`btn-run-all-${index}`);
+                      const btn_erase_master = document.getElementById(`btn-erase-master-${index}`);
+
+                     
+          
+                       
+                      // // btn_increase_x.addEventListener("click",()=>HandleClickBtnIncrease_X(input_x,input_x.value,Max_X));
+                      // btn_decrease_x.addEventListener("click",()=>HandleClickBtnDecrease_X(input_x,input_x.value,Max_X));
+
+                      // btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,input_y.value,Max_Y));
+                      // btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,input_y.value,Max_Y));
+
+                      // btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,input_z.value,Max_Z));
+                      // btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,input_z.value,Max_Z));
+                      
+                      // btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,input_k.value,Max_K));
+                      // btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,input_k.value,Max_K));
+
+                      // btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
+                      // btn_capture.addEventListener("click",()=>HandleClickBtnCapture);
+                      // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
+                      // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -79,7 +132,8 @@ headerMasterAdd.addEventListener("click",function(){
             const imgList = data?.path_arr_img;
             const list_point  = data?.arr_point;
             create_table_product(data)
-            // if (!imgList || imgList.length === 0) {log_master.innerHTML = "Hệ thống chưa có ảnh master nào";console.log("Hệ thống chưa có ảnh master nào");return}
+            //if (!imgList || imgList.length === 0) {log_master.innerHTML = "Hệ thống chưa có ảnh master nào";console.log("Hệ thống chưa có ảnh master nào");return}
+            
             console.log("Danh sách điểm:", list_point);
             console.log("Danh sách ảnh:", imgList);
             imgList.forEach((imgPath, index) => {
@@ -99,7 +153,7 @@ headerMasterAdd.addEventListener("click",function(){
                 div_create.appendChild(h_create);
                 scroll_content.appendChild(div_create);
 
-                div_create.addEventListener("click", () => {
+                div_create.addEventListener("click",function(){
                     ctx.clearRect(0, 0, 1328, 830);
                               const show_img = new Image();
                               canvas_show.width = 1328;
@@ -108,6 +162,75 @@ headerMasterAdd.addEventListener("click",function(){
                                         show_img.onload = () => {
                                           ctx_show.drawImage(show_img, 0, 0, 1328, 830);
                                         };
+                      const index = Array.from(scroll_content.children).indexOf(this);
+                      console.log("Ảnh master đang chỉ tới là 1",index);
+
+                      
+                      create_table_controler(index);
+                      
+
+                      const input_x = document.getElementById(`input-x-${index}`);input_x.type = "number";
+                      const input_y = document.getElementById(`input-y-${index}`);input_y.type = "number";
+                      const input_z = document.getElementById(`input-z-${index}`);input_z.type = "number";
+                      const input_k = document.getElementById(`input-k-${index}`);input_k.type = "number";
+
+                      const btn_increase_x = document.getElementById(`btn-inc-x-${index}`);
+                      const btn_decrease_x = document.getElementById(`btn-dec-x-${index}`);
+                      const btn_increase_y = document.getElementById(`btn-inc-y-${index}`);
+                      const btn_decrease_y = document.getElementById(`btn-dec-y-${index}`);
+                      const btn_increase_z = document.getElementById(`btn-inc-z-${index}`);
+                      const btn_decrease_z = document.getElementById(`btn-dec-z-${index}`);
+                      const btn_increase_k = document.getElementById(`btn-inc-k-${index}`);
+                      const btn_decrease_k = document.getElementById(`btn-dec-k-${index}`);
+
+                      const btn_run          = document.getElementById(`btn-run-${index}`);
+                      const btn_capture      = document.getElementById(`btn-capture-${index}`);
+                      const btn_run_all      = document.getElementById(`btn-run-all-${index}`);
+                      const btn_erase_master = document.getElementById(`btn-erase-master-${index}`);
+
+                     
+                      input_x.value = list_point[index].x;
+                      input_y.value = list_point[index].y;
+                      input_z.value = list_point[index].z;
+                      input_k.value = list_point[index].brightness;
+                 
+                      btn_increase_x.addEventListener("click",()=>HandleClickBtnIncrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_x.addEventListener("click",()=>HandleClickBtnDecrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
+
+                      btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
+
+                      btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,input_z.value,Max_Z));
+                      btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,input_z.value,Max_Z));
+                      
+                      btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,input_k.value,Max_K));
+                      btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,input_k.value,Max_K));
+
+                      btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture);
+                      btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
+                      btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
+
+                    //  console.log("list_point",list_point);
+                    //  console.log("list_point[index].x",list_point[index].x);
+                    //  console.log("list_point[index].y",list_point[index].y);
+                    //  console.log("list_point[index].z",list_point[index].z);
+                    //  console.log("list_point[index].brightness",list_point[index].brightness);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 });
 
 
@@ -122,7 +245,304 @@ headerMasterAdd.addEventListener("click",function(){
     setCurrentPanner(add_master);
 });
 
+function HandleClickBtnIncrease_X(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+       let status_check = CheckData(element,"X",input_x_value,max_element);
+       if(status_check){
+          console.log("input_x_value", input_x_value);
+         element.value = parseInt(input_x_value) + 1;
+         HandleClickBtnRun(element.value,input_y_value,input_z_value,input_k_value);
+       }
 
+}
+function HandleClickBtnDecrease_X(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value) {
+    let new_value = parseInt(input_x_value) - 1;
+    let status_check = CheckData(element,"X", new_value, max_element);
+    if (status_check) {
+        element.value = new_value; 
+        HandleClickBtnRun(element.value,input_y_value,input_z_value,input_k_value);
+    } else {
+        element.value = 0; 
+    }
+}                           
+function HandleClickBtnIncrease_Y(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+       let status_check = CheckData(element,"Y",input_y_value,max_element);
+       if(status_check){
+         element.value = parseInt(input_y_value) + 1;
+          HandleClickBtnRun(input_x_value,element.value,input_z_value,input_k_value);
+       }
+}
+function HandleClickBtnDecrease_Y(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+    let new_value = parseInt(input_y_value) - 1;
+    let status_check = CheckData(element,"Y", new_value, max_element);
+    if (status_check) {
+        element.value = new_value; 
+        HandleClickBtnRun(input_x_value,element.value,input_z_value,input_k_value);
+    } else {
+        element.value = 0; 
+    }
+}
+function HandleClickBtnIncrease_Z(element,data,max_element){
+    element.value = parseInt(data) + 1;
+        let status_check = CheckData(element,"Z",data,max_element);
+        if(status_check){
+          element.value = parseInt(data) + 1;
+        }
+}
+function HandleClickBtnDecrease_Z(element,data,max_element){
+  console.log("VAO GIAM Z");
+    let new_value = parseInt(data) - 1;
+    let status_check = CheckData(element,"Z", new_value, max_element);
+    if (status_check) {
+        element.value = new_value; 
+    } else {
+        element.value = 0; 
+    }
+
+}
+function HandleClickBtnIncrease_K(element,data,max_element){
+    element.value = parseInt(data) + 1;
+        let status_check = CheckData(element,"K",data,max_element);
+        if(status_check){
+          element.value = parseInt(data) + 1;
+    }
+}
+function HandleClickBtnDecrease_K(element,data,max_element){
+    let new_value = parseInt(data) - 1;
+    let status_check = CheckData(element,"K", new_value, max_element);
+    if (status_check) {
+        element.value = new_value; 
+    } else {
+        element.value = 0; 
+    }
+}
+function HandleClickBtnRun(input_x_value,input_y_value,input_z_value,input_k_value){
+  let status_check = validatePoint(input_x_value,input_y_value,input_z_value,input_k_value,Max_X,Max_Y,Max_Z,Max_K);
+  if(!status_check){
+    console.log("Dữ liệu không hợp lệ");
+    return;
+  }
+  console.log("✅Dữ liệu hợp lệ");
+  log_master.innerHTML = "✅Dữ liệu hợp lệ";
+  sendPoint(input_x_value,input_y_value,input_z_value,input_k_value);
+
+
+}
+function HandleClickBtnCapture(){
+
+}
+function HandleClickBtnRunAll(){
+
+}
+function HandleClickBtnEraseMaster(){
+
+}
+
+
+
+async function sendPoint(x, y, z, brightness) {
+  if (isSending) {
+    console.warn("⚠️ Đang gửi dữ liệu, vui lòng đợi...");
+    return null; // bỏ qua nếu đang gửi
+  }
+
+  isSending = true; // đánh dấu đang gửi
+
+  try {
+    const response = await fetch(`/api_new_model/run_point`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ x, y, z, brightness })
+    });
+
+    const data = await response.json();
+
+    console.log("Trạng thái:", data.message);
+    console.log(`✅ Đã gửi điểm đến thiết bị. Phản hồi: ${data.message}`);
+
+    return data; // trả về để hàm khác dùng tiếp
+  } catch (error) {
+    console.error('Lỗi khi gửi điểm:', error);
+    alert('❌ Gửi dữ liệu thất bại.');
+    return null;
+  } finally {
+    isSending = false; // reset cờ, cho phép gửi tiếp
+  }
+}
+
+function CheckData(element,str_name, data, value_max) {
+    if (str_name == null || data == null || value_max == null ||element.value == ""||element.value == null ) {
+        console.log(`⚠️ Dữ liệu "${str_name}" không có giá trị`);
+        log_master.innerHTML = `⚠️ Dữ liệu "${str_name}" không có giá trị`;
+        element.value = 0;
+        return false;
+    }
+
+    if (data < 0) {
+        console.log(`❌ Giá trị "${str_name}" phải lớn hơn hoặc bằng 0`);
+        log_master.innerHTML = `❌ Giá trị "${str_name}" phải lớn hơn hoặc bằng 0`;
+        element.value = 0;
+        console.log("vao day");
+        return false;
+    }
+
+    if (data >= value_max) {
+        console.log(`❌ Giá trị "${str_name}" phải nhỏ hơn hoặc bằng ${value_max}`);
+        log_master.innerHTML = `❌ Giá trị "${str_name}" phải nhỏ hơn hoặc bằng ${value_max}`;
+         element.value = value_max;
+        return false;
+    }
+    console.log("data",data);
+    console.log(`✅ Giá trị ${str_name} hợp lệ`);
+    log_master.innerHTML = `✅ Giá trị ${str_name} hợp lệ`;
+    return true;
+}
+// Hàm kiểm tra một giá trị có hợp lệ hay không
+function isInvalid(value) {
+  let num = Number(value);
+
+  return (
+    value === null ||        // null
+    value === undefined ||   // undefined
+    value === "" ||          // rỗng
+    isNaN(num) ||            // không phải số
+    !Number.isInteger(num)   // không phải số nguyên
+  );
+}
+
+// Hàm validate toàn bộ điểm
+function validatePoint(x, y, z, brightness, Limit_x, Limit_y, Limit_z, Limit_k) {
+    console.log("Dữ liệu trước khi chạy",x, y, z, brightness, Limit_x, Limit_y, Limit_z, Limit_k);
+    if (
+      isInvalid(x) || 
+      isInvalid(y) || 
+      isInvalid(z) || 
+      isInvalid(brightness) ||
+      isInvalid(Limit_x) ||
+      isInvalid(Limit_y) ||
+      isInvalid(Limit_z) ||
+      isInvalid(Limit_k)
+    ) {
+      log_master.innerHTML = `❌ Các giá trị X, Y, Z, K và giới hạn phải là số nguyên hợp lệ và không được để trống`;
+      console.log(`❌ Các giá trị X, Y, Z, K và giới hạn phải là số nguyên hợp lệ và không được để trống`);
+      return false;  // trả về false thay vì string
+    }
+
+    // Ép kiểu int sau khi đã check hợp lệ
+    x = parseInt(x);
+    y = parseInt(y);
+    z = parseInt(z);
+    brightness = parseInt(brightness);
+    Limit_x = parseInt(Limit_x);
+    Limit_y = parseInt(Limit_y);
+    Limit_z = parseInt(Limit_z);
+    Limit_k = parseInt(Limit_k);
+
+    // Các điều kiện giới hạn
+    if (x < 0 || y < 0 || z < 0 || brightness < 0) {
+      log_master.innerHTML = `❌ Giá trị X, Y, Z, K phải lớn hơn hoặc bằng 0`;
+      console.log(`❌ Giá trị X, Y, Z, K phải lớn hơn hoặc bằng 0`);
+      return false;
+    }
+    if (x > Limit_x) {
+       log_master.innerHTML = `❌ Giá trị X phải nhỏ hơn hoặc bằng ${Limit_x}`
+      console.log(`❌ Giá trị X phải nhỏ hơn hoặc bằng ${Limit_x}`);
+      return false;
+    }
+    if (y > Limit_y) {
+      log_master.innerHTML = `❌ Giá trị Y phải nhỏ hơn hoặc bằng ${Limit_y}`
+      console.log(`❌ Giá trị Y phải nhỏ hơn hoặc bằng ${Limit_y}`);
+      return false;
+    }
+    if (z > Limit_z) {
+       log_master.innerHTML = `❌ Giá trị Z phải nhỏ hơn hoặc bằng ${Limit_z}`;
+      console.log(`❌ Giá trị Z phải nhỏ hơn hoặc bằng ${Limit_z}`);
+      return false;
+    }
+    if (brightness > Limit_k) {
+      log_master.innerHTML = `❌ Giá trị Z phải nhỏ hơn hoặc bằng ${Limit_z}`;
+      console.log(`❌ Giá trị ánh sáng (K) phải nhỏ hơn hoặc bằng ${Limit_k}`);
+      return false;
+    }
+    console.log("✅ Dữ liệu hợp lệ");
+    return true; // hợp lệ
+}
+function create_table_controler(index){
+                          // Thêm các input
+                          anonymous.innerHTML = "";
+      anonymous.appendChild(createInputRow("Nhập X", "Nhập X > 0", `input-x-${index}`));
+      anonymous.appendChild(createInputRow("Nhập Y", "Nhập Y > 0", `input-y-${index}`));
+      anonymous.appendChild(createInputRow("Nhập Z", "Nhập Z > 0", `input-z-${index}`));
+      anonymous.appendChild(createInputRow("Mức sáng", "Nhập độ sáng > 0",`input-k-${index}`));
+
+      anonymous.appendChild(createButtonRow([
+          {id: `btn-inc-x-${index}`, icon: "../static/img/add1.png", alt: "Tăng X", text: "Tăng X"},
+          {id: `btn-dec-x-${index}`, icon: "../static/img/minus.png", alt: "Giảm X", text: "Giảm X"}
+      ]));
+
+      anonymous.appendChild(createButtonRow([
+          {id: `btn-inc-y-${index}`, icon: "../static/img/add1.png", alt: "Tăng Y", text: "Tăng Y"},
+          {id: `btn-dec-y-${index}`, icon: "../static/img/minus.png", alt: "Giảm Y", text: "Giảm Y"}
+      ]));
+
+      anonymous.appendChild(createButtonRow([
+          {id: `btn-inc-z-${index}`, icon: "../static/img/add1.png", alt: "Tăng Z", text: "Tăng Z"},
+          {id: `btn-dec-z-${index}`, icon: "../static/img/minus.png", alt: "Giảm Z", text: "Giảm Z"}
+      ]));
+      anonymous.appendChild(createButtonRow([
+          {id: `btn-inc-k-${index}`, icon: "../static/img/add1.png", alt: "Tăng ánh sáng", text: "Tăng ánh sáng"},
+          {id: `btn-dec-k-${index}`, icon: "../static/img/minus.png", alt: "Giảm ánh sáng", text: "Giảm ánh sáng"}
+      ]));
+
+      anonymous.appendChild(createButtonRow([
+          {id: `btn-run-${index}`, icon: "../static/img/check.png", alt: "Chạy", text: "Chạy"},
+          {id: `btn-capture-${index}`, icon: "../static/img/camera.png", alt: "Chụp", text: "Chụp"},
+          {id: `btn-run-all-${index}`, icon: "../static/img/running.png", alt: "Chạy hết", text: "Chạy hết"},
+          {id: `btn-erase-master-${index}`, icon: "../static/img/running.png", alt: "Xóa Master", text: "Xóa Master"}
+      ]));                  
+      // Hiện div anonymous
+      anonymous.style.display = "block";
+}
+
+function createInputRow(labelText, placeholder, id = null) {
+    const div = document.createElement("div");
+    div.className = "Alight-items-x";
+
+    const label = document.createElement("label");
+    label.innerText = labelText;
+    if (id) label.setAttribute("for", id);
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.placeholder = placeholder;
+    if (id) input.id = id;   // ✅ gán id cho input
+
+    div.appendChild(label);
+    div.appendChild(input);
+    return div;
+}
+
+function createButtonRow(buttons) {
+    const div = document.createElement("div");
+    div.className = "Alight-items-x";
+
+    buttons.forEach(btn => {
+        const button = document.createElement("button");
+        button.className = "btn";
+        if (btn.id) button.id = btn.id;   // ✅ gán id cho button
+
+        const img = document.createElement("img");
+        img.src = btn.icon;
+        img.alt = btn.alt;
+
+        button.appendChild(img);
+        button.append(` ${btn.text}`);
+        div.appendChild(button);
+    });
+
+    return div;
+}
 
 function create_table_product(data) {
        const tbody = document.querySelector(".product-table tbody");
@@ -243,28 +663,6 @@ function create_table_product(data) {
   
 
 
-
-function validatePoint(x, y, z, brightness, Limit_x, Limit_y, Limit_z, Limit_k) {
-  if (isNaN(x) || isNaN(y) || isNaN(z) || isNaN(brightness)) {
-    return `❌ Các giá trị X, Y, Z, K phải là số hợp lệ và không được để trống`;
-  }
-  if (x < 0 || y < 0 || z < 0 || brightness < 0) {
-    return `❌ Giá trị X, Y, Z, K phải lớn hơn hoặc bằng 0`;
-  }
-  if (x > Limit_x) {
-    return `❌ Giá trị X phải nhỏ hơn hoặc bằng ${Limit_x}`;
-  }
-  if (y > Limit_y) {
-    return `❌ Giá trị Y phải nhỏ hơn hoặc bằng ${Limit_y}`;
-  }
-  if (z > Limit_z) {
-    return `❌Giá trị Z phải nhỏ hơn hoặc bằng ${Limit_z}`;
-  }
-  if (brightness > Limit_k) {
-    return `❌Giá trị ánh sáng (K) phải nhỏ hơn hoặc bằng ${Limit_k}`;
-  }
-  return null; // không lỗi
-}
 
 
 function handleStart(index,inputs) {
