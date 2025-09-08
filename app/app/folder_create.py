@@ -2,6 +2,7 @@ from typing import Dict,Any
 import json
 import os
 import shutil
+from pathlib import Path
 class Create:
     def __init__(self):
         pass
@@ -112,3 +113,26 @@ class Create:
 
         print(f"Không tìm thấy file '{filename}' trong '{folder_path}'")
         return None
+    def create_file_in_folder(self, folder_path: str, file_name: str) -> Path | bool:
+        """
+        Tạo một file mới trong folder_path với tên file_name.
+        - Nếu file chưa tồn tại: tạo file, trả về Path.
+        - Nếu file đã tồn tại: trả về False.
+        - Nếu không tạo được file: trả về false.
+        """
+        try:
+            folder = Path(folder_path)
+            folder.mkdir(parents=True, exist_ok=True)  # đảm bảo folder tồn tại
+
+            file_path = folder / file_name
+            if not file_path.exists():
+                file_path.touch()  # tạo file rỗng
+                print(f"Đã tạo file: {file_path}")
+                return file_path
+            else:
+                print(f"File đã tồn tại: {file_path}")
+                return False
+
+        except Exception as e:
+            print(f"❌ Không thể tạo file: {e}")
+            return False

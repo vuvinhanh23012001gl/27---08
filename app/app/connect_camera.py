@@ -152,18 +152,25 @@ class BaslerCamera:
                             
                     if self.queue.qsize() > 0:
                         data = self.queue.get()
-                        product_name = data["productname"]
-                        index  = data["index"]
-                        lengt_index = data["lengt_index"]
-                        training  =  data["training"]
-                        if training == 1:
+                        product_name = data.get("productname", -1)
+                        index        = data.get("index", -1)
+                        lengt_index  = data.get("lengt_index", -1)
+                        training     = data.get("training", -1)
+                        name_capture  = data.get("name_capture", -1)
+                        #training == 1 chup anh 
+                        #training == 2 traing lai
+                        #training == 3 chup anh
+                        if training == 1 and product_name !=-1  and index!=-1 and  lengt_index != -1:
                             print("Lưu ảnh Vào File Training")
                             self.capture_image_train(product_name,index,lengt_index,"Training")
-                        if training == 2:
+                        if training == 2  and product_name !=-1  and index!=-1 and  lengt_index != -1:
                             self.capture_image_train(product_name,index,lengt_index,"Retraining")
                         if training == 3:
-                            img_one_frame = self.capture_one_frame()
-                            return img_one_frame
+                            if  name_capture != -1:
+                                print("Đang chụp ảnh ")
+                                print("name_capture",name_capture)
+                                img_one_frame = self.capture_one_frame_path(name_capture)
+                            # return img_one_frame
                     self.last_emit_time = now
             time.sleep(0.01)
             grabResult.Release()
@@ -247,6 +254,55 @@ class BaslerCamera:
                 except Exception as e:
                     print(f"⚠️ Lỗi khi lấy ảnh từ camera: {e}")
                     traceback.print_exc()
+    def capture_one_frame_path(self, save_path: str = None):
+        """
+        Chụp một ảnh từ camera và trả về frame (numpy array).
+        Nếu save_path được cung cấp, sẽ lưu ảnh vào đường dẫn đó.
+        Trả về frame nếu thành công, None nếu lỗi.
+        """
+        with self.lock:
+            if self.camera is None or not self.camera.IsOpen():
+                print("❌ Camera chưa khởi tạo hoặc không mở được.")
+                return None
+
+            if not self.camera.IsGrabbing():
+                self.camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
+
+            try:
+                grabResult = self.camera.RetrieveResult(
+                    BaslerCamera.SET_TIME_TAKE_IMG,
+                    pylon.TimeoutHandling_ThrowException
+                )
+                if grabResult.GrabSucceeded():
+                    image_cv = self.converter.Convert(grabResult)
+                    frame = image_cv.GetArray()
+                    grabResult.Release()
+
+                    if frame is None or frame.size == 0:
+                        print("❌ Ảnh rỗng, không lấy được frame.")
+                        return None
+                    # Nếu có đường dẫn lưu, lưu ảnh ngay
+                    if save_path:
+                        try:
+                            ok = cv2.imwrite(save_path, frame)
+                            if ok:
+                                print(f"📸 Đã lưu ảnh: {save_path}")
+                            else:
+                                print(f"❌ Lưu ảnh thất bại: {save_path}")
+                        except Exception as e:
+                            print(f"❌ Lỗi khi lưu ảnh: {e}")
+
+                    return frame  # trả về frame numpy array
+                else:
+                    print("❌ Lỗi khi chụp ảnh:", grabResult.ErrorCode, grabResult.ErrorDescription)
+                    grabResult.Release()
+                    return None
+
+            except Exception as e:
+                print(f"⚠️ Lỗi khi lấy ảnh từ camera: {e}")
+                traceback.print_exc()
+                return None
+            
     def capture_one_frame(self):
         """
         Chụp một ảnh từ camera và trả về frame (numpy array).

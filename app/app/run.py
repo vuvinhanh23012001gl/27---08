@@ -87,28 +87,29 @@ def stream_logs():
 @main_html.route("/")
 def show_main():
     """Là hàm hiển thị giao diện chính trên Html"""
-    # func.create_choose_master(NAME_FILE_CHOOSE_MASTER) #tạo file choose_master nếu tạo rồi thì thôi
-    # choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)#đọc lại file choose master cũ xem lần trước  người dùng chọn gì
-    # #------------------------------------------------ Thay the bang file kia nha
-    # # choose_master_index =  choose_master_index.strip()
-    # # test = manage_product.find_by_id(choose_master_index)
-    # # print("test",test)
-    # # if(test == -1):
-    # #     print("Tim khong thanh cong")
-    # # else:
-    # #     print("Tim thanh cong")
-    # # check_shape.check_shapes()
-    # #------------------------------------------------------------
-    # arr_type_id = manage_product.get_list_id_product()
-    # # print("arr_type_id :",arr_type_id)
-    # # print("choose_master_index :",choose_master_index)
-    # main_pc.click_page_html = 1  # thong bao dang o trang web chinh
-    # data_strip = choose_master_index.strip() 
-    # if data_strip in  arr_type_id:
-    #     print(f"gui data master co ten {choose_master_index}")
-    #     path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
-    #     print(path_arr_img)
-    #     return render_template("show_main.html",path_arr_img = path_arr_img)
+    func.create_choose_master(NAME_FILE_CHOOSE_MASTER) #tạo file choose_master nếu tạo rồi thì thôi
+    choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)#đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+    #------------------------------------------------ Thay the bang file kia nha
+    # choose_master_index =  choose_master_index.strip()
+    # test = manage_product.find_by_id(choose_master_index)
+    # print("test",test)
+    # if(test == -1):
+    #     print("Tim khong thanh cong")
+    # else:
+    #     print("Tim thanh cong")
+    # check_shape.check_shapes()
+    #------------------------------------------------------------
+    arr_type_id = manage_product.get_list_id_product()
+    # print("arr_type_id :",arr_type_id)
+    # print("choose_master_index :",choose_master_index)
+    main_pc.click_page_html = 1  # thong bao dang o trang web chinh
+    data_strip = choose_master_index.strip() 
+    threading.Thread(target = stream_frames,daemon=True).start()
+    if data_strip in  arr_type_id:
+        print(f"gui data master co ten {choose_master_index}")
+        path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
+        print(path_arr_img)
+        return render_template("show_main.html",path_arr_img = path_arr_img)
     return render_template("show_main.html",path_arr_img = None)
 @main_html.route('/out_app', methods=['GET'])
 def out_app():
@@ -279,6 +280,26 @@ def api_add_master_tree():
 
 
 
+@api_add_master.route("/capture_master",methods=["POST"],strict_slashes=False)
+def capture_master():
+       data = request.get_json()
+       index_capture = data.get("index",-1)
+       func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
+       choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)# đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+       arr_type_id = manage_product.get_list_id_product()
+       data_strip = choose_master_index.strip() 
+       if data_strip in  arr_type_id: 
+            path = manage_product.create_file_and_path_img_master(data_strip,f"img_{index_capture}.png")
+            print(path)
+            queue_accept_capture.put_nowait({"training":3,"name_capture":path})
+            # data = queue_accept_capture.get()
+            # print(data)
+           
+         
+
+
+      
+       return jsonify({'status':"200OK"})
 
 
 
@@ -323,7 +344,7 @@ def run_point():
     brightness = data.get('brightness')
     data_send = f"cmd:{x},{y},{z},{brightness}"
     print(f'x ={x}, y = {y}, z = {z} brightness ={brightness}')
-    # queue_rx_web_api.put(data_send)   //Can than Request nhieu de bi day
+    queue_rx_web_api.put(data_send)  # //Can than Request nhieu de bi day
     return jsonify({"message": "Ok"})
 
 @api_new_model.route("/run_all_points", methods=["POST"])
@@ -371,7 +392,6 @@ def submit():
     return "✅ Đã nhận dữ liệu"
 @api_new_model.route("/training-model")
 def take_photo_trainning_model():
-    threading.Thread(target = stream_frames,daemon=True).start()
     func.clear_queue(queue_rx_web_api)   #rst bufff nhan
     main_pc.click_page_html = 2           #Training model
     return render_template("take_photo.html")

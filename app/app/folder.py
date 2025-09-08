@@ -36,4 +36,17 @@ class FolderCreator:
         # print(f"📁 Đã tạo thư mục: {subfolder_path}")
         return subfolder_path
 
- 
+    def create_file(self, folder_name: str, file_name: str, content: str = ""):
+        """
+        Tạo file trong một thư mục con (folder_name) nằm trong base_path.
+        Nếu thư mục chưa có sẽ được tạo. Nội dung mặc định là rỗng.
+        """
+        folder_path = self.create_subfolder(folder_name)
+        file_path = folder_path / file_name
+        if not file_path.exists():
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            print(f"✅ Đã tạo file: {file_path}")
+        else:
+            print(f"⚠️ File đã tồn tại: {file_path}")
+        return file_path

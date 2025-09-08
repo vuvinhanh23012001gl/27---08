@@ -1,7 +1,7 @@
 import {
     postData,headerMasterAdd,current_panner,setCurrentPanner,
-    index_img_current,scroll_content,set_Z_index_canvas_show,canvas_show,ctx_show,ctx,
-    log
+    index_img_current,scroll_content,set_Z_index_canvas_show,canvas_show,ctx_show,ctx,videoSocket,log
+    
 } from "./show_main_status.js";
 
 const logSocket = io("/log");
@@ -10,6 +10,8 @@ const btn_add_master = document.getElementById("btn-add-master");
 const log_master =  document.getElementById("log_add_master");
 const anonymous =  document.getElementById("anonymous");
 
+let isOpenShowCamVideo = true;
+let prevUrl = null;
 let isSending = false;
 let Max_X = 0;
 let Max_Y = 0;
@@ -44,9 +46,7 @@ btn_add_master.addEventListener("click",function(){
       console.log("Ảnh master đang chỉ tới là 2",index);
       //Tao ra cac nut nhan
       create_table_controler(index);
-      
-
-
+      isOpenShowCamVideo =  true;  //Tat cam khi la san pham cu
                       const input_x = document.getElementById(`input-x-${index}`);input_x.type = "number";
                       const input_y = document.getElementById(`input-y-${index}`);input_y.type = "number";
                       const input_z = document.getElementById(`input-z-${index}`);input_z.type = "number";
@@ -66,32 +66,27 @@ btn_add_master.addEventListener("click",function(){
                       const btn_run_all      = document.getElementById(`btn-run-all-${index}`);
                       const btn_erase_master = document.getElementById(`btn-erase-master-${index}`);
 
-                     
-          
-                       
-                      // // btn_increase_x.addEventListener("click",()=>HandleClickBtnIncrease_X(input_x,input_x.value,Max_X));
-                      // btn_decrease_x.addEventListener("click",()=>HandleClickBtnDecrease_X(input_x,input_x.value,Max_X));
+                 
+                      btn_increase_x.addEventListener("click",()=>HandleClickBtnIncrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_x.addEventListener("click",()=>HandleClickBtnDecrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
 
-                      // btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,input_y.value,Max_Y));
-                      // btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,input_y.value,Max_Y));
+                      btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
 
-                      // btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,input_z.value,Max_Z));
-                      // btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,input_z.value,Max_Z));
+                      btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
                       
-                      // btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,input_k.value,Max_K));
-                      // btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,input_k.value,Max_K));
+                      btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
 
-                      // btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
-                      // btn_capture.addEventListener("click",()=>HandleClickBtnCapture);
+                      btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
+                      // btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index));
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
                       // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
 
 
-
-
-
-
-
+                     
+          
 
 
 
@@ -167,7 +162,7 @@ headerMasterAdd.addEventListener("click",function(){
 
                       
                       create_table_controler(index);
-                      
+                      isOpenShowCamVideo = false; // Bat cam khi la san pham moi
 
                       const input_x = document.getElementById(`input-x-${index}`);input_x.type = "number";
                       const input_y = document.getElementById(`input-y-${index}`);input_y.type = "number";
@@ -200,16 +195,16 @@ headerMasterAdd.addEventListener("click",function(){
                       btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
                       btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
 
-                      btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,input_z.value,Max_Z));
-                      btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,input_z.value,Max_Z));
+                      btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
                       
-                      btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,input_k.value,Max_K));
-                      btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,input_k.value,Max_K));
+                      btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
 
                       btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture);
-                      btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
-                      btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
+                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index));
+                      // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
+                      // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
 
                     //  console.log("list_point",list_point);
                     //  console.log("list_point[index].x",list_point[index].x);
@@ -281,53 +276,83 @@ function HandleClickBtnDecrease_Y(element,max_element,input_x_value,input_y_valu
         element.value = 0; 
     }
 }
-function HandleClickBtnIncrease_Z(element,data,max_element){
-    element.value = parseInt(data) + 1;
-        let status_check = CheckData(element,"Z",data,max_element);
+function HandleClickBtnIncrease_Z(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+        let status_check = CheckData(element,"Z",input_z_value,max_element);
         if(status_check){
-          element.value = parseInt(data) + 1;
+          element.value = parseInt(input_z_value) + 1;
+          HandleClickBtnRun(input_x_value,input_y_value,element.value,input_k_value);
         }
 }
-function HandleClickBtnDecrease_Z(element,data,max_element){
-  console.log("VAO GIAM Z");
-    let new_value = parseInt(data) - 1;
+function HandleClickBtnDecrease_Z(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+    let new_value = parseInt(input_z_value) - 1;
     let status_check = CheckData(element,"Z", new_value, max_element);
     if (status_check) {
         element.value = new_value; 
+        HandleClickBtnRun(input_x_value,input_y_value,element.value,input_k_value);
     } else {
         element.value = 0; 
     }
 
 }
-function HandleClickBtnIncrease_K(element,data,max_element){
-    element.value = parseInt(data) + 1;
-        let status_check = CheckData(element,"K",data,max_element);
+function HandleClickBtnIncrease_K(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+        let status_check = CheckData(element,"K",input_k_value,max_element);
         if(status_check){
-          element.value = parseInt(data) + 1;
-    }
+          element.value = parseInt(input_k_value) + 1;
+           HandleClickBtnRun(input_x_value,input_y_value,input_z_value,element.value);
+    } 
 }
-function HandleClickBtnDecrease_K(element,data,max_element){
-    let new_value = parseInt(data) - 1;
+function HandleClickBtnDecrease_K(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
+    let new_value = parseInt(input_k_value) - 1;
     let status_check = CheckData(element,"K", new_value, max_element);
     if (status_check) {
         element.value = new_value; 
+        HandleClickBtnRun(input_x_value,input_y_value,input_z_value,element.value);
     } else {
         element.value = 0; 
     }
 }
+
+
+
 function HandleClickBtnRun(input_x_value,input_y_value,input_z_value,input_k_value){
   let status_check = validatePoint(input_x_value,input_y_value,input_z_value,input_k_value,Max_X,Max_Y,Max_Z,Max_K);
   if(!status_check){
     console.log("Dữ liệu không hợp lệ");
     return;
   }
-  console.log("✅Dữ liệu hợp lệ");
-  log_master.innerHTML = "✅Dữ liệu hợp lệ";
+
+  console.log("✅Dữ liệu hợp lệ.");
+  log_master.innerHTML = "✅Dữ liệu hợp lệ.";
   sendPoint(input_x_value,input_y_value,input_z_value,input_k_value);
+  isOpenShowCamVideo = true;
+                
+    //nao xong sẽ sưa phần nến có kết nối với cam thì show video nếu không có thì show ảnh hiện có
+                          videoSocket.on("camera_frame", function(data) {
+                                                if(isOpenShowCamVideo){
+                                                // data.image là base64
+                                                const img = new Image();
+                                                img.onload = () => {
+                                                    // Khởi tạo canvas kích thước phù hợp
+                                                    canvas_show.width = 1328; // hoặc img.width
+                                                    canvas_show.height = 830;  // hoặc img.height
 
-
+                                                    // Vẽ ảnh lên canvas
+                                                    ctx_show.drawImage(img, 0, 0, canvas_show.width , canvas_show.height);
+                                                    
+                                                    // Giải phóng URL cũ nếu có (nếu dùng URL.createObjectURL)
+                                                    if (prevUrl) URL.revokeObjectURL(prevUrl);
+                                                };
+                                                img.src = "data:image/jpeg;base64," + data.image;
+                                                }
+                                            });
 }
-function HandleClickBtnCapture(){
+
+function HandleClickBtnCapture(index){
+  console.log("Đã nhấn vào chụp")
+  postData("api_add_master/capture_master", { "status": "200OK","index":index}).then(data => {
+  console.log("Server response: " + data);
+  });
+
 
 }
 function HandleClickBtnRunAll(){
@@ -336,9 +361,6 @@ function HandleClickBtnRunAll(){
 function HandleClickBtnEraseMaster(){
 
 }
-
-
-
 async function sendPoint(x, y, z, brightness) {
   if (isSending) {
     console.warn("⚠️ Đang gửi dữ liệu, vui lòng đợi...");
@@ -615,46 +637,45 @@ function create_table_product(data) {
 
 
 //Log sản phẩm
-// logSocket.on("log_message", function (data) {
-//        const tbody = document.querySelector(".product-table tbody");
-//        if (!tbody){
-//         console.log("Bảng không tồn tại");
-//         return;
-//        }
-//        tbody.innerHTML = "";
-//        let log = data.log_add_master;
-//           console.log("Dữ liệu nhận được là ",log);
-//        let id =  log?.list_id[0];
-//        let name   = log?.list_name[0];
-//        let x = log?.xyz[0][0];
-//        let y = log?.xyz[0][1];
-//        let z = log?.xyz[0][2];
-//        let k = 100;
-//       //  console.log(name)
-//       //  console.log(id)
-//       //  console.log(x)
-//       //  console.log(y)
-//       //  console.log(z)
-//       const row = document.createElement("tr");
-//       row.innerHTML =  
-//       `<td>${name}</td>
-//        <td>${x}</td>
-//        <td>${y}</td>
-//        <td>${z}</td>
-//        <td>${k}</td>
-//       `;
-//       tbody.appendChild(row);
+logSocket.on("log_message", function (data) {
+       const tbody = document.querySelector(".product-table tbody");
+       if (!tbody){
+        console.log("Bảng không tồn tại");
+        return;
+       }
+       tbody.innerHTML = "";
+       let log = data.log_add_master;
+          console.log("Dữ liệu nhận được là ",log);
+       let id =  log?.list_id[0];
+       let name   = log?.list_name[0];
+       let x = log?.xyz[0][0];
+       let y = log?.xyz[0][1];
+       let z = log?.xyz[0][2];
+       let k = 100;
+      //  console.log(name)
+      //  console.log(id)
+      //  console.log(x)
+      //  console.log(y)
+      //  console.log(z)
+      const row = document.createElement("tr");
+      row.innerHTML =  
+      `<td>${name}</td>
+       <td>${x}</td>
+       <td>${y}</td>
+       <td>${z}</td>
+       <td>${k}</td>
+      `;
+      tbody.appendChild(row);
 
-// });
+});
 
 // Log dữ liệu
-// logSocket.on("log_data", function (data) {
-//    console.log(data.log);
-   
-//    if (data.log){
-//         log_master.innerText += data.log;
-//    }
-// });
+logSocket.on("log_data", function (data) {
+   console.log(data.log);
+   if (data.log){
+        log_master.innerText += data.log;
+   }
+});
   
  
 

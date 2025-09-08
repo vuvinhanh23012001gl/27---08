@@ -4,6 +4,8 @@ from folder_create import Create
 import json
 import os
 import func
+
+from PIL import Image, ImageDraw, ImageFont
 class ProductTypeManager:
 
     NAME_FILE_STATIC  = "static"
@@ -115,15 +117,17 @@ class ProductTypeManager:
     def get_list_path_master(self)->List[any]:
         "Trả về danh sách đường dẫn đầy đủ của các lis path master c:\\Users\\anhuv\\Desktop\\26_08\\25-08\\app\\app\\static\\Master_Photo\\Master_Vinhanh', 'c:\\Users\\anhuv\\Desktop\\26_08\\25-08\\app\\app\\static\\Master_Photo\\Master_Vinhan132' "
         return [pt.path_img_master for pt in self.product_types.values()]
-    
+
     def get_list_path_master_product_img_name(self,idtype:str)->List[Any]:
         """Trả về danh sách các path ảnh Master của loại ID đó"""
         if idtype is not None and  self.product_types is not None:
             for pt in self.product_types.values():
                 if pt.type_id == idtype.strip():
+                    # pt.get_path_name_folder_master_img() = static/Master_Photo/Master_SP01
                     return func.get_image_paths_from_folder(pt.get_path_name_folder_master_img())
         else:
             print("Tên ID hoặc dữ liệu chưa có")
+
 
     def find_by_id(self, type_id:str)->object:
         """Trả về đối tượng có id trùng với id nhập  nếu không có trả về -1"""
@@ -258,6 +262,26 @@ class ProductTypeManager:
         self.data = self.get_file_data()
         self.load_from_file()
         print("Cập nhật lại dữ liệu")
+
+    def create_file_and_path_img_master(self,idtype:str,name_img:str)->bool:
+        """ Tạo ra đường dẫn và tạo ra ảnh rỗng nếu đúng
+        trả về đường dẫn ảnh nếu đúng trả về none nếu sai"""
+        strip_data = idtype.strip()
+        result =  self.find_by_id(strip_data)
+        if result != -1:
+            path_master = result.get_path_img_master()
+            if not path_master:
+                print("Không tìm thấy đường dẫn Path")
+                return False
+            object_folder = Create()
+            status = object_folder.create_file_in_folder(path_master,name_img)
+            return status
+        else :
+            print("Không tìm thấy ID")
+            return False
+    
+    
+    
 #-------------------------------------------------------------------------
     def remove_product_type(self, type_id:str)->bool:
         print("Tiến Hành Xóa ID")
@@ -313,6 +337,10 @@ class ProductTypeManager:
 
             
 # #----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 # quanly = ProductTypeManager()
 # print(quanly.get_list_path_master())
 
@@ -320,7 +348,10 @@ class ProductTypeManager:
 # quanly.remove_product_in_file_data('SP1')
 
 # quanly = ProductTypeManager()
-# print(quanly.get_list_path_master_product_img_name("SP001"))
+# print(quanly.get_list_path_master_product_img_name("SP01"))
+
+# quanly = ProductTypeManager()
+# print(quanly.create_file_and_path_img_master("SP01","anh1.png"))
 
 # quanly = ProductTypeManager()
 # quanly.remove_product_type("0")
@@ -386,9 +417,12 @@ class ProductTypeManager:
 # # path  = quanly.get_list_path_master_product_img_name("idtype1")
 # # print(path)
 
-# # # # # print(quanly.find_by_id("typeid2"))
-# # # quanly.get_path_product_img_name(232)
-# # print(quanly.absolute_path("1"))
+# quanly = ProductTypeManager()
+# # # # # # print(quanly.find_by_id("typeid2"))
+# print(quanly.get_path_product_img_name("SP01"))
+
+# quanly = ProductTypeManager()
+# print(quanly.absolute_path("SP01"))
 
 # # print(quanly.get_file_data())
 # # # # # # Tạo các loại sản phẩm

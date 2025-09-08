@@ -75,63 +75,59 @@ def fuc_main_process():
             #click_page_html  ==  2 vao che do trainning san pham
             #click_page_html  ==  1 Vào Chế độ main  show
             STATUS_CHECK_CONNECT = 1
-            if click_page_html  == 2:
-                if not queue_rx_web_api.empty():
-                    data_web_rx = queue_rx_web_api.get()
-                    if("cmd:" in data_web_rx):
+            match click_page_html:
+                case 2|6:
+                    if not queue_rx_web_api.empty():
+                        data_web_rx = queue_rx_web_api.get()
+                        if("cmd:" in data_web_rx):
+                            obj_manager_serial.clear_tx_queue()
+                            obj_manager_serial.send_data(data_web_rx)
+                            result_send = func.wait_for_specific_data(obj_manager_serial,data_web_rx)                   
+                            if result_send:
+                                queue_tx_web_log.put(f" Di chuyển thành công đến tọa độ : {data_web_rx}")
+                            else :
+                                queue_tx_web_log.put(f" Di chuyển thất bại đến tọa độ  : {data_web_rx}")
+                    if is_data_train == 1:
+                                is_data_train = 0
+                                print("Có sản phẩm cần Trainging")
+                                func.read_file_training('name_product_train.json',queue_tx_arm,obj_manager_serial,data_web_rx) # Thuc hien doc tin hieu tra ve va thuc hien
+                                time.sleep(0.5)
+                              
+                case 1:
+                    import run 
+                    print("Đang Xử Lý Trang Main")
+                    if flag_the_firts_connect :
+                        flag_the_firts_connect = False
+                    
+                    # else:
+                    #     #  print("Cam đã kết nối")
+                    if(is_run == 1): 
+                        run.cam_basler.initialize_camera()
+                        is_run = 0  #tat de khong vao lai
+                        obj_manager_serial.clear_rx_queue()
                         obj_manager_serial.clear_tx_queue()
-                        obj_manager_serial.send_data(data_web_rx)
-                        result_send = func.wait_for_specific_data(obj_manager_serial,data_web_rx)                   
-                        if result_send:
-                            queue_tx_web_log.put(f"Send : {data_web_rx} Thanh cong ")
-                        else :
-                            queue_tx_web_log.put(f"Send : {data_web_rx} That bai")
-                if is_data_train == 1:
-                              is_data_train = 0
-                              print("Co san pham dang can train")
-                              func.read_file_training('name_product_train.json',queue_tx_arm,obj_manager_serial,data_web_rx) # Thuc hien doc tin hieu tra ve va thuc hien
-                              time.sleep(0.5)
-                              
-            elif(click_page_html == 1):
-                import run 
-                
-                print("Đang Xử Lý Trang Main")
-                if flag_the_firts_connect :
-                     flag_the_firts_connect = False
-                
-                # else:
-                #     #  print("Cam đã kết nối")
-                if(is_run == 1): 
-                       run.cam_basler.initialize_camera()
-                       is_run = 0  #tat de khong vao lai
-                       obj_manager_serial.clear_rx_queue()
-                       obj_manager_serial.clear_tx_queue()
-                       print("Bắt đầu chạy các điểm")
-                       func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
-                       choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER) # đọc lại file choose master cũ xem lần trước  người dùng chọn gì
-                       print("Chạy với ID là :",choose_master_index)
-                       arr_point = manage_product_type.get_list_point_find_id(choose_master_index.strip())
-                       name_product       = manage_product_type.get_product_name_find_id(choose_master_index.strip())
-                    #    print("arr Point",arr_point)
-                    #    print("name product",name_product)
-                       
-                       if arr_point is not None and name_product is not None :
-                              print("Quá trình chạy các điểm")
-                              func.run_and_capture(name_product,arr_point,obj_manager_serial,run.cam_basler)
-                       else:
-                            print("Không tìm thấy ID danh sách điểm để chạy")
-                            
-                              
-                  
-                              
-                       
-                              
-
+                        print("Bắt đầu chạy các điểm")
+                        func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
+                        choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER) # đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+                        print("Chạy với ID là :",choose_master_index)
+                        arr_point = manage_product_type.get_list_point_find_id(choose_master_index.strip())
+                        name_product       = manage_product_type.get_product_name_find_id(choose_master_index.strip())
+                        #    print("arr Point",arr_point)
+                        #    print("name product",name_product)
+                        
+                        if arr_point is not None and name_product is not None :
+                                print("Quá trình chạy các điểm")
+                                func.run_and_capture(name_product,arr_point,obj_manager_serial,run.cam_basler)
+                        else:
+                                print("Không tìm thấy ID danh sách điểm để chạy")
+                                
+                                
+      
 
                
 
-                time.sleep(2)         
-            # time.sleep(2)
+                    time.sleep(0.5)         
+            time.sleep(0.5)
                          
         else:
             the_first_connect = True

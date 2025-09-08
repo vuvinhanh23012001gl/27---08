@@ -28,7 +28,7 @@ import {
   setCurrentPanner,
   index_img_current,
   set_index_img_current,
-  set_Z_index_canvas_show,canvas_img_show,ctx,canvas_img_show_oke,ctx_oke
+  set_Z_index_canvas_show,canvas_img_show,ctx,canvas_img_show_oke,ctx_oke,videoSocket
 } from "./show_main_status.js";
 // CONSTANT
 const SCROLL_STEP = 300;
@@ -66,7 +66,7 @@ let startX = 0, startY = 0, endX = 0, endY = 0;
 let isDrawing = false;
 let prevUrl = null;
 
-const videoSocket = io("/video");
+
 canvas_img_show.addEventListener("mousedown", handleMouseDown);
 canvas_img_show.addEventListener("mousemove", handleMouseMove);
 canvas_img_show.addEventListener("mouseup", handleMouseUp);
@@ -751,22 +751,22 @@ videoSocket.on("photo_taken", (data) => {
   img.src = imgUrl;
 });
 
-videoSocket.on("camera_frame", function(data) {
-    // data.image là base64
-    const img = new Image();
-    img.onload = () => {
-        // Khởi tạo canvas kích thước phù hợp
-        canvas_img_show_oke.width = 1328; // hoặc img.width
-        canvas_img_show_oke.height = 830;  // hoặc img.height
+// videoSocket.on("camera_frame", function(data) {
+//     // data.image là base64
+//     const img = new Image();
+//     img.onload = () => {
+//         // Khởi tạo canvas kích thước phù hợp
+//         canvas_img_show_oke.width = 1328; // hoặc img.width
+//         canvas_img_show_oke.height = 830;  // hoặc img.height
 
-        // Vẽ ảnh lên canvas
-        ctx_oke.drawImage(img, 0, 0, canvas_img_show_oke.width , canvas_img_show_oke.height);
+//         // Vẽ ảnh lên canvas
+//         ctx_oke.drawImage(img, 0, 0, canvas_img_show_oke.width , canvas_img_show_oke.height);
         
-        // Giải phóng URL cũ nếu có (nếu dùng URL.createObjectURL)
-        if (prevUrl) URL.revokeObjectURL(prevUrl);
-    };
-    img.src = "data:image/jpeg;base64," + data.image;
-});
+//         // Giải phóng URL cũ nếu có (nếu dùng URL.createObjectURL)
+//         if (prevUrl) URL.revokeObjectURL(prevUrl);
+//     };
+//     img.src = "data:image/jpeg;base64," + data.image;
+// });
 
 // =========================
 // 2. HÀM TIỆN ÍCH (UTILITIES)
