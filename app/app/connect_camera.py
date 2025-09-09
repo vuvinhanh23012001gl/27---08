@@ -374,10 +374,34 @@ class BaslerCamera:
             except:
                 print("Xin Hãy kết nối với cam, Cam đang lỗi")
                 
-            
-            
+    def is_camera_stable(self):
+        """
+        Kiểm tra camera có đang hoạt động hay không.
+        Tránh conflict với luồng start_stream (không gọi RetrieveResult nữa).
+        """
+        try:
+            if self.camera is None:
+                print("❌ Camera chưa khởi tạo.")
+                return False
+
+            if not self.camera.IsOpen():
+                print("❌ Camera chưa mở.")
+                return False
+
+            if self.camera.IsGrabbing():
+                # Camera đang grabbing (có thể từ start_stream)
+                print("✅ Camera đang chạy (luồng start_stream hoạt động).")
+                return True
+            else:
+                print("⚠️ Camera đã mở nhưng chưa grabbing.")
+                return False
+
+        except Exception as e:
+            print(f"⚠️ Lỗi khi kiểm tra camera: {e}")
+            return False
 # def main():
 #     cam = BaslerCamera(config_file="Camera_25129678.pfs")
+#     print(cam.is_camera_stable())
 #     cam.run_cam()
 # if __name__ == "__main__":
 #     main()

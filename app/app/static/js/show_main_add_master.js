@@ -51,7 +51,10 @@ btn_add_master.addEventListener("click",function(){
                       const input_y = document.getElementById(`input-y-${index}`);input_y.type = "number";
                       const input_z = document.getElementById(`input-z-${index}`);input_z.type = "number";
                       const input_k = document.getElementById(`input-k-${index}`);input_k.type = "number";
-
+                      input_x.value = 0
+                      input_y.value = 0
+                      input_z.value = 0
+                      input_k.value = 0
                       const btn_increase_x = document.getElementById(`btn-inc-x-${index}`);
                       const btn_decrease_x = document.getElementById(`btn-dec-x-${index}`);
                       const btn_increase_y = document.getElementById(`btn-inc-y-${index}`);
@@ -80,7 +83,8 @@ btn_add_master.addEventListener("click",function(){
                       btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
 
                       btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
-                      // btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index));
+                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
+
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
                       // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
 
@@ -124,11 +128,27 @@ headerMasterAdd.addEventListener("click",function(){
     console.log("Chuyển sang trang thêm mẫu");
     scroll_content.innerHTML = ""; 
     postData("api_add_master", { "status": "on" }).then(data => {
+    renderMaster(data)
+    });
+    const add_master = document.getElementById("panel-add-master");
+    if (current_panner === add_master) return;
+    current_panner.classList.remove("active");
+    current_panner.style.zIndex = 1;
+    add_master.classList.add("active");
+    add_master.style.zIndex = 2;
+    setCurrentPanner(add_master);
+});
+const socket_realtime = io("/data_clinet_show");
+socket_realtime.on("data_realtime", (data) => {
+  console.log("data",data);
+  renderMaster(data);
+});
+function renderMaster(data) {
             const imgList = data?.path_arr_img;
             const list_point  = data?.arr_point;
             create_table_product(data)
             //if (!imgList || imgList.length === 0) {log_master.innerHTML = "Hệ thống chưa có ảnh master nào";console.log("Hệ thống chưa có ảnh master nào");return}
-            
+            scroll_content.innerHTML = "";
             console.log("Danh sách điểm:", list_point);
             console.log("Danh sách ảnh:", imgList);
             imgList.forEach((imgPath, index) => {
@@ -139,7 +159,8 @@ headerMasterAdd.addEventListener("click",function(){
                 h_create.className = "p-index-img-master";
 
                 const img = document.createElement("img");
-                img.src = imgPath;
+                img.src = `${imgPath}?t=${Date.now()}`;  // dam bao  goi moi nhat
+              // img.src = imgPath;
                 img.alt = "Ảnh sản phẩm";
                 img.style.width = "200px";
                 img.style.margin = "10px";
@@ -202,7 +223,7 @@ headerMasterAdd.addEventListener("click",function(){
                       btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
 
                       btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index));
+                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
                       // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
 
@@ -230,16 +251,8 @@ headerMasterAdd.addEventListener("click",function(){
 
 
           });
-    });
-    const add_master = document.getElementById("panel-add-master");
-    if (current_panner === add_master) return;
-    current_panner.classList.remove("active");
-    current_panner.style.zIndex = 1;
-    add_master.classList.add("active");
-    add_master.style.zIndex = 2;
-    setCurrentPanner(add_master);
-});
 
+        }
 function HandleClickBtnIncrease_X(element,max_element,input_x_value,input_y_value,input_z_value,input_k_value){
        let status_check = CheckData(element,"X",input_x_value,max_element);
        if(status_check){
@@ -347,9 +360,9 @@ function HandleClickBtnRun(input_x_value,input_y_value,input_z_value,input_k_val
                                             });
 }
 
-function HandleClickBtnCapture(index){
+function HandleClickBtnCapture(index,x,y,z,k){
   console.log("Đã nhấn vào chụp")
-  postData("api_add_master/capture_master", { "status": "200OK","index":index}).then(data => {
+  postData("api_add_master/capture_master", { "status": "200OK","index":index,"x":x,"y":y,"z":z,"k":k}).then(data => {
   console.log("Server response: " + data);
   });
 

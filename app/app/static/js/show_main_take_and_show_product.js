@@ -144,7 +144,7 @@ btn_accept_and_send.addEventListener("click",()=>{
       let  dulieu = shapes_all?.[`${j}`]?.shapes;   // danh sach diem dau cua 1 hinh anh
       if (dulieu  == null){continue;}
       console.log("du lieu la",dulieu);
-      for (i of dulieu){
+      for (let i of dulieu){
         console.log("doi tuong kla",i);
         let ten_max = i?.ten_khung_max||"";
         let ten_min = i?.ten_hinh_min ||"";

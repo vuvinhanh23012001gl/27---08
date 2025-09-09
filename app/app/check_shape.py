@@ -215,15 +215,18 @@ def check_shape_data_config_master(length_shapes,data):
 
 # if __name__ == "__main__":
 #     data = read_file_json("shapes.json")
-    # print("Dữ liệu JSON",data)
-    # print("check du lieu co phai so nguyen k")
-    # print("Kiểu dữ liệu :",type(data))
-    # frames = extract_min_max(data[0])
-    # for frame_id, (list_min, list_max) in frames.items():
-    #     print(f"\n--- Frame {frame_id} ---")
-    #     validate_shapes(list_min, list_max)
-    # length_oke = check_quantity(21,data) # Kiem Tra do dai du lieu co du
-    # check_shape_data_config_master(5,data)
+#     print("Dữ liệu JSON",data)
+#     print("check du lieu co phai so nguyen k")
+#     print("Kiểu dữ liệu :",type(data))
+#     frames = extract_min_max(data[0])
+#     for frame_id, (list_min, list_max) in frames.items():
+#         print(f"\n--- Frame {frame_id} ---")
+#         status = validate_shapes(list_min, list_max)
+#         if(status == False):
+#             print("Dữ liệu tại master {frame_id} Không oke")
+#             return False
+#     length_oke = check_quantity(21,data) # Kiem Tra do dai du lieu co du
+#     check_shape_data_config_master(5,data)
    
 
         

@@ -50,6 +50,9 @@ def handle_video_connect():
 @socketio.on('connect', namespace='/log') 
 def handle_log_connect():
     print("📡 Client connected to /log")
+@socketio.on('connect',namespace='/data_clinet_show')  #'/data_clinet_show' img + loction point,... 
+def handle_data_send_connect():
+    print("📡 Client connect to /data_clinet_show") #img hiển thị hình ảnh sản phẩm
 def stream_frames():
     while OPEN_THREAD_STREAM:
          cam_basler.run_cam_html()
@@ -104,7 +107,6 @@ def show_main():
     # print("choose_master_index :",choose_master_index)
     main_pc.click_page_html = 1  # thong bao dang o trang web chinh
     data_strip = choose_master_index.strip() 
-    threading.Thread(target = stream_frames,daemon=True).start()
     if data_strip in  arr_type_id:
         print(f"gui data master co ten {choose_master_index}")
         path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
@@ -168,13 +170,13 @@ def config_master():
     data = request.get_json()
     choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER) # đọc lại file choose master cũ xem lần trước  người dùng chọn gì
     print(data)   
-    # status = check_shape.check_shapes(data)
     check_shape.save_shapes_to_json(data,"shapes.json")
-    print("--------------------------------Luu Thanh cong-------------------")
-    # if(status):
-    #     print("--------------------------------dU LIEU CHUA CHUAN-------------------")
-    # else :
-    #     print("--------------------------------dU LIEU DA  CHUAN---------------------")
+    # status = check_shape.check_shapes(data)
+    # print("--------------------------------Luu Thanh cong-------------------")
+    # # if(status):
+    # #     print("--------------------------------dU LIEU CHUA CHUAN-------------------")
+    # # else :
+    # #     print("--------------------------------dU LIEU DA  CHUAN---------------------")
     return jsonify({'status':"OKE"})
 #--------------------------------------------------------Api_new_product ---------------------------------------------
 @api_new_product.route("/add")
@@ -268,7 +270,12 @@ def api_add_master_tree():
         path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
         arr_point = manage_product.return_data_list_point(data_strip) 
         print(path_arr_img)
-        inf_product = manage_product.get_all_ids_and_names() 
+        inf_product = manage_product.get_all_ids_and_names()
+        socketio.emit("data_realtime", {
+            "path_arr_img": path_arr_img,
+            "arr_point": arr_point,
+            "inf_product": inf_product
+        },namespace='/data_clinet_show')   
         return {"path_arr_img": path_arr_img,"arr_point":arr_point,"inf_product":inf_product} 
     return {"path_arr_img": None,"arr_point":None,"inf_product":inf_product}
 
@@ -282,23 +289,59 @@ def api_add_master_tree():
 
 @api_add_master.route("/capture_master",methods=["POST"],strict_slashes=False)
 def capture_master():
+       #néu có ảnh sẵn rồi thì không tạo file nữa và chỉnh sửa điểm trong index nếu chua có điểm thì đó là sản phẩm mới thì sẽ tạo ra file mới ảnh mới , thêm điẻm mới
        data = request.get_json()
        index_capture = data.get("index",-1)
+       x = data.get("x",-1)
+       y = data.get("y",-1)
+       z = data.get("z",-1)
+       k = data.get("k",-1)
+       
+       print("type",type(x),type(y))
        func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
        choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)# đọc lại file choose master cũ xem lần trước  người dùng chọn gì
        arr_type_id = manage_product.get_list_id_product()
-       data_strip = choose_master_index.strip() 
-       if data_strip in  arr_type_id: 
-            path = manage_product.create_file_and_path_img_master(data_strip,f"img_{index_capture}.png")
-            print(path)
-            queue_accept_capture.put_nowait({"training":3,"name_capture":path})
-            # data = queue_accept_capture.get()
-            # print(data)
-           
-         
+       data_strip = choose_master_index.strip()  
+       if data_strip in  arr_type_id:
+            status_camera = cam_basler.is_camera_stable()
+            if status_camera :
+                status = manage_product.create_file_and_path_img_master(data_strip,f"img_{index_capture}.png")
+                if status:
+                    status_create_file = status.get("return",-1)
+                    path = status.get("path",-1)
+                    if status_create_file != -1 and path!=-1 and status_create_file == True:
+                        print("Tiến hành lưu ảnh mới điểm mới...")
+                        print("xyz",x,y,z,k,index_capture)
+                        queue_accept_capture.put_nowait({"training":3,"name_capture":path})
+                        manage_product.add_list_point_to_product(data_strip,int(x.strip()),int(y.strip()),int(z.strip()),int(k.strip()))
+                    elif (status_create_file != -1 and path!=-1 and status_create_file == False):
+                        print("Tiến hành sửa điểm cũ lưu ảnh mới...")
+                        print("xyz",x,y,z,k,index_capture)
+                        queue_accept_capture.put_nowait({"training":3,"name_capture":path})
+                        manage_product.fix_score_point_product(data_strip,int(x.strip()),int(y.strip()),int(z.strip()),int(k.strip()),index_capture)
+                    else:
+                        print("Tạo File thất bại")
+                
+                    path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
+                    arr_point = manage_product.return_data_list_point(data_strip) 
+                    print(path_arr_img)
+                    inf_product = manage_product.get_all_ids_and_names()
+                    socketio.emit("data_realtime", {
+                            "path_arr_img": path_arr_img,
+                            "arr_point": arr_point,
+                            "inf_product": inf_product
+                    },namespace='/data_clinet_show')   
+                                    
 
-
-      
+                    # 
+                else:
+                    print("Tạo File thất bại")
+                    queue_tx_web_log.put_nowait("\nThêm thất bại")
+            else:
+                queue_tx_web_log.put_nowait("Camera hiện tại không hoạt động nên không thể chụp ảnh được\n")
+                print("Camera hiện tại không hoạt động nên không thể chụp ảnh được")
+       else:
+           print("Không tìm thấy sản phẩm có ID trong danh sách ID đã lưu để chụp ảnh\n")
        return jsonify({'status':"200OK"})
 
 
@@ -413,6 +456,7 @@ if __name__ == "__main__":
     import threading
     threading.Thread(target=stream_logs,daemon = True).start()
     threading.Thread(target=stream_img,daemon = True).start()
+    threading.Thread(target = stream_frames,daemon=True).start()
     socketio.run(app, host="0.0.0.0", port=5000, debug=True, use_reloader=False)
     print("Đã thoát chương trình chính")
 

@@ -1,65 +1,17 @@
 [
+  0,
   {
     "0": {
       "shapes": [
         {
           "type": "rect",
-          "x1": 327,
-          "y1": 165,
-          "x2": 869,
-          "y2": 521,
-          "mode": "max",
-          "color": "red",
-          "ten_khung_max": "container 1",
-          "so_diem_dau": 2,
-          "rotation": -0.6031974354654337,
-          "corners": [
-            {
-              "x": 273.8488762849963,
-              "y": 350.1448578922452
-            },
-            {
-              "x": 720.199963500168,
-              "y": 42.67988925055715
-            },
-            {
-              "x": 922.1511237150037,
-              "y": 335.8551421077548
-            },
-            {
-              "x": 475.80003649983206,
-              "y": 643.3201107494428
-            }
-          ]
-        },
-        {
-          "type": "rect",
-          "x1": 664,
-          "y1": 96,
-          "x2": 756,
-          "y2": 175,
+          "x1": 882,
+          "y1": 546,
+          "x2": 973,
+          "y2": 644,
           "mode": "min",
           "color": "blue",
-          "rotation": 0.08964985056587516,
-          "corners": [
-            {
-              "x": 667.7211569781819,
-              "y": 92.0402550313919
-            },
-            {
-              "x": 759.3516981231683,
-              "y": 100.27699768106542
-            },
-            {
-              "x": 752.2788430218181,
-              "y": 178.9597449686081
-            },
-            {
-              "x": 660.6483018768317,
-              "y": 170.72300231893456
-            }
-          ],
-          "ten_hinh_min": "1",
+          "ten_hinh_min": "Điểm1",
           "so_diem_dau": 1,
           "kich_thuoc_min": 1,
           "kich_thuoc_max": 1,
@@ -68,18 +20,18 @@
         },
         {
           "type": "rect",
-          "x1": 446,
-          "y1": 500,
-          "x2": 537,
-          "y2": 595,
+          "x1": 571,
+          "y1": 157,
+          "x2": 689,
+          "y2": 249,
           "mode": "min",
           "color": "blue",
-          "ten_hinh_min": "2",
-          "so_diem_dau": 2,
-          "kich_thuoc_min": 2,
-          "kich_thuoc_max": 2,
-          "tuong_thich_min": 2,
-          "tuong_thich_max": 2
+          "ten_hinh_min": "điểm2",
+          "so_diem_dau": 1,
+          "kich_thuoc_min": 1,
+          "kich_thuoc_max": 1,
+          "tuong_thich_min": 1,
+          "tuong_thich_max": 1
         }
       ]
     },
@@ -87,28 +39,127 @@
       "shapes": [
         {
           "type": "rect",
-          "x1": 483,
-          "y1": 207,
-          "x2": 825,
-          "y2": 477,
+          "x1": 561,
+          "y1": 277,
+          "x2": 795,
+          "y2": 451,
           "mode": "min",
           "color": "blue",
-          "ten_hinh_min": "point2",
+          "ten_hinh_min": "điểm3",
+          "so_diem_dau": 2,
+          "kich_thuoc_min": 2,
+          "kich_thuoc_max": 2,
+          "tuong_thich_min": 2,
+          "tuong_thich_max": 2
+        }
+      ]
+    }
+  },
+  {
+    "0": {
+      "shapes": [
+        {
+          "type": "rect",
+          "x1": 882,
+          "y1": 546,
+          "x2": 973,
+          "y2": 644,
+          "mode": "min",
+          "color": "blue",
+          "ten_hinh_min": "Điểm1",
+          "so_diem_dau": 1,
+          "kich_thuoc_min": 1,
+          "kich_thuoc_max": 1,
+          "tuong_thich_min": 1,
+          "tuong_thich_max": 1
+        },
+        {
+          "type": "rect",
+          "x1": 571,
+          "y1": 157,
+          "x2": 689,
+          "y2": 249,
+          "mode": "min",
+          "color": "blue",
+          "ten_hinh_min": "điểm2",
+          "so_diem_dau": 1,
+          "kich_thuoc_min": 1,
+          "kich_thuoc_max": 1,
+          "tuong_thich_min": 1,
+          "tuong_thich_max": 1
+        }
+      ]
+    },
+    "1": {
+      "shapes": [
+        {
+          "type": "rect",
+          "x1": 561,
+          "y1": 277,
+          "x2": 795,
+          "y2": 451,
+          "mode": "min",
+          "color": "blue",
+          "ten_hinh_min": "điểm3",
+          "so_diem_dau": 2,
+          "kich_thuoc_min": 2,
+          "kich_thuoc_max": 2,
+          "tuong_thich_min": 2,
+          "tuong_thich_max": 2
+        }
+      ]
+    }
+  },
+  {
+    "0": {
+      "shapes": [
+        {
+          "type": "rect",
+          "x1": 334,
+          "y1": 188,
+          "x2": 466,
+          "y2": 291,
+          "mode": "min",
+          "color": "blue",
+          "ten_hinh_min": "1",
           "so_diem_dau": 1,
           "kich_thuoc_min": 1,
           "kich_thuoc_max": 1,
           "tuong_thich_min": 11,
           "tuong_thich_max": 1
-        },
+        }
+      ]
+    },
+    "1": {
+      "shapes": [
         {
           "type": "rect",
-          "x1": 468,
-          "y1": 104,
-          "x2": 551,
-          "y2": 146,
+          "x1": 348,
+          "y1": 235,
+          "x2": 453,
+          "y2": 357,
           "mode": "min",
           "color": "blue",
-          "ten_hinh_min": "point1",
+          "rotation": 0.07827567629606746,
+          "corners": [
+            {
+              "x": 352.93069558447115,
+              "y": 231.08150280988667
+            },
+            {
+              "x": 457.6091880146349,
+              "y": 239.29205836649442
+            },
+            {
+              "x": 448.06930441552885,
+              "y": 360.9184971901133
+            },
+            {
+              "x": 343.3908119853651,
+              "y": 352.7079416335056
+            }
+          ],
+          "ten_hinh_min": "1",
           "so_diem_dau": 1,
           "kich_thuoc_min": 1,
           "kich_thuoc_max": 1,
@@ -121,99 +172,13 @@
       "shapes": [
         {
           "type": "rect",
-          "x1": 468,
-          "y1": 87,
-          "x2": 1278,
-          "y2": 357,
-          "mode": "max",
-          "color": "red",
-          "ten_khung_max": "container1",
-          "so_diem_dau": 6
-        },
-        {
-          "type": "rect",
-          "x1": 499,
-          "y1": 171,
-          "x2": 620,
-          "y2": 274,
+          "x1": 643,
+          "y1": 291,
+          "x2": 739,
+          "y2": 374,
           "mode": "min",
           "color": "blue",
-          "ten_hinh_min": "point1",
-          "so_diem_dau": 1,
-          "kich_thuoc_min": 1,
-          "kich_thuoc_max": 1,
-          "tuong_thich_min": 1,
-          "tuong_thich_max": 1
-        },
-        {
-          "type": "rect",
-          "x1": 637,
-          "y1": 206,
-          "x2": 698,
-          "y2": 275,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point2",
-          "so_diem_dau": 2,
-          "kich_thuoc_min": 2,
-          "kich_thuoc_max": 2,
-          "tuong_thich_min": 2,
-          "tuong_thich_max": 2
-        },
-        {
-          "type": "rect",
-          "x1": 739,
-          "y1": 212,
-          "x2": 803,
-          "y2": 274,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point3",
-          "so_diem_dau": 1,
-          "kich_thuoc_min": 1,
-          "kich_thuoc_max": 1,
-          "tuong_thich_min": 1,
-          "tuong_thich_max": 1
-        },
-        {
-          "type": "rect",
-          "x1": 836,
-          "y1": 210,
-          "x2": 931,
-          "y2": 288,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point4",
-          "so_diem_dau": 1,
-          "kich_thuoc_min": 1,
-          "kich_thuoc_max": 1,
-          "tuong_thich_min": 1,
-          "tuong_thich_max": 1
-        },
-        {
-          "type": "rect",
-          "x1": 950,
-          "y1": 210,
-          "x2": 1047,
-          "y2": 282,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point5",
-          "so_diem_dau": 1,
-          "kich_thuoc_min": 1,
-          "kich_thuoc_max": 1,
-          "tuong_thich_min": 1,
-          "tuong_thich_max": 1
-        },
-        {
-          "type": "rect",
-          "x1": 1065,
-          "y1": 209,
-          "x2": 1123,
-          "y2": 277,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point6",
+          "ten_hinh_min": "1",
           "so_diem_dau": 1,
           "kich_thuoc_min": 1,
           "kich_thuoc_max": 1,
@@ -226,74 +191,18 @@
       "shapes": [
         {
           "type": "rect",
-          "x1": 465,
-          "y1": 138,
-          "x2": 794,
-          "y2": 346,
-          "mode": "max",
-          "color": "red",
-          "ten_khung_max": "container4",
-          "so_diem_dau": 4
-        },
-        {
-          "type": "rect",
-          "x1": 496,
-          "y1": 206,
-          "x2": 557,
-          "y2": 249,
+          "x1": 801,
+          "y1": 245,
+          "x2": 934,
+          "y2": 365,
           "mode": "min",
           "color": "blue",
-          "ten_hinh_min": "point1",
+          "ten_hinh_min": "1",
           "so_diem_dau": 1,
-          "kich_thuoc_min": 1,
+          "kich_thuoc_min": 11,
           "kich_thuoc_max": 1,
-          "tuong_thich_min": 1,
+          "tuong_thich_min": 11,
           "tuong_thich_max": 1
-        },
-        {
-          "type": "rect",
-          "x1": 651,
-          "y1": 201,
-          "x2": 732,
-          "y2": 243,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point2",
-          "so_diem_dau": 2,
-          "kich_thuoc_min": 2,
-          "kich_thuoc_max": 2,
-          "tuong_thich_min": 2,
-          "tuong_thich_max": 2
-        },
-        {
-          "type": "rect",
-          "x1": 729,
-          "y1": 293,
-          "x2": 769,
-          "y2": 325,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point4",
-          "so_diem_dau": 4,
-          "kich_thuoc_min": 4,
-          "kich_thuoc_max": 4,
-          "tuong_thich_min": 4,
-          "tuong_thich_max": 4
-        },
-        {
-          "type": "rect",
-          "x1": 566,
-          "y1": 196,
-          "x2": 632,
-          "y2": 293,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point3",
-          "so_diem_dau": 3,
-          "kich_thuoc_min": 3,
-          "kich_thuoc_max": 3,
-          "tuong_thich_min": 3,
-          "tuong_thich_max": 3
         }
       ]
     },
@@ -301,113 +210,39 @@
       "shapes": [
         {
           "type": "rect",
-          "x1": 388,
-          "y1": 178,
-          "x2": 1273,
-          "y2": 727,
-          "mode": "max",
-          "color": "red",
-          "ten_khung_max": "container",
-          "so_diem_dau": 3,
-          "rotation": 0,
-          "corners": [
-            {
-              "x": 388,
-              "y": 178
-            },
-            {
-              "x": 1273,
-              "y": 178
-            },
-            {
-              "x": 1273,
-              "y": 727
-            },
-            {
-              "x": 388,
-              "y": 727
-            }
-          ]
-        },
-        {
-          "type": "rect",
-          "x1": 528,
-          "y1": 292,
-          "x2": 604,
-          "y2": 359,
+          "x1": 472,
+          "y1": 277,
+          "x2": 674,
+          "y2": 425,
           "mode": "min",
           "color": "blue",
-          "ten_hinh_min": "point1",
+          "ten_hinh_min": "1",
           "so_diem_dau": 1,
           "kich_thuoc_min": 1,
           "kich_thuoc_max": 1,
-          "tuong_thich_min": 1,
+          "tuong_thich_min": 11,
           "tuong_thich_max": 1
-        },
-        {
-          "type": "rect",
-          "x1": 527,
-          "y1": 367,
-          "x2": 619,
-          "y2": 422,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point2",
-          "so_diem_dau": 2,
-          "kich_thuoc_min": 2,
-          "kich_thuoc_max": 2,
-          "tuong_thich_min": 2,
-          "tuong_thich_max": 2
-        },
-        {
-          "type": "rect",
-          "x1": 546,
-          "y1": 442,
-          "x2": 622,
-          "y2": 499,
-          "mode": "min",
-          "color": "blue",
-          "ten_hinh_min": "point3",
-          "so_diem_dau": 3,
-          "kich_thuoc_min": 3,
-          "kich_thuoc_max": 3,
-          "tuong_thich_min": 3,
-          "tuong_thich_max": 3
         }
       ]
-    }
-  },
-  {
-    "state": null
-  },
-  {
-    "state": {
-      "page": "add_product"
-    }
-  },
-  {
-    "state": null
-  },
-  {
-    "state": null
-  },
-  {
-    "state": null
-  },
-  {
-    "state": null
-  },
-  {
-    "state": {
-      "page": "add_product"
-    }
-  },
-  {
-    "state": null
-  },
-  {
-    "0": {
-      "shapes": []
+    },
+    "5": {
+      "shapes": [
+        {
+          "type": "rect",
+          "x1": 610,
+          "y1": 339,
+          "x2": 806,
+          "y2": 490,
+          "mode": "min",
+          "color": "blue",
+          "ten_hinh_min": "1",
+          "so_diem_dau": 1,
+          "kich_thuoc_min": 1,
+          "kich_thuoc_max": 1,
+          "tuong_thich_min": 11,
+          "tuong_thich_max": 1
+        }
+      ]
     }
   }
 ]

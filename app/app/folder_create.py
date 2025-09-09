@@ -136,3 +136,45 @@ class Create:
         except Exception as e:
             print(f"❌ Không thể tạo file: {e}")
             return False
+    def create_file_in_folder_two(self,name_file: str, name_folder: str):
+            """Tạo ra 1 foder nếu có rồi thì vào đó tạo ra 1 file
+             trả về đường dẫn đến file nằm trong folder
+            """
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            target_dir = os.path.join(current_dir, name_folder)
+            os.makedirs(target_dir, exist_ok=True)
+
+            file_path = os.path.join(target_dir, name_file)
+
+            if not os.path.exists(file_path):
+                print("📄 File không tồn tại, tạo mới.")
+                with open(file_path, "wb") as f:   # tạo file nhị phân rỗng
+                    print("File rỗng")
+                    f.write(b"")                   # ghi 0 byte
+            # else:
+            #     print("📄 File đã tồn tại.")
+            #     # Kiểm tra phần mở rộng
+            #     ext = os.path.splitext(name_file)[1].lower()
+            #     if ext in [".txt", ".json", ".md"]:   # file text
+            #         with open(file_path, "r", encoding="utf-8") as f:
+            #             print(f.read())
+            #     else:  # file nhị phân (.pt, .png, .jpg, ...)
+            #         with open(file_path, "rb") as f:
+            #             data = f.read()
+            #             print(data)
+            #             print("📦 Đây là file nhị phân, kích thước:", len(data), "bytes")
+            return file_path
+
+    def create_folder(self,folder_path: str):
+        """
+        Tạo 1 folder theo đường dẫn.
+        Nếu đã tồn tại thì không báo lỗi.
+        """
+        try:
+            os.makedirs(folder_path, exist_ok=True)
+            print(f"✅ Đã tạo (hoặc đã tồn tại): {folder_path}")
+            return folder_path
+        except Exception as e:
+            print(f"❌ Lỗi khi tạo folder: {e}")
+            return None
+    

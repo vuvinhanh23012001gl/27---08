@@ -84,9 +84,9 @@ def fuc_main_process():
                             obj_manager_serial.send_data(data_web_rx)
                             result_send = func.wait_for_specific_data(obj_manager_serial,data_web_rx)                   
                             if result_send:
-                                queue_tx_web_log.put(f" Di chuyển thành công đến tọa độ : {data_web_rx}")
+                                queue_tx_web_log.put(f"\n✔️Chạy {data_web_rx} thành công")
                             else :
-                                queue_tx_web_log.put(f" Di chuyển thất bại đến tọa độ  : {data_web_rx}")
+                                queue_tx_web_log.put(f"\n❌Chạy {data_web_rx} thất bại")
                     if is_data_train == 1:
                                 is_data_train = 0
                                 print("Có sản phẩm cần Trainging")

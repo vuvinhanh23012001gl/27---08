@@ -133,7 +133,31 @@ class ProductType:
     def get_path_img_master(self):
         """Trả về đường dẫn tuyệt đối của sản IMG Master"""
         return self.path_img_master
+    def update_point_by_index(self, index: int, x=None, y=None, z=None, brightness=None):
+        """
+        Cập nhật thông tin của một điểm dầu theo vị trí index.
+        - index: vị trí phần tử trong list_point (bắt đầu từ 0)
+        - x, y, z, brightness: giá trị mới (nếu None thì giữ nguyên giá trị cũ)
+        Trả về True nếu cập nhật thành công, False nếu lỗi.
+        """
+        if not self.list_point:
+            print("❌ Danh sách rỗng, không thể sửa.")
+            return False
 
+        if 0 <= index < len(self.list_point):
+            point = self.list_point[index]
+
+            # Giữ nguyên giá trị cũ nếu không truyền vào
+            point.x = x if x is not None else point.x
+            point.y = y if y is not None else point.y
+            point.z = z if z is not None else point.z
+            point.brightness = brightness if brightness is not None else point.brightness
+
+            print(f"✏️ Đã cập nhật điểm tại index {index}: (x={point.x}, y={point.y}, z={point.z}, brightness={point.brightness})")
+            return True
+        else:
+            print(f"❌ Index {index} không hợp lệ. Độ dài hiện tại: {len(self.list_point)}")
+            return False
          
 # Loai_1  = ProductType("1", "Loại A",[1,2,3])
 # Loai_1.add_list_point(1, 2, 3, 10)

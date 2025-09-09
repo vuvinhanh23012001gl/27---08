@@ -5,7 +5,6 @@ import json
 import os
 import func
 
-from PIL import Image, ImageDraw, ImageFont
 class ProductTypeManager:
 
     NAME_FILE_STATIC  = "static"
@@ -257,6 +256,29 @@ class ProductTypeManager:
             return True
         print("Không tìm thấy ID trong danh sách")
         return False
+    def fix_score_point_product(self,type_id:str,x:int,y:int,z:int,brightness:int,index)->bool:
+        if type_id is None or x is None or y is None or z is None or brightness is None:
+            print("Giá trị đầu vào khác Null")
+            return False
+        isObject = self.find_by_id(type_id)
+        if isObject != -1:
+            if x < 0 or y < 0 or z < 0:
+                    print("Giá trị x, y, z phải lớn hơn hoặc bằng 0.")
+                    return False
+            xyz = isObject.get_xyz()
+            if x > xyz[0] or y > xyz[1] or z > xyz[2]:
+                    print(f"Giá trị x, y, z phải nhỏ hơn hoặc bằng {xyz}.")
+                    return False
+            print("đã vào đây")
+            status_update_point = isObject.update_point_by_index(index,x, y, z, brightness)
+            if status_update_point:
+                self.update_data_json()
+                print("Thêm điểm thành công")
+                return True
+            print("Thêm điểm không thành công")
+            return False
+        print("Không tìm thấy ID trong danh sách")
+        return False
     def update_data_json(self)->None:
         self.save_json_data(self.path_product_list)
         self.data = self.get_file_data()
@@ -264,8 +286,9 @@ class ProductTypeManager:
         print("Cập nhật lại dữ liệu")
 
     def create_file_and_path_img_master(self,idtype:str,name_img:str)->bool:
-        """ Tạo ra đường dẫn và tạo ra ảnh rỗng nếu đúng
-        trả về đường dẫn ảnh nếu đúng trả về none nếu sai"""
+        """đầu vào: ID cần tìm , tên ảnh nếu tìm thấy
+        chức năng hàm :  Tạo ra 1 đường dẫn ảnh có tên name_img nằm trong thư mục ảnh master của loại sản phẩm
+        """
         strip_data = idtype.strip()
         result =  self.find_by_id(strip_data)
         if result != -1:
@@ -395,6 +418,8 @@ class ProductTypeManager:
 # quanly.add_list_point_to_product("SP01",56,70,10,80)
 # quanly.add_list_point_to_product("SP01",80,60,12,80)
 
+# quanly = ProductTypeManager()
+# quanly.fix_score_point_product("SP01",12,40,12,80,2)
 # # # # # quanly = ProductTypeManager()
 # # # # # print(quanly.get_list_id_product())
 
