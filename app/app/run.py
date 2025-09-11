@@ -5,7 +5,7 @@ from flask_socketio import SocketIO
 from connect_camera import BaslerCamera
 from flask import redirect, url_for
 from producttypemanager import ProductTypeManager
-import check_shape
+from process_master import Proces_Shape_Master
 import threading
 import time
 import func
@@ -33,6 +33,7 @@ api_add_master = Blueprint("api_add_master",__name__)
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 manage_product = ProductTypeManager()
+shape_master = Proces_Shape_Master()
 cam_basler = None
 
 #-------open thread--------
@@ -154,12 +155,8 @@ def master_take():
         print(f"gui data master co ten {choose_master_index}")
         path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
         print(path_arr_img)
-        return {"path_arr_img": path_arr_img} 
-    return {"path_arr_img": None}
-
-
-
-
+        return {"path_arr_img": path_arr_img,"Shapes":shape_master.get_data_is_id(data_strip)} 
+    return {"path_arr_img": None,"Shapes":None}
 
 
 
@@ -169,15 +166,18 @@ def master_take():
 def config_master():
     data = request.get_json()
     choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER) # đọc lại file choose master cũ xem lần trước  người dùng chọn gì
-    print(data)   
-    check_shape.save_shapes_to_json(data,"shapes.json")
-    # status = check_shape.check_shapes(data)
-    # print("--------------------------------Luu Thanh cong-------------------")
-    # # if(status):
-    # #     print("--------------------------------dU LIEU CHUA CHUAN-------------------")
-    # # else :
-    # #     print("--------------------------------dU LIEU DA  CHUAN---------------------")
+    choose_master_index = str(choose_master_index).strip()
+    status_check = shape_master.check_all_rules(data)
+    if status_check:
+        status_save = shape_master.save_shapes_to_json(choose_master_index,data)
+        queue_tx_web_log.put_nowait("Lưu dữ liệu thành công") if status_save else queue_tx_web_log.put_nowait("Lưu dữ liệu thất bại") 
+    else:
+        print("Dữ liệu bị lỗi")
+        queue_tx_web_log.put_nowait("Kiểm tra dữ liệu bị sai")
     return jsonify({'status':"OKE"})
+
+
+
 #--------------------------------------------------------Api_new_product ---------------------------------------------
 @api_new_product.route("/add")
 def add():
@@ -255,6 +255,37 @@ def chose_product():
     print(data)
     return render_template("chose_product.html",data = data)
 
+@api_choose_master.route("/exit")
+def exit_choose_master():
+    response = {
+        'redirect_url':'/'
+    }
+    return jsonify(response)
+@api_choose_master.route("/erase_product",methods = ["POST"])
+def erase_product():
+    print("------------------------------------------Tiến hành xóa bắt đầu----------------------------------")
+    data = request.get_json()
+    print(data)
+    Choose_product_erase = data.get("Choose_product_erase",-1)
+    print(Choose_product_erase)
+    if Choose_product_erase != -1 :
+        status_erase_product = manage_product.remove_product_type(Choose_product_erase)
+        if status_erase_product:
+            response = {
+                'redirect_url':'/'
+            }
+            print("------------------------------------------Tiến hành xóa kết thúc 1----------------------------------")
+            return jsonify(response)
+           
+        else :
+            print("------------------------------------------Tiến hành xóa kết thúc 2----------------------------------")
+            return jsonify({"status":"200OK","erase":"NG"})
+    else:
+        print("------------------------------------------Tiến hành xóa kết thúc 3----------------------------------")
+        print("Không nhận được data chuẩn Form")
+    return jsonify({"status":"200OK","erase":None})
+
+
 #----------------------------------------------api_add_master------------------------------------------------------
 @api_add_master.route("/",methods=["POST"],strict_slashes=False)
 def api_add_master_tree():
@@ -277,7 +308,7 @@ def api_add_master_tree():
             "inf_product": inf_product
         },namespace='/data_clinet_show')   
         return {"path_arr_img": path_arr_img,"arr_point":arr_point,"inf_product":inf_product} 
-    return {"path_arr_img": None,"arr_point":None,"inf_product":inf_product}
+    return {"path_arr_img": None,"arr_point":None,"inf_product":None}
 
 
         
@@ -306,6 +337,7 @@ def capture_master():
             status_camera = cam_basler.is_camera_stable()
             if status_camera :
                 status = manage_product.create_file_and_path_img_master(data_strip,f"img_{index_capture}.png")
+                print(status)
                 if status:
                     status_create_file = status.get("return",-1)
                     path = status.get("path",-1)

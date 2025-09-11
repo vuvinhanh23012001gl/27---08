@@ -349,7 +349,7 @@ def write_data_to_file(filename: str, content: str, append: bool = False) -> Non
         file_path = os.path.join(static_dir, filename)
         mode = "a" if append else "w"
         with open(file_path, mode, encoding="utf-8") as f:
-            f.write(content + "\n")
+            f.write(str(content))
         action = "Thêm vào" if append else "Ghi đè"
         print(f"✅ {action} file '{filename}' thành công.")
     except:

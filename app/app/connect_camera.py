@@ -2,8 +2,8 @@ import cv2
 import time
 from datetime import datetime
 import base64
-from pypylon import pylon,genicam
-from folder import FolderCreator
+from pypylon import pylon
+from folder_create import Create
 import threading
 import traceback
 import os
@@ -215,7 +215,7 @@ class BaslerCamera:
                     self.camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
 
                 try:
-                    self.folder_retrain = FolderCreator(BaslerCamera.NAME_FOLDER_TRAIN)
+                    self.folder_retrain = Create(BaslerCamera.NAME_FOLDER_TRAIN)
                     # Tạo base: .../static/Training
                     product_folder = self.folder_retrain.create_subfolder_support(name_foder_in_static)
                     # Cho FolderCreator biết base mới

@@ -5,7 +5,7 @@ import {
 } from "./show_main_status.js";
 
 const logSocket = io("/log");
-const erase_master = document.getElementById("erase-master");
+
 const btn_add_master = document.getElementById("btn-add-master");
 const log_master =  document.getElementById("log_add_master");
 const anonymous =  document.getElementById("anonymous");
@@ -85,8 +85,9 @@ btn_add_master.addEventListener("click",function(){
                       btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
                       btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
 
+                      // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster(index));
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
-                      // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
+                      // 
 
 
                      
@@ -111,15 +112,16 @@ btn_add_master.addEventListener("click",function(){
 
 
 //Xóa chưa Oke Cần Viết sau
-erase_master.addEventListener("click",function(){
-  console.log("Max_X",Max_X,Max_Y,Max_Z)
-  console.log("Đã nhấn vào nút xóa master");
-  console.log("Ảnh đang chỉ tới là",index_img_current);
-  postData("api_add_master/erase_master", { "status": "200OK" }).then(data => {
-  console.log("Server response: " + data);
-  });
+
+// erase_master.addEventListener("click",function(){
+//   console.log("Max_X",Max_X,Max_Y,Max_Z)
+//   console.log("Đã nhấn vào nút xóa master");
+//   console.log("Ảnh đang chỉ tới là",index_img_current);
+//   postData("api_add_master/erase_master", { "status": "200OK" }).then(data => {
+//   console.log("Server response: " + data);
+//   });
   
-});
+// });
 
 // sự kiện nhấn chuyển tab
 headerMasterAdd.addEventListener("click",function(){

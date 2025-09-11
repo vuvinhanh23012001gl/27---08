@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../static/css/show_main.css">
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <title>Kiểm tra dầu</title>
-    <script>
+    <!-- <script>
     if (localStorage.getItem("app_open") === "true") {   // kiem tra xem trinh duet mo hay chua 
       window.location.href = "/empty_page.html";   
     } else {
@@ -16,7 +16,7 @@
     window.addEventListener("beforeunload", () => {
       localStorage.removeItem("app_open");
     });
-    </script>
+    </script> -->
 </head>
 <body>
     <div class = "header">
@@ -110,7 +110,6 @@
                                     <img id = "btn-circle" src="../static/img/circle.png" alt="Hình Tròn">
                                 </div>
                             </div>
-                            <button id = "btn-select-max"><img src="../static/img/scan.png" alt="icon vẽ đường bao lơn ">Vẽ đường bao khối</button>
                             <button id = "btn-select-min"><img src="../static/img/stop.png" alt="icon vẽ đường bao nhỏ nhất"> Vẽ đường bao điểm</button>
                             <button id = "btn-undo"><img src="../static/img/eraser.png" alt="icon xóa hình"> Xóa hình trước</button>
                             <button id = "btn-erase"><img src="../static/img/clean-up.png" alt="icon xóa tất cả"></i> Xóa tất cả các hình</button>
@@ -179,7 +178,6 @@
                     <!-- Nút điều khiển tất cả điểm -->
                     <div class="controls-all-points">
                         <button class="btn btn-add-point" id = "btn-add-master"><img src="../static/img/gallery.png" alt="Thêm master"> Thêm master</button>
-                        <button class="btn btn-delete-point" id = "erase-master"><img src="../static/img/eraser_img.png" alt="Xóa master"> Xóa master</button>
                         <button class="btn btn-save"><img src="../static/img/diskette.png" alt="Lưu master"> Lưu</button>
                         <button class="btn btn-exit"><img src="../static/img/close.png" alt="Thoát master"> Thoát</button>
                     </div>                    

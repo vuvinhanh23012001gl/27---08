@@ -1,9 +1,9 @@
 {
     "SP01": {
         "type_id": "SP01",
-        "type_name": "GAT-123.xyz",
+        "type_name": "GAT-123.124",
         "description": " Description deafaut ",
-        "len": 6,
+        "len": 4,
         "xyz": [
             110,
             75,
@@ -19,33 +19,21 @@
                 "brightness": 80
             },
             {
-                "x": 45,
-                "y": 60,
-                "z": 8,
+                "x": 36,
+                "y": 46,
+                "z": 3,
                 "brightness": 80
             },
             {
-                "x": 65,
-                "y": 58,
-                "z": 10,
-                "brightness": 80
-            },
-            {
-                "x": 50,
-                "y": 60,
-                "z": 8,
+                "x": 51,
+                "y": 53,
+                "z": 4,
                 "brightness": 80
             },
             {
                 "x": 74,
                 "y": 52,
                 "z": 4,
-                "brightness": 80
-            },
-            {
-                "x": 48,
-                "y": 49,
-                "z": 10,
                 "brightness": 80
             }
         ]
@@ -54,27 +42,14 @@
         "type_id": "SP02",
         "type_name": "GAT-123.124",
         "description": " Description deafaut ",
-        "len": 2,
+        "len": 0,
         "xyz": [
             110,
-            80,
-            15
+            75,
+            12
         ],
         "path_img_product": "static/Product_Photo/IMG_SP02.png",
         "path_img_master": "static/Master_Photo/Master_SP02",
-        "point_check": [
-            {
-                "x": 34,
-                "y": 40,
-                "z": 2,
-                "brightness": 80
-            },
-            {
-                "x": 42,
-                "y": 47,
-                "z": 2,
-                "brightness": 80
-            }
-        ]
+        "point_check": []
     }
 }

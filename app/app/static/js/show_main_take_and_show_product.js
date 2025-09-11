@@ -20,7 +20,6 @@ import {
   btn_erase,
   btn_check,
   select_min,
-  select_max,
   btn_accept_and_send,
   api_training,
   postData,
@@ -65,7 +64,7 @@ let mode = null;
 let startX = 0, startY = 0, endX = 0, endY = 0;
 let isDrawing = false;
 let prevUrl = null;
-
+let is_screen_frame_load_data = true;
 
 canvas_img_show.addEventListener("mousedown", handleMouseDown);
 canvas_img_show.addEventListener("mousemove", handleMouseMove);
@@ -97,7 +96,6 @@ function deactivateAllButtons() {
   btn_circle.style.scale = "";
   mode = null;
   select_min.classList.remove("active");
-  select_max.classList.remove("active");
 }
 
 
@@ -244,20 +242,10 @@ function handleSelectMinClick() {
     return;
   }
   log.innerText = "Tiến hành vẽ đường bao điểm dầu \n";
-  select_max.classList.remove("active");
   select_min.classList.add("active");
 }
 
-function handleSelectMaxClick() {
-  if (check_select == 0) {
-    log.innerText = "Hãy chọn biên dạng phù hợp";
-    return;
-  }
-  log.innerText = "Tiến hành vẽ đường bao khối\n";
-  select_min.classList.remove("active");
-  select_max.classList.add("active");
-  mode = "max";
-}
+
 
 function handleCanvasDoubleClick(event) {
   log.innerHTML = "✍️ Nhập thông tin\n❌Tên quy ước không được trùng với tên đã có trong hình";
@@ -286,14 +274,20 @@ function handleCanvasDoubleClick(event) {
       }
 
       // Tạo bảng
-      labels.forEach(label => {
+      labels.forEach((label,index)=> {
         const add_tr = document.createElement("tr");
         const add_th = document.createElement("th");
         const add_td = document.createElement("td");
         const add_input = document.createElement("input");
 
         add_th.innerText = label;
-        add_input.type = "text";
+        
+        if (index == 0) {
+            add_input.type = "text";
+        }
+        else {
+           add_input.type = "number";
+        }
         add_input.placeholder = "Nhập ... ";
         add_input.className = "input-field"; 
 
@@ -329,7 +323,7 @@ function handleCanvasDoubleClick(event) {
       }
 
       // Tạo bảng
-      labels.forEach(label => {
+      labels.forEach((label,index) => {
         const add_tr = document.createElement("tr");
         const add_th = document.createElement("th");
         const add_td = document.createElement("td");
@@ -337,6 +331,12 @@ function handleCanvasDoubleClick(event) {
 
         add_th.innerText = label;
         add_input.type = "text";
+        if (index == 0) {
+            add_input.type = "text";
+        }
+        else {
+           add_input.type = "number";
+        }
         add_input.placeholder = "Nhập ... ";
         add_input.className = "input-field"; 
 
@@ -407,16 +407,17 @@ function handleCanvasDoubleClick(event) {
       const value = input.value.trim();
       const key = labelToKey[label] || label;
 
+      // Check trùng tên hình min
       if (key == "ten_hinh_min") {
         const existing = shapes.find(shape =>
           ((shape?.ten_hinh_min) ?? '').trim() === (value ?? '').trim()
         );
         if (existing && existing !== foundShape) {
-          // Nếu là shape khác thì coi như trùng, không cho phép
           valid_repeat = false;
         }
       }
 
+      // Check trùng tên khung max
       if (key == "ten_khung_max") {
         const existing = shapes.find(shape =>
           ((shape?.ten_khung_max) ?? '').trim() === (value ?? '').trim()
@@ -426,33 +427,45 @@ function handleCanvasDoubleClick(event) {
         }
       }
 
+      // Các trường số nguyên
       if (integerKeys.includes(key)) {
         if (!/^-?\d+$/.test(value)) {
+          // Không phải số nguyên
           input.style.border = "1px solid red";
           valid = false;
           return;
         } else {
+          const numberValue = parseInt(value, 10);
+          if (numberValue < 0) {
+            // Số nguyên nhưng không hợp lệ (<= 0)
+            input.style.border = "1px solid red";
+            input.value = 0;
+            valid = false;
+            return;
+          }
+          // Hợp lệ
           input.style.border = "";
-          data[key] = parseInt(value, 10); 
+          data[key] = numberValue;
           return;
         }
       }
 
+      // Các trường khác (string)
       input.style.border = "";
       data[key] = value;
     });
 
+    // Sau khi duyệt xong tất cả row
     if (!valid) {
-      alert("Bạn cần nhập số ở đây!");
+      alert("Bạn cần nhập số nguyên dương (> 0) ở các ô bị đánh dấu đỏ!");
       return;
     }
     if (!valid_repeat) {
       undo_shapes();
-      hidden_table_and_button(table_write_data,part_table_log);
-      alert("Tên hình bao điểm vừa vẽ đã có ! Hãy vẽ lại hình và đặt tên khác");
+      hidden_table_and_button(table_write_data, part_table_log);
+      alert("Tên hình/khung đã tồn tại! Hãy vẽ lại hình và đặt tên khác");
       return;
     }
-
     const text = data.ten_khung_max || data.ten_hinh_min || "Không có nội dung";
     writeLabelWitdthGet(foundShape, text, foundShape.x1, foundShape.y1);
 
@@ -542,9 +555,14 @@ api_training.addEventListener("click", () => {
   window.location.href = "/api_new_model/training-model";
 });
 
+function split_data_shapes(data){
+   console.log("master_shapes_data----------------------------",data)
+   shapes_all = data;
+   is_screen_frame_load_data = true;
+}
 
 headerMasterTake.addEventListener("click", () => {
-  set_Z_index_canvas_show(-1);
+    set_Z_index_canvas_show(-1);
     const take_master = document.getElementById("paner-take-master");
     if (current_panner === take_master) return;
     current_panner.classList.remove("active");
@@ -555,6 +573,10 @@ headerMasterTake.addEventListener("click", () => {
     console.log("current_panner",current_panner);
     postData("api_take_master/master_take", { "status": "on" }).then(data => {
             console.log("Master Take :" + data);
+            let master_shapes_data = {};
+            master_shapes_data = data?.Shapes;  
+            split_data_shapes(master_shapes_data)
+
             const imgList = data.path_arr_img; 
             scroll_content.innerHTML = ""; // Xóa hết ảnh cũ trước khi thêm mới
             console.log("Danh sách ảnh:", imgList);
@@ -620,7 +642,6 @@ scroll_container.addEventListener("scroll", Event_press_left_right);
 btn_square.addEventListener("click", handleSquareBtnClick);
 btn_circle.addEventListener("click", handleCircleBtnClick);
 select_min.addEventListener("click", handleSelectMinClick);
-select_max.addEventListener("click", handleSelectMaxClick);
 canvas_img_show.addEventListener("dblclick", handleCanvasDoubleClick);
 
 // ==========================
@@ -701,10 +722,30 @@ function delete_shape_on_page(index, shape_idx) {
         console.log(`Trang ${index} không tồn tại`);
     }
 }
+// function next_page_img(index,index_choose_last){
+//     let dict_data = {}
+//     dict_data.shapes = shapes;
+//     shapes_all[`${index_choose_last}`] = dict_data;
+//     console.log("shapes_all",shapes_all)
+//     if(Object.keys(shapes_all).length > 0)
+//     {
+//          shapes = shapes_all[`${index}`]?.shapes || [];
+//          redrawAll();
+//     }
+// }
 function next_page_img(index,index_choose_last){
     let dict_data = {}
     dict_data.shapes = shapes;
-    shapes_all[`${index_choose_last}`] = dict_data;
+    console.log("dict_data....",dict_data);
+    if (!shapes_all) {
+    shapes_all = {};   // khởi tạo object rỗng
+}
+if (!is_screen_frame_load_data){
+  
+shapes_all[`${index_choose_last}`] = dict_data;}
+else{
+  is_screen_frame_load_data =  false;
+}
     console.log("shapes_all",shapes_all)
     if(Object.keys(shapes_all).length > 0)
     {

@@ -4,8 +4,8 @@ import os
 import shutil
 from pathlib import Path
 class Create:
-    def __init__(self):
-        pass
+    def __init__(self,base_path: str = None):
+        self.base_path = base_path
     def get_data_grandaugter(self,file_name:str,parent:str,grandparent:str)->Dict[str, Any]:
         """Trả về data sản phẩm hiện tại ở trong neu chua khoi tao thi se khoi tao duong dan
            Trả về rỗng nếu không có dữ liệu trong file
@@ -31,6 +31,22 @@ class Create:
         except Exception as e:
             print("⚠️ File JSON rỗng hoặc sai định dạng → trả về dict rỗng")
             return {}
+    def get_data_in_path(self,path:str):
+         """đọc File json theo đường dẫn nếu không có trả về False nếu không có  file hoặc 
+         có đường dẫn nhưng không phải file json . nếu thỏa mãn hết tất cả trả về data của đường dẫn
+         """
+         if path.lower().endswith(".json"):
+            print("Là file Json")
+         else:
+             return False
+         if not os.path.exists(path):
+               print("Thư mục này không tồn tại")
+               return False
+         else :
+            with open(path, 'r', encoding='utf-8') as f:
+                print("Đọc File thành cônng")
+                return json.load(f)
+
     def get_path_grandaugter(self,file_name:str,parent:str,grandparent:str)->Dict[str, Any]:
             """Giống với hàm trên nhưng trả về đường dẫn tới thu mục con
             """
@@ -127,12 +143,12 @@ class Create:
             file_path = folder / file_name
             if not file_path.exists():
                 file_path.touch()  # tạo file rỗng
-                print(f"Đã tạo file: {file_path}")
-                return file_path
+                print(f"Đã tạo file: {file_path}")     
+                return {"return":True,"path":file_path}
             else:
                 print(f"File đã tồn tại: {file_path}")
-                return False
-
+                return {"return":False,"path":file_path}
+            
         except Exception as e:
             print(f"❌ Không thể tạo file: {e}")
             return False
@@ -164,7 +180,6 @@ class Create:
             #             print(data)
             #             print("📦 Đây là file nhị phân, kích thước:", len(data), "bytes")
             return file_path
-
     def create_folder(self,folder_path: str):
         """
         Tạo 1 folder theo đường dẫn.
@@ -177,4 +192,3 @@ class Create:
         except Exception as e:
             print(f"❌ Lỗi khi tạo folder: {e}")
             return None
-    

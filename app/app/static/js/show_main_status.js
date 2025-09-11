@@ -1,5 +1,4 @@
 
-
 export const chooseProductBtn = document.getElementById("choose-product");
 export const current_panner_default = document.getElementById("paner-main");
 export const headerMasterTake = document.getElementById("header-ul-li-master-take");  //chuyển hướng
@@ -26,7 +25,8 @@ export const btn_erase = document.getElementById("btn-erase");
 export const btn_check = document.getElementById("btn-check");
 
 export const select_min = document.getElementById("btn-select-min");
-export const select_max = document.getElementById("btn-select-max");
+
+
 
 export const btn_accept_and_send = document.getElementById("btn-accept-and-send-server"); // Nút nhấn chấp nhận kết nối
 export const api_training = document.getElementById("api-training");
