@@ -311,8 +311,28 @@ def api_add_master_tree():
     return {"path_arr_img": None,"arr_point":None,"inf_product":None}
 
 
-        
-                   
+@api_add_master.route("/erase_index",methods=["POST"],strict_slashes=False)
+def erase_index():
+    data  =  request.get_json()
+    func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
+    choose_id = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)# đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+    choose_id_strip = choose_id.strip() 
+    index = data.get("index",-1)
+    if index != -1:
+        print("choose_id_strip",choose_id_strip)
+        print("index :",index)
+        manage_product.remove_all_master_index(str(choose_id_strip),int(index))
+        path_arr_img = manage_product.get_list_path_master_product_img_name(choose_id_strip)
+        arr_point = manage_product.return_data_list_point(choose_id_strip) 
+        print(path_arr_img)
+        inf_product = manage_product.get_all_ids_and_names()
+        socketio.emit("data_realtime", {
+                            "path_arr_img": path_arr_img,
+                            "arr_point": arr_point,
+                            "inf_product": inf_product
+                    },namespace='/data_clinet_show')  
+    return jsonify({"message":"OK"})
+
 
 
 

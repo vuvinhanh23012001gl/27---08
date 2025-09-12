@@ -1,9 +1,9 @@
 {
     "SP01": {
         "type_id": "SP01",
-        "type_name": "GAT-123.124",
+        "type_name": "STM32-F103C8T6",
         "description": " Description deafaut ",
-        "len": 4,
+        "len": 0,
         "xyz": [
             110,
             75,
@@ -11,36 +11,11 @@
         ],
         "path_img_product": "static/Product_Photo/IMG_SP01.png",
         "path_img_master": "static/Master_Photo/Master_SP01",
-        "point_check": [
-            {
-                "x": 34,
-                "y": 40,
-                "z": 2,
-                "brightness": 80
-            },
-            {
-                "x": 36,
-                "y": 46,
-                "z": 3,
-                "brightness": 80
-            },
-            {
-                "x": 51,
-                "y": 53,
-                "z": 4,
-                "brightness": 80
-            },
-            {
-                "x": 74,
-                "y": 52,
-                "z": 4,
-                "brightness": 80
-            }
-        ]
+        "point_check": []
     },
     "SP02": {
         "type_id": "SP02",
-        "type_name": "GAT-123.124",
+        "type_name": "STM32-F103C8T6",
         "description": " Description deafaut ",
         "len": 0,
         "xyz": [

@@ -84,8 +84,8 @@ btn_add_master.addEventListener("click",function(){
 
                       btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
                       btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
-
-                      // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster(index));
+                      btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster(index));
+                      // 
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
                       // 
 
@@ -226,9 +226,9 @@ function renderMaster(data) {
 
                       btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
                       btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
+                      btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster(index));
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
-                      // btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster);
-
+                      // 
                     //  console.log("list_point",list_point);
                     //  console.log("list_point[index].x",list_point[index].x);
                     //  console.log("list_point[index].y",list_point[index].y);
@@ -370,11 +370,31 @@ function HandleClickBtnCapture(index,x,y,z,k){
 
 
 }
-function HandleClickBtnRunAll(){
-
-}
-function HandleClickBtnEraseMaster(){
-
+function HandleClickBtnEraseMaster(index){
+    fetch('/api_add_master/erase_index', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"index":index})
+  })
+    .then(response => response.json())
+    .then(data => {
+                   const show_img = new Image();
+                              canvas_show.width = 1328;
+                              canvas_show.height = 830;
+                   
+                                        show_img.onload = () => {
+                                          ctx_show.drawImage(show_img, 0, 0, 1328, 830);
+                                        };
+      console.log("Trạng thái:",data.message)
+      console.log(`✅ Đã gửi điểm ${index} đến thiết bị. Phản hồi: ${data.message}`);
+    })
+    .catch(error => {
+      console.error('Lỗi khi gửi điểm:', error);
+      alert('❌ Gửi dữ liệu thất bại.');
+    });
+  
 }
 async function sendPoint(x, y, z, brightness) {
   if (isSending) {
@@ -535,8 +555,7 @@ function create_table_controler(index){
       anonymous.appendChild(createButtonRow([
           {id: `btn-run-${index}`, icon: "../static/img/check.png", alt: "Chạy", text: "Chạy"},
           {id: `btn-capture-${index}`, icon: "../static/img/camera.png", alt: "Chụp", text: "Chụp"},
-          {id: `btn-run-all-${index}`, icon: "../static/img/running.png", alt: "Chạy hết", text: "Chạy hết"},
-          {id: `btn-erase-master-${index}`, icon: "../static/img/running.png", alt: "Xóa Master", text: "Xóa Master"}
+          {id: `btn-erase-master-${index}`, icon: "../static/img/running.png", alt: "Xóa Master", text: "Xóa Master này"}
       ]));                  
       // Hiện div anonymous
       anonymous.style.display = "block";

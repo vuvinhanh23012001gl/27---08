@@ -108,11 +108,50 @@ class Proces_Shape_Master():
             else:
                 print("Không tìm thấy ID đó trong sản phẩm")
                 return False
-    def erase_master_index(self,ID:str,index):
+    def erase_master_index(self, ID: str, index):
         """Hàm này thực hiện xóa index thứ bao nhiêu trong 1 ID"""
-        
-        pass  
-            
+        print("Xóa master thứ index:", index)
+        index = int(index)
+        ID = ID.strip()
+        if self.list_regulations:
+            list_key = self.get_list_id_master()
+            print("list_key", list_key)
+            if list_key and ID in list_key:
+                print("Tìm thấy ID:", ID)
+                arr_key = [i for i in self.list_regulations[ID]]
+                print("Trước:", arr_key)
+                if arr_key:
+                    # Nếu tồn tại key đó thì xóa
+                    if str(index) in self.list_regulations[ID]:
+                        self.list_regulations[ID].pop(str(index), None)
+
+                        # Sau khi xóa, renumber lại key nếu còn phần tử
+                        arr_key = list(self.list_regulations[ID].keys())
+                        if arr_key:
+                            name_key_arr_new = [str(i) for i in range(len(arr_key))]
+                            for value1, value2 in zip(arr_key, name_key_arr_new):
+                                self.list_regulations[ID][value2] = self.list_regulations[ID].pop(value1)
+
+                        # Luôn update dữ liệu sau khi xóa
+                        self.update_data()
+                        print("Sau:", list(self.list_regulations[ID].keys()))
+                        print("Xóa thành công")
+                        return True
+                    else:
+                        print("Không tìm thấy index:", index)
+                        return False
+                else:
+                    print("List key không tồn tại")
+                    return False
+            else:
+                print("Không tìm thấy ID đó trong sản phẩm")
+                return False
+
+
+# shape = Proces_Shape_Master()
+# shape.erase_master_index("SP01",0)
+
+
 # shape = Proces_Shape_Master()
 # print(shape.get_list_id_master())
 

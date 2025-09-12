@@ -302,10 +302,12 @@ class ProductTypeManager:
                 return False
             object_folder = Create()
             status = object_folder.create_file_in_folder(path_master,name_img)
+            # self.path_img_master =
             return status
         else :
             print("Không tìm thấy ID")
             return False
+
     def remove_product_type(self, type_id:str)->bool:
         """Xóa tất cả liên quan đến ID như master, đường link ảnh, đường link
         sản phẩm choose master,đường link retraing,dât lưu trong file data"""
@@ -370,8 +372,57 @@ class ProductTypeManager:
         else:
             print("Không tìm thấy ID")
             return False
+    def remove_img_master_index_of_product(self,ID,index):
+        """Xóa ảnh master có index ở vị trí index"""
+        print("Tiến hành xóa ảnh master thứ index")
+        list_id = self.get_list_id_product()
+        if ID in list_id:
+                if index < 0:
+                    print("Index phải lớn 0")
+                    return False  
+                try:      
+                   isObject = self.find_by_id(ID)
+                   path_master = isObject.get_path_img_master()
+                   print("Tìm ảnh có tên trong đường dẫn",path_master)
+                   list_file_in_dir_befor_index = os.listdir(path_master)
+                   if not list_file_in_dir_befor_index:
+                       print("Danh sách rỗng")
+                       return False
+                   if len(list_file_in_dir_befor_index) <= index:
+                       print("Trong thư mục ảnh chứa không index không hợp lệ") # trường hợp này xảy ra khi Data vị trí có nhưng chưa chụp ảnh lưu 
+                       return False
+                   else:
+                       print(f"Tìm ảnh có index :{index}")
+                       name_file_index = self.find_file_by_index(list_file_in_dir_befor_index,index)
+                       patd_index = os.path.join(path_master,name_file_index)
+                       if not os.path.exists(patd_index):
+                           print("File không tồn tại")
+                           return False
+                       else:
+                           print("File tồn tại Tiến hành xóa File")
+                           os.remove(patd_index)
+                           print("Tiến hành đổi tên File ảnh")
+                           list_file_in_dir_after_index = os.listdir(path_master)
+                           print("Danh sách trước khi xóa",list_file_in_dir_befor_index)
+                           print("Danh sách sau khi xóa",list_file_in_dir_after_index)
+                           arr_new = self.insert_missing_files(list_file_in_dir_after_index,len(list_file_in_dir_after_index)-1)
+                           for value1,value2 in zip(list_file_in_dir_after_index,arr_new):
+                               path_value1 = os.path.join(path_master,value1)
+                               path_value2 = os.path.join(path_master,value2)
+                               print(path_value1)
+                               print(path_value2)
+                               os.rename(path_value1,path_value2)
+                           print("Đổi tên thành cống")
+                           print(f"Xóa file {name_file_index} thành công")
+                           return True
+                except:
+                    print("Xóa lỗi, ko xóa được")
+                    return False
+        else:
+            print("Không tìm thấy ID trong list ID")
+            return False
 
-    def remove_img_index_of_product(self,ID:str,index:int):
+    def remove_data_index_of_product(self,ID:str,index:int):
         """Sẽ xóa data ơ vi tri index có trong 1 ID trả về True nếu xóa thành công tra về False nếu xóa không thành công"""
         list_id = self.get_list_id_product()
         if ID in list_id:
@@ -382,14 +433,15 @@ class ProductTypeManager:
                     return False
                 if index < 0:
                     print("Index phải lớn 0")
+                    return False  
+                try:      
+                   self.product_types[ID].list_point.pop(index)
+                   self.update_data_json()
+                   print("Xóa index thành công")
+                   return True
+                except:
+                    print("Xóa lỗi, ko xóa được")
                     return False
-                arr_point = arr_point.pop(index) #xoa roi gan lai luon
-                
-                print(type(self.product_types[ID].list_point[0]))
-                print(type(arr_point))
-               
-
-
             else:
                 print("Sản phẩm chưa có list ID")
                 return False
@@ -397,16 +449,56 @@ class ProductTypeManager:
         else:
             print("Không tìm thấy ID trong list ID")
             return False
+    def find_file_by_index(self, file_list, index):
+        target_file_name = f"img_{index}.png"
+        if target_file_name in file_list:
+            return target_file_name
+        else:
+            return None  # or you can return a custom message
+    def insert_missing_files(self,file_list, max_index):
+        result = []
+        for i in range(max_index + 1):
+            file_name = f"img_{i}.png"
+            if file_name in file_list:
+                result.append(file_name)
+            else:
+                result.append(file_name)  # still add to maintain order; can be handled differently if needed
+        return result
+    
+    def remove_all_master_index(self,ID,index):
+        index = int(index)
+        print("--------------------------------------Remove All Master Index ------------------------------------")
+        statuse_erase_img = self.remove_img_master_index_of_product(ID,index)
+        statuse_erase_data = self.remove_data_index_of_product(ID,index)
+        print("--------------str(ID) ",ID) 
+        print("--------------index(index) ",index) 
+        statuse_erase_master_index = self.Proces_Shape_Master.erase_master_index(str(ID),int(index))
+        if statuse_erase_img == True and statuse_erase_data == True:
+            print("Xóa thành công ảnh master thứ ",index)
+            print("Xóa thành công dữ liệu master thú",index)
+            if not statuse_erase_master_index:
+                print("Xóa không thành công dữ liệu master do....")
+            else:
+                print("Xóa thành công dữ liệu master")
+        print("---------------------------------------------o0o--------------------------------------------------")
+
+
 
 
 # #----------------------------------------------------------------------------------------------------------------------------
-quanly = ProductTypeManager()
-quanly.remove_img_index_of_product("SP01",1)
+# quanly = ProductTypeManager()
+# quanly.remove_data_index_of_product("SP01",3)
 
+# quanly = ProductTypeManager()
+# quanly.remove_all_master_index("SP01",0)
 
+# quanly = ProductTypeManager()
+# quanly.remove_img_master_index_of_product("SP01",0)
 # quanly = ProductTypeManager()
 # quanly.remove_product_type("SP02")
 
+# quanly = ProductTypeManager()
+# quanly.remove_data_index_of_product("SP01",3)
 
 # quanly = ProductTypeManager()
 # print(quanly.get_list_path_master())
