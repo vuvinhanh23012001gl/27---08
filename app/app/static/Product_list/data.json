@@ -1,9 +1,9 @@
 {
     "SP01": {
         "type_id": "SP01",
-        "type_name": "STM32-F103C8T6",
+        "type_name": "STM32-F103C8T6 ",
         "description": " Description deafaut ",
-        "len": 0,
+        "len": 4,
         "xyz": [
             110,
             75,
@@ -11,20 +11,31 @@
         ],
         "path_img_product": "static/Product_Photo/IMG_SP01.png",
         "path_img_master": "static/Master_Photo/Master_SP01",
-        "point_check": []
-    },
-    "SP02": {
-        "type_id": "SP02",
-        "type_name": "STM32-F103C8T6",
-        "description": " Description deafaut ",
-        "len": 0,
-        "xyz": [
-            110,
-            75,
-            12
-        ],
-        "path_img_product": "static/Product_Photo/IMG_SP02.png",
-        "path_img_master": "static/Master_Photo/Master_SP02",
-        "point_check": []
+        "point_check": [
+            {
+                "x": 34,
+                "y": 41,
+                "z": 5,
+                "brightness": 80
+            },
+            {
+                "x": 46,
+                "y": 63,
+                "z": 6,
+                "brightness": 80
+            },
+            {
+                "x": 61,
+                "y": 60,
+                "z": 10,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 56,
+                "z": 1,
+                "brightness": 80
+            }
+        ]
     }
 }

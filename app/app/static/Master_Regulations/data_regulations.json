@@ -1,3 +1,80 @@
 {
-    "SP01": {}
+    "SP01": {
+        "0": {
+            "shapes": [
+                {
+                    "type": "rect",
+                    "x1": 912,
+                    "y1": 526,
+                    "x2": 964,
+                    "y2": 584,
+                    "mode": "min",
+                    "color": "blue",
+                    "ten_hinh_min": "0",
+                    "so_diem_dau": 0,
+                    "kich_thuoc_min": 0,
+                    "kich_thuoc_max": 0,
+                    "tuong_thich_min": 0,
+                    "tuong_thich_max": 0
+                }
+            ]
+        },
+        "1": {
+            "shapes": [
+                {
+                    "type": "rect",
+                    "x1": 772,
+                    "y1": 327,
+                    "x2": 853,
+                    "y2": 381,
+                    "mode": "min",
+                    "color": "blue",
+                    "ten_hinh_min": "2",
+                    "so_diem_dau": 2,
+                    "kich_thuoc_min": 2,
+                    "kich_thuoc_max": 2,
+                    "tuong_thich_min": 2,
+                    "tuong_thich_max": 2
+                }
+            ]
+        },
+        "2": {
+            "shapes": [
+                {
+                    "type": "rect",
+                    "x1": 668,
+                    "y1": 103,
+                    "x2": 732,
+                    "y2": 162,
+                    "mode": "min",
+                    "color": "blue",
+                    "ten_hinh_min": "3",
+                    "so_diem_dau": 3,
+                    "kich_thuoc_min": 3,
+                    "kich_thuoc_max": 3,
+                    "tuong_thich_min": 3,
+                    "tuong_thich_max": 3
+                }
+            ]
+        },
+        "3": {
+            "shapes": [
+                {
+                    "type": "rect",
+                    "x1": 673,
+                    "y1": 127,
+                    "x2": 788,
+                    "y2": 234,
+                    "mode": "min",
+                    "color": "blue",
+                    "ten_hinh_min": "4",
+                    "so_diem_dau": 4,
+                    "kich_thuoc_min": 4,
+                    "kich_thuoc_max": 4,
+                    "tuong_thich_min": 4,
+                    "tuong_thich_max": 4
+                }
+            ]
+        }
+    }
 }

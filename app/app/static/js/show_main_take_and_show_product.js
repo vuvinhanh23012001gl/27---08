@@ -562,6 +562,7 @@ function split_data_shapes(data){
 }
 
 headerMasterTake.addEventListener("click", () => {
+    shapes_all = {};
     set_Z_index_canvas_show(-1);
     const take_master = document.getElementById("paner-take-master");
     if (current_panner === take_master) return;
@@ -576,13 +577,13 @@ headerMasterTake.addEventListener("click", () => {
             let master_shapes_data = {};
             master_shapes_data = data?.Shapes;  
             split_data_shapes(master_shapes_data)
-
+            number_img_receive = 0;
             const imgList = data.path_arr_img; 
             scroll_content.innerHTML = ""; // Xóa hết ảnh cũ trước khi thêm mới
             console.log("Danh sách ảnh:", imgList);
             imgList.forEach((imgPath, index) => {
                 index_point_current =  index; 
-                number_img_receive = number_img_receive + 1;
+                 number_img_receive++; 
 
                 const div_create = document.createElement("div");
                 div_create.className = "div-index-img-mater";

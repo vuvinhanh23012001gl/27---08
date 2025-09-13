@@ -50,7 +50,7 @@ def handle_video_connect():
     print("📡 Client connected to /video")
 @socketio.on('connect', namespace='/log') 
 def handle_log_connect():
-    print("📡 Client connected to /log")
+    print("📡 Client connected to /log") 
 @socketio.on('connect',namespace='/data_clinet_show')  #'/data_clinet_show' img + loction point,... 
 def handle_data_send_connect():
     print("📡 Client connect to /data_clinet_show") #img hiển thị hình ảnh sản phẩm
@@ -310,7 +310,7 @@ def api_add_master_tree():
         return {"path_arr_img": path_arr_img,"arr_point":arr_point,"inf_product":inf_product} 
     return {"path_arr_img": None,"arr_point":None,"inf_product":None}
 
-
+# "Shapes":shape_master.get_data_is_id(data_strip)
 @api_add_master.route("/erase_index",methods=["POST"],strict_slashes=False)
 def erase_index():
     data  =  request.get_json()
@@ -509,7 +509,7 @@ if __name__ == "__main__":
     threading.Thread(target=stream_logs,daemon = True).start()
     threading.Thread(target=stream_img,daemon = True).start()
     threading.Thread(target = stream_frames,daemon=True).start()
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    socketio.run(app, host="0.0.0.0", port=5000, debug=False, use_reloader=False)
     print("Đã thoát chương trình chính")
 
 

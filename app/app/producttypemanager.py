@@ -6,19 +6,18 @@ import json
 import os
 import func
 NAME_FILE_CHOOSE_MASTER = "choose_master"
+Proces_Shape = Proces_Shape_Master()
 class ProductTypeManager:
-
     NAME_FILE_STATIC  = "static"
     NAME_FOLDER_PRODUCT_LIST = "Product_list"
     NAME_DATA_PRODUCT_LIST = "data.json"
 
     def __init__(self):
-        self.Proces_Shape_Master = Proces_Shape_Master()
+
         self.product_types = {}
         self.path_product_list = self.get_patd_datajson()    # Trả về đường dẫn của dẫn tới nơi lưu dữ liệu data.json
         self.data = self.get_file_data()                     # Lấy dữ liệu từ File đấy ra
         self.load_from_file()                                # Load File đấy ra
-
 
     def get_patd_datajson(self):
         """"Hàm này trả về đường dẫn,dẫn tới data.json"""
@@ -347,8 +346,8 @@ class ProductTypeManager:
                         print("Không tìm thấy File ảnh lưu sản phẩm xóa ảnh chưa đc")
                 else:
                     print("Đường dẫn tới Product_Photo không tồn tại")
-                self.Proces_Shape_Master.get_file_data_json()  #Dam bao tat ca du lieu la moi nhat
-                status_erase_master = self.Proces_Shape_Master.erase_product_master(type_id)
+                Proces_Shape.get_file_data_json()  #Dam bao tat ca du lieu la moi nhat
+                status_erase_master = Proces_Shape.erase_product_master(type_id)
                 status = self.remove_product_in_file_data(type_id)
                 if status !=False  and status_erase_master != False:
                     print("Xóa thành công 4 File")
@@ -465,14 +464,13 @@ class ProductTypeManager:
                 result.append(file_name)  # still add to maintain order; can be handled differently if needed
         return result
     
-    def remove_all_master_index(self,ID,index):
-        index = int(index)
+    def remove_all_master_index(self,ID:str,index:int):
         print("--------------------------------------Remove All Master Index ------------------------------------")
+        print("--------------------------------------Cần theo dõi hàm này ------------------------------------")
+        statuse_erase_master_index = Proces_Shape.erase_master_index(ID,index)
+        print("--------------------------------------Kết thúc theo dõi hàm này ------------------------------------")
         statuse_erase_img = self.remove_img_master_index_of_product(ID,index)
         statuse_erase_data = self.remove_data_index_of_product(ID,index)
-        print("--------------str(ID) ",ID) 
-        print("--------------index(index) ",index) 
-        statuse_erase_master_index = self.Proces_Shape_Master.erase_master_index(str(ID),int(index))
         if statuse_erase_img == True and statuse_erase_data == True:
             print("Xóa thành công ảnh master thứ ",index)
             print("Xóa thành công dữ liệu master thú",index)
@@ -490,7 +488,7 @@ class ProductTypeManager:
 # quanly.remove_data_index_of_product("SP01",3)
 
 # quanly = ProductTypeManager()
-# quanly.remove_all_master_index("SP01",0)
+# quanly.remove_all_master_index("SP01",1)
 
 # quanly = ProductTypeManager()
 # quanly.remove_img_master_index_of_product("SP01",0)

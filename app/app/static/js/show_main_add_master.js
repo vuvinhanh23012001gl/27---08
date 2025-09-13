@@ -69,22 +69,57 @@ btn_add_master.addEventListener("click",function(){
                       const btn_run_all      = document.getElementById(`btn-run-all-${index}`);
                       const btn_erase_master = document.getElementById(`btn-erase-master-${index}`);
 
-                 
-                      btn_increase_x.addEventListener("click",()=>HandleClickBtnIncrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_x.addEventListener("click",()=>HandleClickBtnDecrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
+          // Khai báo các handler (function reference)
+const handleIncreaseX = () => HandleClickBtnIncrease_X(input_x, Max_X, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseX = () => HandleClickBtnDecrease_X(input_x, Max_X, input_x.value, input_y.value, input_z.value, input_k.value);
 
-                      btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
+const handleIncreaseY = () => HandleClickBtnIncrease_Y(input_y, Max_Y, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseY = () => HandleClickBtnDecrease_Y(input_y, Max_Y, input_x.value, input_y.value, input_z.value, input_k.value);
 
-                      btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
-                      
-                      btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
+const handleIncreaseZ = () => HandleClickBtnIncrease_Z(input_z, Max_Z, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseZ = () => HandleClickBtnDecrease_Z(input_z, Max_Z, input_x.value, input_y.value, input_z.value, input_k.value);
 
-                      btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster(index));
+const handleIncreaseK = () => HandleClickBtnIncrease_K(input_k, Max_K, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseK = () => HandleClickBtnDecrease_K(input_k, Max_K, input_x.value, input_y.value, input_z.value, input_k.value);
+
+const handleRun       = () => HandleClickBtnRun(input_x.value, input_y.value, input_z.value, input_k.value);
+const handleCapture   = () => HandleClickBtnCapture(index, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleErase     = () => HandleClickBtnEraseMaster(index);
+
+// Gắn event (trước khi add thì remove trước để tránh trùng)
+btn_increase_x.removeEventListener("click", handleIncreaseX);
+btn_increase_x.addEventListener("click", handleIncreaseX);
+
+btn_decrease_x.removeEventListener("click", handleDecreaseX);
+btn_decrease_x.addEventListener("click", handleDecreaseX);
+
+btn_increase_y.removeEventListener("click", handleIncreaseY);
+btn_increase_y.addEventListener("click", handleIncreaseY);
+
+btn_decrease_y.removeEventListener("click", handleDecreaseY);
+btn_decrease_y.addEventListener("click", handleDecreaseY);
+
+btn_increase_z.removeEventListener("click", handleIncreaseZ);
+btn_increase_z.addEventListener("click", handleIncreaseZ);
+
+btn_decrease_z.removeEventListener("click", handleDecreaseZ);
+btn_decrease_z.addEventListener("click", handleDecreaseZ);
+
+btn_increase_k.removeEventListener("click", handleIncreaseK);
+btn_increase_k.addEventListener("click", handleIncreaseK);
+
+btn_decrease_k.removeEventListener("click", handleDecreaseK);
+btn_decrease_k.addEventListener("click", handleDecreaseK);
+
+btn_run.removeEventListener("click", handleRun);
+btn_run.addEventListener("click", handleRun);
+
+btn_capture.removeEventListener("click", handleCapture);
+btn_capture.addEventListener("click", handleCapture);
+
+btn_erase_master.removeEventListener("click", handleErase);
+btn_erase_master.addEventListener("click", handleErase);
+
                       // 
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
                       // 
@@ -206,27 +241,76 @@ function renderMaster(data) {
                       const btn_run_all      = document.getElementById(`btn-run-all-${index}`);
                       const btn_erase_master = document.getElementById(`btn-erase-master-${index}`);
 
-                     
+                                          if (
+                      list_point[index]?.x == null ||
+                      list_point[index]?.y == null ||
+                      list_point[index]?.z == null ||
+                      list_point[index]?.brightness == null
+                    ) {
+                      input_x.value = list_point[index]?.x ?? 0;
+                      input_y.value = list_point[index]?.y ?? 0;
+                      input_z.value = list_point[index]?.z ?? 0;
+                      input_k.value = list_point[index]?.brightness ?? 0;
+                    } else {
                       input_x.value = list_point[index].x;
                       input_y.value = list_point[index].y;
                       input_z.value = list_point[index].z;
                       input_k.value = list_point[index].brightness;
-                 
-                      btn_increase_x.addEventListener("click",()=>HandleClickBtnIncrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_x.addEventListener("click",()=>HandleClickBtnDecrease_X(input_x,Max_X,input_x.value,input_y.value,input_z.value,input_k.value));
-
-                      btn_increase_y.addEventListener("click",()=>HandleClickBtnIncrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_y.addEventListener("click",()=>HandleClickBtnDecrease_Y(input_y,Max_Y,input_x.value,input_y.value,input_z.value,input_k.value));
-
-                      btn_increase_z.addEventListener("click",()=>HandleClickBtnIncrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_z.addEventListener("click",()=>HandleClickBtnDecrease_Z(input_z,Max_Z,input_x.value,input_y.value,input_z.value,input_k.value));
+                    }
                       
-                      btn_increase_k.addEventListener("click",()=>HandleClickBtnIncrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_decrease_k.addEventListener("click",()=>HandleClickBtnDecrease_K(input_k,Max_K,input_x.value,input_y.value,input_z.value,input_k.value));
+                     
+                 
+// Khai báo các handler (function reference)
+const handleIncreaseX = () => HandleClickBtnIncrease_X(input_x, Max_X, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseX = () => HandleClickBtnDecrease_X(input_x, Max_X, input_x.value, input_y.value, input_z.value, input_k.value);
 
-                      btn_run.addEventListener("click",()=>HandleClickBtnRun(input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_capture.addEventListener("click",()=>HandleClickBtnCapture(index,input_x.value,input_y.value,input_z.value,input_k.value));
-                      btn_erase_master.addEventListener("click",()=>HandleClickBtnEraseMaster(index));
+const handleIncreaseY = () => HandleClickBtnIncrease_Y(input_y, Max_Y, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseY = () => HandleClickBtnDecrease_Y(input_y, Max_Y, input_x.value, input_y.value, input_z.value, input_k.value);
+
+const handleIncreaseZ = () => HandleClickBtnIncrease_Z(input_z, Max_Z, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseZ = () => HandleClickBtnDecrease_Z(input_z, Max_Z, input_x.value, input_y.value, input_z.value, input_k.value);
+
+const handleIncreaseK = () => HandleClickBtnIncrease_K(input_k, Max_K, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleDecreaseK = () => HandleClickBtnDecrease_K(input_k, Max_K, input_x.value, input_y.value, input_z.value, input_k.value);
+
+const handleRun       = () => HandleClickBtnRun(input_x.value, input_y.value, input_z.value, input_k.value);
+const handleCapture   = () => HandleClickBtnCapture(index, input_x.value, input_y.value, input_z.value, input_k.value);
+const handleErase     = () => HandleClickBtnEraseMaster(index);
+
+// Gắn event (trước khi add thì remove trước để tránh trùng)
+btn_increase_x.removeEventListener("click", handleIncreaseX);
+btn_increase_x.addEventListener("click", handleIncreaseX);
+
+btn_decrease_x.removeEventListener("click", handleDecreaseX);
+btn_decrease_x.addEventListener("click", handleDecreaseX);
+
+btn_increase_y.removeEventListener("click", handleIncreaseY);
+btn_increase_y.addEventListener("click", handleIncreaseY);
+
+btn_decrease_y.removeEventListener("click", handleDecreaseY);
+btn_decrease_y.addEventListener("click", handleDecreaseY);
+
+btn_increase_z.removeEventListener("click", handleIncreaseZ);
+btn_increase_z.addEventListener("click", handleIncreaseZ);
+
+btn_decrease_z.removeEventListener("click", handleDecreaseZ);
+btn_decrease_z.addEventListener("click", handleDecreaseZ);
+
+btn_increase_k.removeEventListener("click", handleIncreaseK);
+btn_increase_k.addEventListener("click", handleIncreaseK);
+
+btn_decrease_k.removeEventListener("click", handleDecreaseK);
+btn_decrease_k.addEventListener("click", handleDecreaseK);
+
+btn_run.removeEventListener("click", handleRun);
+btn_run.addEventListener("click", handleRun);
+
+btn_capture.removeEventListener("click", handleCapture);
+btn_capture.addEventListener("click", handleCapture);
+
+btn_erase_master.removeEventListener("click", handleErase);
+btn_erase_master.addEventListener("click", handleErase);
+
                       // btn_run_all.addEventListener("click",()=>HandleClickBtnRunAll);
                       // 
                     //  console.log("list_point",list_point);
@@ -370,7 +454,11 @@ function HandleClickBtnCapture(index,x,y,z,k){
 
 
 }
+let dem = 0;
 function HandleClickBtnEraseMaster(index){
+  dem =  dem + 1;
+  console.log("Nhan lan thu",dem,"voi index",index)
+    console.log
     fetch('/api_add_master/erase_index', {
     method: 'POST',
     headers: {

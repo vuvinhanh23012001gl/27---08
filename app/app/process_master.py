@@ -30,18 +30,29 @@ class Proces_Shape_Master():
         with open(self.path_save, 'w', encoding='utf-8') as f:
             json.dump(self.list_regulations, f, ensure_ascii=False, indent=4)
         return True
-    def update_data(self):
-        try:
-            if not self.path_save:
-                print("Lưu thất bại: đường dẫn tới file không tồn tại")
-                return False
-            with open(self.path_save, 'w', encoding='utf-8') as f:
-                json.dump(self.list_regulations, f, ensure_ascii=False, indent=4)
-            return True
-        except:
-            print("Lỗi update data")
+    def update_data(self) -> bool:
+        """
+        Ghi lại toàn bộ dữ liệu self.list_regulations xuống file JSON.
+        Trả về True nếu thành công, False nếu thất bại.
+        """
+        if not self.path_save:
+            print("❌ Lưu thất bại: đường dẫn tới file không tồn tại")
             return False
 
+        try:
+            # Đảm bảo luôn cập nhật dữ liệu mới nhất trong RAM
+            with open(self.path_save, "w", encoding="utf-8") as f:
+                json.dump(self.list_regulations, f, ensure_ascii=False, indent=4)
+
+            # Đọc lại file để đảm bảo dữ liệu đã lưu thành công
+            self.list_regulations = self.get_file_data_json() or {}
+
+            print("✅ Cập nhật dữ liệu thành công")
+            return True
+
+        except Exception as e:
+            print(f"❌ Lỗi update_data: {e}")
+            return False
     def check_all_rules(self, data_sp: dict) -> bool:
             """
             Kiểm tra toàn bộ dữ liệu của 1 sản phẩm (vd: data["SP01"]).
@@ -108,45 +119,47 @@ class Proces_Shape_Master():
             else:
                 print("Không tìm thấy ID đó trong sản phẩm")
                 return False
-    def erase_master_index(self, ID: str, index):
+    def erase_master_index(self, ID: str, index:int):
         """Hàm này thực hiện xóa index thứ bao nhiêu trong 1 ID"""
         print("Xóa master thứ index:", index)
-        index = int(index)
-        ID = ID.strip()
+        self.list_regulations = self.get_file_data_json() or {}
+        print("self.list_regulations",self.list_regulations)
         if self.list_regulations:
             list_key = self.get_list_id_master()
-            print("list_key", list_key)
-            if list_key and ID in list_key:
-                print("Tìm thấy ID:", ID)
+            print("Danh sách ID Master hiện có :",list_key)
+            if  ID in list_key:
+                print("Tìm thấy master quy định có ID",ID)
                 arr_key = [i for i in self.list_regulations[ID]]
-                print("Trước:", arr_key)
+                print("Index ảnh đã có:", arr_key)
                 if arr_key:
-                    # Nếu tồn tại key đó thì xóa
-                    if str(index) in self.list_regulations[ID]:
+                    if str(index) in arr_key:
                         self.list_regulations[ID].pop(str(index), None)
-
-                        # Sau khi xóa, renumber lại key nếu còn phần tử
-                        arr_key = list(self.list_regulations[ID].keys())
-                        if arr_key:
-                            name_key_arr_new = [str(i) for i in range(len(arr_key))]
-                            for value1, value2 in zip(arr_key, name_key_arr_new):
+                        arr_key_new = list(self.list_regulations[ID].keys())
+                        print("Sau khi xóa danh sách ảnh là:",arr_key_new)
+                        if arr_key_new:
+                            name_key_arr_new = [str(i) for i in range(len(arr_key)-1)]
+                            print("Danh sách ảnh sau khi cần đổi tên",name_key_arr_new)
+                            for value1, value2 in zip(arr_key_new, name_key_arr_new):
                                 self.list_regulations[ID][value2] = self.list_regulations[ID].pop(value1)
-
-                        # Luôn update dữ liệu sau khi xóa
-                        self.update_data()
-                        print("Sau:", list(self.list_regulations[ID].keys()))
-                        print("Xóa thành công")
-                        return True
+                            print("Update sau khi xoa")
+                            self.update_data()
+                            print("Danh sách index còn lại sau khi xóa", list(self.list_regulations[ID].keys()))
+                            print("Xóa thành công")
+                            return True
+                        else:
+                          self.update_data()
+                          print("Danh sách đã rỗng")
+                          return False
                     else:
-                        print("Không tìm thấy index:", index)
-                        return False
+                       print("Index không nằm trong data đang có")
+                       return False
                 else:
-                    print("List key không tồn tại")
+                    print("Loại sản phẩm này chưa có dữ liệu Master regulation")
                     return False
             else:
-                print("Không tìm thấy ID đó trong sản phẩm")
+                print("ID này chưa tạo master regulation")
                 return False
-
+          
 
 # shape = Proces_Shape_Master()
 # shape.erase_master_index("SP01",0)
@@ -155,8 +168,8 @@ class Proces_Shape_Master():
 # shape = Proces_Shape_Master()
 # print(shape.get_list_id_master())
 
-# shape = Proces_Shape_Master()
-# shape.get_data_is_id("SP03")
+shape = Proces_Shape_Master()
+shape.get_data_is_id("SP01")
 
 # shape = Proces_Shape_Master()
 # shape.erase_product_master("SP02")
