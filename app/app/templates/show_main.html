@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../static/img/image.png">
-    <link rel="stylesheet" href="../static/css/show_main.css">
-    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-    <title>Kiểm tra dầu</title>
-    <!-- <script>
-    if (localStorage.getItem("app_open") === "true") {   // kiem tra xem trinh duet mo hay chua 
-      window.location.href = "/empty_page.html";   
-    } else {
-      localStorage.setItem("app_open", "true");
-    }
-    window.addEventListener("beforeunload", () => {
-      localStorage.removeItem("app_open");
-    });
-    </script> -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="../static/img/image.png">
+        <link rel="stylesheet" href="../static/css/show_main.css">
+        <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+        <title>Kiểm tra dầu</title>
+        <!-- <script>
+        if (localStorage.getItem("app_open") === "true") {   // kiem tra xem trinh duet mo hay chua 
+        window.location.href = "/empty_page.html";   
+        } else {
+        localStorage.setItem("app_open", "true");
+        }
+        window.addEventListener("beforeunload", () => {
+        localStorage.removeItem("app_open");
+        });
+        </script> -->
 </head>
 <body>
     <div class = "header">
@@ -96,7 +96,6 @@
                 </div>
                 <div id="paner-take-master" class="paner take-master">
                         <div id="part-table-log">
-                            <!-- Bảng table sẽ hiển thị bằng JS -->
                             <div class="log"></div>
                             <table class="table">
                                 <tbody id="table"></tbody>
@@ -104,11 +103,11 @@
                         </div>
                         <div class="part-controler">
                             <div class="contour-select">
-                                <label for="list-contour" >Chọn biên dạng</label>
-                                <div id="list-contour">
-                                    <img id ="btn-square" src="../static/img/rectangle.png" alt="Hình Vuông" style="margin-left:33px;">
-                                    <img id = "btn-circle" src="../static/img/circle.png" alt="Hình Tròn">
-                                </div>
+                                    <label for="list-contour" >Chọn biên dạng</label>
+                                    <div id="list-contour">
+                                        <img id ="btn-square" src="../static/img/rectangle.png" alt="Hình Vuông" style="margin-left:33px;">
+                                        <img id = "btn-circle" src="../static/img/circle.png" alt="Hình Tròn">
+                                    </div>
                             </div>
                             <button id = "btn-select-min"><img src="../static/img/stop.png" alt="icon vẽ đường bao nhỏ nhất"> Vẽ đường bao điểm</button>
                             <button id = "btn-undo"><img src="../static/img/eraser.png" alt="icon xóa hình"> Xóa hình trước</button>
@@ -119,76 +118,39 @@
                         </div>
                 </div>
                 <div id="panel-add-master" class="paner add-master">
-                    <!-- Bảng thông tin loại sản phẩm -->
-                    <div class="panel-table">
-                        <table class="product-table">
-                            <thead>
-                                <tr>
-                                    <th>Tên loại</th>
-                                    <th>Max X</th>
-                                    <th>Max Y</th>
-                                    <th>Max Z</th>
-                                    <th>Max K</th>
-                                </tr> 
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <div class="log log-area" id="log_add_master"></div>
-                    </div>
-                    <!-- Nút điều khiển 1 điểm -->
-                    <div class="controls-single-point">
-                        <div class="anonymous" id="anonymous">
-                            <!-- <div class = "Alight-items-x">    
-                                <label >Nhập X</label>
-                                <input type="number"  placeholder="Nhập X > 0" /> 
-                            </div>
-                            <div class = "Alight-items-x">   
-                                <label for="input-y">Nhập Y</label>
-                                <input type="number"  placeholder="Nhập Y > 0" /> 
-                            </div>
-                                <div class = "Alight-items-x">   
-                            <label >Nhập Z</label>
-                            <input type="number" placeholder="Nhập Z > 0" /> 
-                            </div>
-                            <div class = "Alight-items-x">   
-                                <label>Mức sáng</label>
-                                <input type="number" id="input-k" placeholder="Nhập độ sáng > 0" />
-                            </div>
-                            <div class = "Alight-items-x">                           
-                                <button class="btn"><img src="../static/img/add1.png" alt="Tăng X"> Tăng X</button>
-                                <button class="btn"><img src="../static/img/minus.png" alt="Giảm X"> Giảm X</button>
-                            </div>
-                            <div class = "Alight-items-x">   
-                                <button class="btn"><img src="../static/img/add1.png" alt="Tăng Y"> Tăng Y</button>
-                                <button class="btn"><img src="../static/img/minus.png" alt="Giảm Y"> Giảm Y</button>
-                            </div>
-                            <div class = "Alight-items-x">   
-                                <button class="btn"><img src="../static/img/add1.png" alt="Tăng Z"> Tăng Z</button>
-                                <button class="btn"><img src="../static/img/minus.png" alt="Giảm Z"> Giảm Z</button>
-                            </div>
-                            <div class = "Alight-items-x">   
-                                <button class="btn"><img src="../static/img/check.png" alt="Chạy"> Chạy</button>
-                                <button class="btn"><img src="../static/img/camera.png"alt="Chạy"> Chụp</button>
-                                <button class="btn"><img src="../static/img/running.png" alt="Chạy"> Chạy hết</button>
-                            </div> -->
+                        <!-- Bảng thông tin loại sản phẩm -->
+                        <div class="panel-table">
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tên loại</th>
+                                        <th>Max X</th>
+                                        <th>Max Y</th>
+                                        <th>Max Z</th>
+                                        <th>Max K</th>
+                                    </tr> 
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="log log-area" id="log_add_master"></div>
                         </div>
-                    </div> 
+                        <!-- Nút điều khiển 1 điểm -->
+                        <div class="controls-single-point">
+                            <div class="anonymous" id="anonymous">
+                                <!--Chèn nội dung ở đây -->
+                            </div>
+                        </div> 
 
-                    <!-- Nút điều khiển tất cả điểm -->
-                    <div class="controls-all-points">
-                        <button class="btn btn-add-point" id = "btn-add-master"><img src="../static/img/gallery.png" alt="Thêm master"> Thêm master</button>
-                        <button class="btn btn-save"><img src="../static/img/diskette.png" alt="Chạy các Master">Chạy các Master</button>
-                        <button class="btn btn-exit"><img src="../static/img/close.png" alt="Thoát master"> Thoát</button>
-                    </div>                    
-
-                </div>
-                                
+                        <!-- Nút điều khiển tất cả điểm -->
+                        <div class="controls-all-points">
+                            <button class="btn btn-add-point" id = "btn-add-master"><img src="../static/img/gallery.png" alt="Thêm master"> Thêm master</button>
+                            <button class="btn btn-save" id = "run_all_master"><img src="../static/img/diskette.png" alt="Chạy các Master">Chạy các Master</button>
+                            <button class="btn btn-exit" id = "exit-add-master"><img src="../static/img/close.png" alt="Thoát master"> Thoát</button>
+                        </div>                    
+                </div>              
         </div>
-    </div>
-   
-     
+    </div> 
 </body>
- <script type="module" src="../static/js/show_main.js"></script>    
-        
+ <script type="module" src="../static/js/show_main.js"></script>     
 </html>

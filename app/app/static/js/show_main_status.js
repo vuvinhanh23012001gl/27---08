@@ -26,8 +26,6 @@ export const btn_check = document.getElementById("btn-check");
 
 export const select_min = document.getElementById("btn-select-min");
 
-
-
 export const btn_accept_and_send = document.getElementById("btn-accept-and-send-server"); // Nút nhấn chấp nhận kết nối
 export const api_training = document.getElementById("api-training");
 export const headerMasterAdd = document.getElementById("header-ul-li-add-take");

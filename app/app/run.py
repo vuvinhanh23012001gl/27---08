@@ -154,7 +154,9 @@ def master_take():
     if data_strip in  arr_type_id:
         print(f"gui data master co ten {choose_master_index}")
         path_arr_img = manage_product.get_list_path_master_product_img_name(data_strip)
-        print(path_arr_img)
+        print("path_arr_img",path_arr_img)
+        shape_master.load_file()
+        print("\nshape_master.get_data_is_id(data_strip) la:------------------------\n",shape_master.get_data_is_id(data_strip))
         return {"path_arr_img": path_arr_img,"Shapes":shape_master.get_data_is_id(data_strip)} 
     return {"path_arr_img": None,"Shapes":None}
 
@@ -287,6 +289,45 @@ def erase_product():
 
 
 #----------------------------------------------api_add_master------------------------------------------------------
+
+
+@api_add_master.route("/run_all_master",methods=["POST"],strict_slashes=False)
+def run_all_master():
+    data = request.get_json()
+    func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
+    choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER)# đọc lại file choose master cũ xem lần trước  người dùng chọn gì
+    arr_type_id = manage_product.get_list_id_product()
+    data_strip = choose_master_index.strip() 
+    if data_strip in  arr_type_id:
+        arr_point = manage_product.return_data_list_point(data_strip)
+        print("arr_point",arr_point)
+        print("len arr_point",len(arr_point))
+        if arr_point:
+            for point in arr_point:
+                   x=point.get("x",-1)
+                   y=point.get("y",-1)
+                   z=point.get("z",-1)
+                   brightness=point.get("brightness",-1)
+                   if x == -1 or y == -1 or z==-1 or brightness==-1:
+                       return jsonify({"status_run":"erro"})
+                   else :
+                       data_send = f"cmd:{x},{y},{z},{brightness}"
+                   print(data_send)
+                   queue_rx_web_api.put(data_send) 
+            return jsonify({"status_run":"oke"}) 
+        else:
+            print("Không tìm thấy ID ")
+            return jsonify({"status_run":"erro"})
+    else:
+        return jsonify({"status_run":"erro"})
+        
+@api_add_master.route("/exit")
+def exit_add_master():
+    response = {
+        'redirect_url':'/'
+    }
+    return jsonify(response)  
+    
 @api_add_master.route("/",methods=["POST"],strict_slashes=False)
 def api_add_master_tree():
     main_pc.click_page_html = 6  #Ve lai main chinh 
@@ -332,10 +373,6 @@ def erase_index():
                             "inf_product": inf_product
                     },namespace='/data_clinet_show')  
     return jsonify({"message":"OK"})
-
-
-
-
 
 
 @api_add_master.route("/capture_master",methods=["POST"],strict_slashes=False)
@@ -402,14 +439,6 @@ def capture_master():
 
 
 
-
-
-
-@api_add_master.route("/erase_master",methods=["POST"],strict_slashes=False)
-def erase_master():
-       data = request.get_json()
-       print(data)   
-       return jsonify({'status':"200OK"})
 
 
 

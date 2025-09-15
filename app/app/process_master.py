@@ -53,6 +53,9 @@ class Proces_Shape_Master():
         except Exception as e:
             print(f"❌ Lỗi update_data: {e}")
             return False
+    def load_file(self):
+       self.list_regulations = self.get_file_data_json() 
+
     def check_all_rules(self, data_sp: dict) -> bool:
             """
             Kiểm tra toàn bộ dữ liệu của 1 sản phẩm (vd: data["SP01"]).
@@ -168,8 +171,8 @@ class Proces_Shape_Master():
 # shape = Proces_Shape_Master()
 # print(shape.get_list_id_master())
 
-shape = Proces_Shape_Master()
-shape.get_data_is_id("SP01")
+# shape = Proces_Shape_Master()
+# shape.get_data_is_id("SP01")
 
 # shape = Proces_Shape_Master()
 # shape.erase_product_master("SP02")

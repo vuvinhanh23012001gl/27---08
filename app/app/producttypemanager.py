@@ -517,7 +517,7 @@ class ProductTypeManager:
 # print(quanly.return_data_dict("SP01"))
 
 # quanly = ProductTypeManager()
-# print(quanly.return_data_list_point("SP1"))
+# print(quanly.return_data_list_point("SP02"))
 
 # quanly = ProductTypeManager()
 # print(quanly.get_all_ids())
