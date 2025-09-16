@@ -106,6 +106,41 @@ function deactivateAllButtons() {
 // window.addEventListener("beforeunload", function (e) {
 //       e.preventDefault();  
 // });
+function normalizeShapes(data, width, height) {
+  // clone để không làm thay đổi data gốc
+  const result = JSON.parse(JSON.stringify(data));
+
+  for (const key in data) {
+    const item = result[key];
+    if (!item.shapes) continue; // bỏ qua nếu không có shapes
+
+    item.shapes.forEach(shape => {
+      if (shape.type === "rect") {
+        // chuẩn hóa x1, x2, y1, y2
+        shape.x1 = shape.x1 / width;
+        shape.x2 = shape.x2 / width;
+        shape.y1 = shape.y1 / height;
+        shape.y2 = shape.y2 / height;
+
+        // nếu có corners thì normalize từng điểm
+        if (shape.corners) {
+          shape.corners = shape.corners.map(c => ({
+            x: c.x / width,
+            y: c.y / height
+          }));
+        }
+      } else if (shape.type === "circle") {
+        shape.cx = shape.cx / width;
+        shape.cy = shape.cy / height;
+        // scale bán kính theo width (nếu muốn chính xác hơn có thể dùng (width+height)/2)
+        shape.r = shape.r / width;
+      }
+    });
+  }
+
+  return result;
+}
+
 
 btn_accept_and_send.addEventListener("click",()=>{
     // console.log("shapes_all_la",shapes_all);
@@ -181,7 +216,8 @@ btn_accept_and_send.addEventListener("click",()=>{
     else{
         //  console.log("Dữ liệu Shape là :",shapes_all);
          log.textContent = `☑️Dữ liệu quy định master hợp lệ`;
-         postData("/api_take_master/config_master",shapes_all);
+          let normalizeShape  = normalizeShapes(shapes_all,1328, 830) 
+         postData("/api_take_master/config_master",normalizeShape);
     }
 });
 function Event_press_left_right() {
@@ -559,8 +595,41 @@ function split_data_shapes(data){
    console.log("master_shapes_data----------------------------",data)
    shapes_all = {};
    shapes_all = data;
+   shapes_all = denormalizeShapes(shapes_all,1328,830)
    is_screen_frame_load_data = true;
    console.log("Shape khi nhan vao nut take master",shapes_all);
+}
+function denormalizeShapes(data, width, height) {
+  // clone để không thay đổi data gốc
+  const result = JSON.parse(JSON.stringify(data));
+
+  for (const key in result) {
+    const item = result[key];
+    if (!item.shapes) continue;
+
+    item.shapes.forEach(shape => {
+      if (shape.type === "rect") {
+        shape.x1 = shape.x1 * width;
+        shape.x2 = shape.x2 * width;
+        shape.y1 = shape.y1 * height;
+        shape.y2 = shape.y2 * height;
+
+        if (shape.corners) {
+          shape.corners = shape.corners.map(c => ({
+            x: c.x * width,
+            y: c.y * height
+          }));
+        }
+      } else if (shape.type === "circle") {
+        shape.cx = shape.cx * width;
+        shape.cy = shape.cy * height;
+        // bán kính nhân lại với width (hoặc (width+height)/2 nếu normalize kiểu khác)
+        shape.r = shape.r * width;
+      }
+    });
+  }
+
+  return result;
 }
 
 headerMasterTake.addEventListener("click", () => {

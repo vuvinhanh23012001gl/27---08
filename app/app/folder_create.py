@@ -6,6 +6,7 @@ from pathlib import Path
 class Create:
     def __init__(self,base_path: str = None):
         self.base_path = base_path
+        
     def get_data_grandaugter(self,file_name:str,parent:str,grandparent:str)->Dict[str, Any]:
         """Trả về data sản phẩm hiện tại ở trong neu chua khoi tao thi se khoi tao duong dan
            Trả về rỗng nếu không có dữ liệu trong file
@@ -164,21 +165,9 @@ class Create:
 
             if not os.path.exists(file_path):
                 print("📄 File không tồn tại, tạo mới.")
-                with open(file_path, "wb") as f:   # tạo file nhị phân rỗng
+                with open(file_path, "wb") as f:   
                     print("File rỗng")
-                    f.write(b"")                   # ghi 0 byte
-            # else:
-            #     print("📄 File đã tồn tại.")
-            #     # Kiểm tra phần mở rộng
-            #     ext = os.path.splitext(name_file)[1].lower()
-            #     if ext in [".txt", ".json", ".md"]:   # file text
-            #         with open(file_path, "r", encoding="utf-8") as f:
-            #             print(f.read())
-            #     else:  # file nhị phân (.pt, .png, .jpg, ...)
-            #         with open(file_path, "rb") as f:
-            #             data = f.read()
-            #             print(data)
-            #             print("📦 Đây là file nhị phân, kích thước:", len(data), "bytes")
+                    f.write(b"")                   
             return file_path
     def create_folder(self,folder_path: str):
         """
@@ -192,3 +181,27 @@ class Create:
         except Exception as e:
             print(f"❌ Lỗi khi tạo folder: {e}")
             return None
+    def save_json(self,data: Dict[str, Any], filename: str) -> None:
+        """
+        Ghi dữ liệu vào file JSON
+        :param data: dictionary cần ghi
+        :param filename: tên file .json
+        """
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+    def load_json(self,filename: str) -> Dict[str, Any]:
+        """
+        Đọc dữ liệu từ file JSON
+        :param filename: tên file .json
+        :return: dictionary dữ liệu đọc được
+        """
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            print(f"⚠️ File '{filename}' không tồn tại.")
+            return {}
+        except json.JSONDecodeError:
+            print(f"⚠️ File '{filename}' không đúng định dạng JSON.")
+            return {}

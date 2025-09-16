@@ -3,9 +3,18 @@ import numpy as np
 from ultralytics import YOLO
 import cv2
 import matplotlib.pyplot as plt
-from folder_create import Create 
-class Manage_Point_Oil_Detect:
-    def __init__(self,data):
+class Manage_Point_Oil_Detect: 
+
+    NAME_STATIC = "static"
+    NAME_FOLDER_DATA_INTERP = "Product_Data_Interp"
+    NAME_DATA = "data.json"
+    from folder_create import Create
+    folder = Create()
+    folder.get_data_grandaugter(NAME_DATA,NAME_FOLDER_DATA_INTERP,NAME_STATIC)
+    path_interp = folder.get_path_grandaugter(NAME_DATA,NAME_FOLDER_DATA_INTERP,NAME_STATIC)
+
+
+    def __init__(self,data=None):
         self.data = data
         self.list_object_point = []  #danh sach doi tuong diem
         self.number_point = None #nhieu ham can 
@@ -117,7 +126,6 @@ class Manage_Point_Oil_Detect:
                         # point.draw_mark_data()  # test ham nay oke
                         # point.get_predict_point_oil()
                         # point.count_mask_white_pixels()
-                        
                         print(f"Khởi tạo thành công điểm thứ {i+1}",)
                     print("Khởi tạo thành công danh sách điểm dầu")
                     return True
@@ -130,15 +138,6 @@ class Manage_Point_Oil_Detect:
         else:
             print("Dữ liệu Data Không Tồn Tại")
             return False
-    def get_size_arr_point(self,z):
-        """Z là chiều cao của điểm dầu, cần phải hiệu chỉnh calib_Z và calib_scale cho chuẩn"""
-        if self.check_number_point() and self.check_data() and self.check_list_object_point():          
-             for point_detect in self.list_object_point:
-                size = point_detect.estimate_area_with_calib(z)
-                print("Dien Tich Thuc te cua diem dau la",size)
-        else:
-            print("Mot trong cac gia tri sai")
-          
     def draw_all(self):
         """Hàm vẽ tất cả các điểm dầu có trong ảnh đã phát hiện đc"""
         masks = self.get_masks_data()
@@ -162,15 +161,56 @@ class Manage_Point_Oil_Detect:
             cv2.destroyAllWindows()
         else:
             print("Mask rỗng, không thể hiển thị")
-# path_point_oil = r"C:\Disk D\Project\Project\Training\best.pt"
-# # path_point_oil = r"C:\Disk D\Project\Project\Training\model\train9\weights\best.pt"
-data = None
-folder =  Create()
-file_path = folder.create_file_in_folder_two("best.pt","model")
-print(file_path)
-img = cv2.imread(r"C:\Disk D\Project\Project\Training\img.png")
-model = YOLO(file_path)
-results = model(img)
+        
+    def read_interp_file(self):
+        return Manage_Point_Oil_Detect.folder.load_json(Manage_Point_Oil_Detect.path_interp)
+    
+    def write_inter_file(self,data):
+        Manage_Point_Oil_Detect.folder.save_json(data,Manage_Point_Oil_Detect.path_interp)
+        
+    def get_size_arr_point(self,z):
+        """Z là chiều cao của điểm dầu, cần phải hiệu chỉnh calib_Z và calib_scale cho chuẩn"""
+        if self.check_number_point() and self.check_data() and self.check_list_object_point():          
+             for point_detect in self.list_object_point:
+                size = point_detect.estimate_area_with_calib(z)
+                print("Dien Tich Thuc te cua diem dau la",size)
+        else:
+            print("Mot trong cac gia tri sai")
+    def area_correction(self,z):
+        data = self.read_interp_file()
+        if self.check_number_point() and self.check_data() and self.check_list_object_point():          
+             for point_detect in self.list_object_point:
+                 pass
+                 
+
+
+# manager = Manage_Point_Oil_Detect()
+# manager.area_correction(1)
+# manager.read_interp_file()
+
+# file_path = Manage_Point_Oil_Detect.folder.create_file_in_folder_two("best.pt","model")
+# img = cv2.imread(r"C:\Disk D\Project\Project\Training\img.png")
+# model = YOLO(file_path)
+# results = model(img)
+# manager  = Manage_Point_Oil_Detect(results) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # print("Dữ liệu nhận được")
 # print("=====================boxes====================")
@@ -179,7 +219,7 @@ results = model(img)
 # print(results[0].masks)
 
 
-# manager  = Manage_Point_Oil_Detect(results) 
+
 # manager.get_size_arr_point(8)
 
 # manager  = Manage_Point_Oil_Detect(results) 

@@ -187,7 +187,6 @@ def add():
      return render_template("save_product_new.html")
 @api_new_product.route("/upload", methods=["POST"])
 def upload_product():
- 
     # ---- Lấy dữ liệu text từ form ----
     product_id = request.form.get("product_id")
     product_name = request.form.get("product_name")

@@ -1,11 +1,12 @@
 import json
 from folder_create import Create
- 
+import cv2
 class Proces_Shape_Master():
     NAME_FOLDER_SAVE_DATA_MASTER = "Master_Regulations"
     NAME_FILE_SAVE_MASTER_REGULATIONS = "data_regulations.json"
     NAME_FOLDER_STATIC = "static"
-
+    HEIGHT_CONVERT = 830
+    WIDTH_CONVERT  = 1328
     def __init__(self):
         self.object_folder = Create()
         self.path_save = self.init_file()
@@ -16,12 +17,73 @@ class Proces_Shape_Master():
             Proces_Shape_Master.NAME_FOLDER_SAVE_DATA_MASTER,
             Proces_Shape_Master.NAME_FOLDER_STATIC
         )
+    def get_quanlity_master_of_id(self,ID):
+        """Trả về số lượng dữ liệu master tại mỗi một loại sản phẩm hay 1 tóa độ
+        Trả về None nếu không tìm thấy id
+        Trả về 0 nếu rỗng , trả về len sản phẩm hiện tại
+        """
+        list_ID = self.get_list_id_master()
+        if not list_ID:
+            print("Không có ID nào tồn tại có thể File rỗng") 
+            return None
+        if ID in list_ID :  
+            return len([ i for i in self.list_regulations[ID]])  
+        else:
+            print("ID sản phẩm không tồn tại trong dữ liệu regulation")
+            return None
+    
+    def get_quanlity_shape_of_location_point(self,ID,index):
+        """Trả về số lượng hình shape trong 1 master tại một điểm Index
+        Trả về None nếu không tìm thấy id
+        Trả về 0 nếu rỗng , trả về len só lượng hình trong 1 index
+        """
+        index = str(index)
+        data_id = self.get_data_is_id(ID)
+        if data_id:
+            data_point_index = data_id.get(index,-1)
+            if data_point_index == -1:
+                print("Không tìm thấy dữ liệu index trong data regulation")
+                return  None
+            else:
+                data_point_index = data_point_index.get("shapes",-1)
+                if data_point_index == -1:
+                    print("Không tìm thấy Shapes")
+                    return None
+                else:
+                    return len([i for i in data_point_index])
+        else:
+            print("Data không tồn tại")
+            return None
+    def get_data_shape_of_location_point(self,ID,index):
+        """Trả về số lượng hình shape trong 1 master tại một điểm Index
+        Trả về None nếu không tìm thấy id
+        Trả về 0 nếu rỗng , trả về len só lượng hình trong 1 index
+        """
+        index = str(index)
+        data_id = self.get_data_is_id(ID)
+        if data_id:
+            data_point_index = data_id.get(index,-1)
+            if data_point_index == -1:
+                print("Không tìm thấy dữ liệu index trong data regulation")
+                return  None
+            else:
+                data_point_index = data_point_index.get("shapes",-1)
+                if data_point_index == -1:
+                    print("Không tìm thấy Shapes")
+                    return None
+                else:
+                    return data_point_index
+        else:
+            print("Data không tồn tại")
+            return None
 
     def get_file_data_json(self):
+        '''Đọc file json trong File lưu dữ liệu regualtion'''
         data = self.object_folder.get_data_in_path(self.path_save)
         return data if data else {}
 
     def save_shapes_to_json(self, type_id: str, data_master):
+        """Lưu dữ liệu của 1 data mới"""
         if not self.path_save:
             print("Lưu thất bại: đường dẫn tới file không tồn tại")
             return False
@@ -54,8 +116,9 @@ class Proces_Shape_Master():
             print(f"❌ Lỗi update_data: {e}")
             return False
     def load_file(self):
+       """Load dữ liệu hiện tại từ File vào đối tượng """
        self.list_regulations = self.get_file_data_json() 
-
+    
     def check_all_rules(self, data_sp: dict) -> bool:
             """
             Kiểm tra toàn bộ dữ liệu của 1 sản phẩm (vd: data["SP01"]).
@@ -99,7 +162,7 @@ class Proces_Shape_Master():
             print("Không có ID nào tồn tại có thể File rỗng") 
             return None
         if ID in list_ID :
-            print(self.list_regulations[ID])
+            # print(self.list_regulations[ID])
             return self.list_regulations[ID]  
         else:
             print("ID sản phẩm không tồn tại trong dữ liệu regulation")
@@ -162,11 +225,19 @@ class Proces_Shape_Master():
             else:
                 print("ID này chưa tạo master regulation")
                 return False
-          
+
 
 # shape = Proces_Shape_Master()
 # shape.erase_master_index("SP01",0)
 
+# shape = Proces_Shape_Master()
+# print(shape.get_quanlity_master_of_id("SP01"))
+
+# shape = Proces_Shape_Master()
+# print(shape.get_quanlity_shape_of_location_point("SP01",0))
+
+# shape = Proces_Shape_Master()
+# print(shape.get_data_shape_of_location_point("SP01",0))
 
 # shape = Proces_Shape_Master()
 # print(shape.get_list_id_master())

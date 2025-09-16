@@ -45,7 +45,7 @@ class point_oil_detect:
         # Nếu là tensor PyTorch, chuyển về numpy
         mask0 = self.masks_data.cpu().numpy()
         mask_img = (mask0 * 255).astype(np.uint8)  # 0-255
-        count_zero, count_one, ratio = point_oil_detect.count_mask_pixels(mask_img)
+        count_zero, count_one, ratio = self.count_mask_pixels(mask_img)
         print(f"Pixel 0: {count_zero}, Pixel 1: {count_one}, Tỷ lệ: {ratio:.2%}")
         return count_zero, count_one, ratio
     def draw_mark_data(self) -> None:
@@ -54,7 +54,7 @@ class point_oil_detect:
         mask_img = (mask0 * 255).astype(np.uint8)  # 0-255
 
         # --- đếm pixel ---
-        count_zero, count_one, ratio = point_oil_detect.count_mask_pixels(mask_img)
+        count_zero, count_one, ratio = self.count_mask_pixels(mask_img)
         print(f"Pixel 0: {count_zero}, Pixel 1: {count_one}, Tỷ lệ: {ratio:.2%}")
 
         # --- hiển thị ảnh ---
@@ -64,8 +64,7 @@ class point_oil_detect:
             cv2.destroyAllWindows()
         else:
             print("Mask rỗng, không thể hiển thị")
-    @staticmethod
-    def count_mask_pixels(mask: np.ndarray):
+    def count_mask_pixels(self,mask: np.ndarray):
         """
         Đếm số pixel 0 và 1 (hoặc 0 và 255)
         Trả về: (count_zero, count_one, ratio)

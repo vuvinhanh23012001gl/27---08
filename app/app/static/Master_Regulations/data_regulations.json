@@ -3,466 +3,466 @@
         "0": {
             "shapes": [
                 {
-                    "type": "rect",
-                    "x1": 566,
-                    "y1": 95,
-                    "x2": 703,
-                    "y2": 193,
-                    "mode": "min",
                     "color": "blue",
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "Điểm 1",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.42620481927710846,
+                    "x2": 0.5293674698795181,
+                    "y1": 0.1144578313253012,
+                    "y2": 0.2325301204819277
                 },
                 {
-                    "type": "circle",
-                    "cx": 724,
-                    "cy": 657,
-                    "r": 47.16990566028302,
-                    "mode": "min",
                     "color": "blue",
+                    "cx": 0.5451807228915663,
+                    "cy": 0.791566265060241,
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.035519507274309504,
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 2",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 },
                 {
-                    "type": "circle",
-                    "cx": 920,
-                    "cy": 621,
-                    "r": 52.55473337388365,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điêm 3",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
+                    "cx": 0.6927710843373494,
+                    "cy": 0.7481927710843373,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.03957434742009311,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điêm 3",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 }
             ]
         },
         "1": {
             "shapes": [
                 {
-                    "type": "circle",
-                    "cx": 617,
-                    "cy": 379,
-                    "r": 53.53503525729669,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 1",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
+                    "cx": 0.46460843373493976,
+                    "cy": 0.4566265060240964,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.0403125265491692,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 1",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 },
                 {
-                    "type": "circle",
-                    "cx": 813,
-                    "cy": 343,
-                    "r": 57.14017850864661,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 2",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
+                    "cx": 0.6121987951807228,
+                    "cy": 0.41325301204819276,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.043027242852896545,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 2",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 }
             ]
         },
         "2": {
             "shapes": [
                 {
-                    "type": "circle",
-                    "cx": 753,
-                    "cy": 388,
-                    "r": 87.36704184073076,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 1",
-                    "so_diem_dau": 2,
-                    "kich_thuoc_min": 2,
+                    "cx": 0.5670180722891566,
+                    "cy": 0.4674698795180723,
                     "kich_thuoc_max": 2,
+                    "kich_thuoc_min": 2,
+                    "mode": "min",
+                    "r": 0.0657884351210322,
+                    "so_diem_dau": 2,
+                    "ten_hinh_min": "điểm 1",
+                    "tuong_thich_max": 2,
                     "tuong_thich_min": 2,
-                    "tuong_thich_max": 2
+                    "type": "circle"
                 },
                 {
-                    "type": "rect",
-                    "x1": 564,
-                    "y1": 412,
-                    "x2": 676,
-                    "y2": 546,
-                    "mode": "min",
                     "color": "blue",
-                    "rotation": -0.6075059820168907,
                     "corners": [
                         {
-                            "x": 535.774806232529,
-                            "y": 455.95402996548046
+                            "x": 0.40344488421124175,
+                            "y": 0.5493422047776872
                         },
                         {
-                            "x": 627.7351176356258,
-                            "y": 392.022026034386
+                            "x": 0.47269210665333267,
+                            "y": 0.47231569401733253
                         },
                         {
-                            "x": 704.225193767471,
-                            "y": 502.04597003451954
+                            "x": 0.5302900555477944,
+                            "y": 0.6048746626921923
                         },
                         {
-                            "x": 612.2648823643742,
-                            "y": 565.9779739656141
+                            "x": 0.4610428331057035,
+                            "y": 0.6819011734525471
                         }
                     ],
-                    "ten_hinh_min": "điểm 2",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "rotation": -0.6075059820168907,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 2",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.4246987951807229,
+                    "x2": 0.5090361445783133,
+                    "y1": 0.4963855421686747,
+                    "y2": 0.6578313253012048
                 }
             ]
         },
         "3": {
             "shapes": [
                 {
-                    "type": "rect",
-                    "x1": 685,
-                    "y1": 277,
-                    "x2": 798,
-                    "y2": 419,
-                    "mode": "min",
                     "color": "blue",
-                    "rotation": 0.24557734839121115,
                     "corners": [
                         {
-                            "x": 703.9564263064167,
-                            "y": 265.3941280881651
+                            "x": 0.5300876704114583,
+                            "y": 0.31975196155200614
                         },
                         {
-                            "x": 813.5661012944632,
-                            "y": 292.86628033393566
+                            "x": 0.6126250762759512,
+                            "y": 0.35285094016136825
                         },
                         {
-                            "x": 779.0435736935833,
-                            "y": 430.6058719118349
+                            "x": 0.5866291970584212,
+                            "y": 0.5188022553154638
                         },
                         {
-                            "x": 669.4338987055368,
-                            "y": 403.13371966606434
+                            "x": 0.5040917911939283,
+                            "y": 0.48570327670610164
                         }
                     ],
-                    "ten_hinh_min": "Điểm 1",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "rotation": 0.24557734839121115,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "Điểm 1",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.5158132530120482,
+                    "x2": 0.6009036144578314,
+                    "y1": 0.3337349397590361,
+                    "y2": 0.5048192771084338
                 }
             ]
         },
         "4": {
             "shapes": [
                 {
-                    "type": "rect",
-                    "x1": 468,
-                    "y1": 170,
-                    "x2": 611,
-                    "y2": 246,
-                    "mode": "min",
                     "color": "blue",
+                    "corners": [
+                        {
+                            "x": 0.3467951891463058,
+                            "y": 0.22897592608485398
+                        },
+                        {
+                            "x": 0.45071811129583494,
+                            "y": 0.1838580726790884
+                        },
+                        {
+                            "x": 0.4657048108536942,
+                            "y": 0.27222889319225446
+                        },
+                        {
+                            "x": 0.361781888704165,
+                            "y": 0.31734674659802004
+                        }
+                    ],
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
                     "rotation": -0.2649622704238017,
-                    "corners": [
-                        {
-                            "x": 460.54401118629414,
-                            "y": 190.0500186504288
-                        },
-                        {
-                            "x": 598.5536518008688,
-                            "y": 152.6022003236434
-                        },
-                        {
-                            "x": 618.4559888137059,
-                            "y": 225.9499813495712
-                        },
-                        {
-                            "x": 480.44634819913114,
-                            "y": 263.3977996763566
-                        }
-                    ],
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điẻm 1",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.35240963855421686,
+                    "x2": 0.46009036144578314,
+                    "y1": 0.20481927710843373,
+                    "y2": 0.2963855421686747
                 },
                 {
-                    "type": "rect",
-                    "x1": 523,
-                    "y1": 259,
-                    "x2": 639,
-                    "y2": 327,
-                    "mode": "min",
                     "color": "blue",
+                    "corners": [
+                        {
+                            "x": 0.38697946967925945,
+                            "y": 0.3477933224604934
+                        },
+                        {
+                            "x": 0.465025108380146,
+                            "y": 0.2850293472814587
+                        },
+                        {
+                            "x": 0.48802053032074055,
+                            "y": 0.3582307739250488
+                        },
+                        {
+                            "x": 0.409974891619854,
+                            "y": 0.4209947491040835
+                        }
+                    ],
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
                     "rotation": -0.46574330973991707,
-                    "corners": [
-                        {
-                            "x": 513.9087357340566,
-                            "y": 288.6684576422095
-                        },
-                        {
-                            "x": 617.5533439288339,
-                            "y": 236.5743582436107
-                        },
-                        {
-                            "x": 648.0912642659434,
-                            "y": 297.3315423577905
-                        },
-                        {
-                            "x": 544.4466560711661,
-                            "y": 349.4256417563893
-                        }
-                    ],
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 2",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.3938253012048193,
+                    "x2": 0.4811746987951807,
+                    "y1": 0.31204819277108437,
+                    "y2": 0.39397590361445783
                 },
                 {
-                    "type": "rect",
-                    "x1": 859,
-                    "y1": 160,
-                    "x2": 988,
-                    "y2": 232,
-                    "mode": "min",
                     "color": "blue",
+                    "corners": [
+                        {
+                            "x": 0.6645538363725547,
+                            "y": 0.16209469762188047
+                        },
+                        {
+                            "x": 0.7509942339005713,
+                            "y": 0.23300117377030374
+                        },
+                        {
+                            "x": 0.7262594166394934,
+                            "y": 0.31019445900462556
+                        },
+                        {
+                            "x": 0.6398190191114769,
+                            "y": 0.23928798285620229
+                        }
+                    ],
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
                     "rotation": 0.4737426826511233,
-                    "corners": [
-                        {
-                            "x": 882.5274947027527,
-                            "y": 134.5385990261608
-                        },
-                        {
-                            "x": 997.3203426199588,
-                            "y": 193.3909742293521
-                        },
-                        {
-                            "x": 964.4725052972473,
-                            "y": 257.4614009738392
-                        },
-                        {
-                            "x": 849.6796573800412,
-                            "y": 198.6090257706479
-                        }
-                    ],
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điẻm3",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.6468373493975904,
+                    "x2": 0.7439759036144579,
+                    "y1": 0.1927710843373494,
+                    "y2": 0.27951807228915665
                 },
                 {
-                    "type": "rect",
-                    "x1": 223,
-                    "y1": 394,
-                    "x2": 292,
-                    "y2": 482,
-                    "mode": "min",
                     "color": "blue",
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điẻm 4",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.16792168674698796,
+                    "x2": 0.21987951807228914,
+                    "y1": 0.4746987951807229,
+                    "y2": 0.5807228915662651
                 },
                 {
-                    "type": "rect",
-                    "x1": 164,
-                    "y1": 477,
-                    "x2": 262,
-                    "y2": 575,
-                    "mode": "min",
                     "color": "blue",
-                    "rotation": 0,
                     "corners": [
                         {
-                            "x": 164,
-                            "y": 477
+                            "x": 0.12349397590361445,
+                            "y": 0.5746987951807229
                         },
                         {
-                            "x": 262,
-                            "y": 477
+                            "x": 0.19728915662650603,
+                            "y": 0.5746987951807229
                         },
                         {
-                            "x": 262,
-                            "y": 575
+                            "x": 0.19728915662650603,
+                            "y": 0.6927710843373494
                         },
                         {
-                            "x": 164,
-                            "y": 575
+                            "x": 0.12349397590361445,
+                            "y": 0.6927710843373494
                         }
                     ],
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "rotation": 0,
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 5",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.12349397590361445,
+                    "x2": 0.19728915662650603,
+                    "y1": 0.5746987951807229,
+                    "y2": 0.6927710843373494
                 },
                 {
-                    "type": "rect",
-                    "x1": 534,
-                    "y1": 620,
-                    "x2": 614,
-                    "y2": 692,
-                    "mode": "min",
                     "color": "blue",
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 6",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.40210843373493976,
+                    "x2": 0.4623493975903614,
+                    "y1": 0.7469879518072289,
+                    "y2": 0.8337349397590361
                 },
                 {
-                    "type": "rect",
-                    "x1": 758,
-                    "y1": 505,
-                    "x2": 831,
-                    "y2": 586,
-                    "mode": "min",
                     "color": "blue",
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 7",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
-                },
-                {
                     "type": "rect",
-                    "x1": 845,
-                    "y1": 514,
-                    "x2": 910,
-                    "y2": 588,
-                    "mode": "min",
-                    "color": "blue",
-                    "ten_hinh_min": "điểm 8",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
-                    "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "x1": 0.5707831325301205,
+                    "x2": 0.6257530120481928,
+                    "y1": 0.608433734939759,
+                    "y2": 0.7060240963855422
                 },
                 {
-                    "type": "circle",
-                    "cx": 816,
-                    "cy": 635,
-                    "r": 42.44997055358225,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 9",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 8",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.6362951807228916,
+                    "x2": 0.6852409638554217,
+                    "y1": 0.619277108433735,
+                    "y2": 0.708433734939759
+                },
+                {
+                    "color": "blue",
+                    "cx": 0.6144578313253012,
+                    "cy": 0.7650602409638554,
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.03196533927227579,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 9",
+                    "tuong_thich_max": 1,
+                    "tuong_thich_min": 1,
+                    "type": "circle"
                 }
             ]
         },
         "5": {
             "shapes": [
                 {
-                    "type": "circle",
-                    "cx": 691,
-                    "cy": 300,
-                    "r": 50.24937810560445,
-                    "mode": "min",
                     "color": "blue",
+                    "cx": 0.5203313253012049,
+                    "cy": 0.3614457831325301,
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.037838387127714194,
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 1",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 },
                 {
-                    "type": "rect",
-                    "x1": 590,
-                    "y1": 397,
-                    "x2": 685,
-                    "y2": 480,
-                    "mode": "min",
                     "color": "blue",
+                    "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "so_diem_dau": 1,
                     "ten_hinh_min": "điểm 2",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
-                    "kich_thuoc_max": 1,
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "rect",
+                    "x1": 0.4442771084337349,
+                    "x2": 0.5158132530120482,
+                    "y1": 0.4783132530120482,
+                    "y2": 0.5783132530120482
                 },
                 {
-                    "type": "circle",
-                    "cx": 667,
-                    "cy": 366,
-                    "r": 46.75467891024384,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 3",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
+                    "cx": 0.5022590361445783,
+                    "cy": 0.44096385542168676,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.03520683652879807,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 3",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 }
             ]
         },
         "6": {
             "shapes": [
                 {
-                    "type": "circle",
-                    "cx": 638,
-                    "cy": 375,
-                    "r": 71.11258679024411,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 1",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
+                    "cx": 0.48042168674698793,
+                    "cy": 0.45180722891566266,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.05354863463120791,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 1",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 }
             ]
         },
         "7": {
             "shapes": [
                 {
-                    "type": "circle",
-                    "cx": 607,
-                    "cy": 189,
-                    "r": 63.702433234531945,
-                    "mode": "min",
                     "color": "blue",
-                    "ten_hinh_min": "điểm 2",
-                    "so_diem_dau": 1,
-                    "kich_thuoc_min": 1,
+                    "cx": 0.45707831325301207,
+                    "cy": 0.22771084337349398,
                     "kich_thuoc_max": 1,
+                    "kich_thuoc_min": 1,
+                    "mode": "min",
+                    "r": 0.04796869972479815,
+                    "so_diem_dau": 1,
+                    "ten_hinh_min": "điểm 2",
+                    "tuong_thich_max": 1,
                     "tuong_thich_min": 1,
-                    "tuong_thich_max": 1
+                    "type": "circle"
                 }
             ]
         }
