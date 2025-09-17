@@ -423,3 +423,8 @@ def convert_dict_to_string(data: dict) -> str:
         f"-- ID:{i}  --Tên sản phẩm: {n} ---X_Y_Z:{k}" for i, n,k in zip(data["list_id"], data["list_name"],data["xyz"])
     ]
     return "\n".join(result_lines)
+def remove_vietnamese_tone(text: str) -> str:
+        import unicodedata
+        nfkd_form = unicodedata.normalize('NFD', text)
+        without_tone = ''.join([c for c in nfkd_form if unicodedata.category(c) != 'Mn'])
+        return without_tone.replace("Đ", "D").replace("đ", "d")

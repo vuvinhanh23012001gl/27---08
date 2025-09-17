@@ -1,25 +1,16 @@
 from point_oil_detected import point_oil_detect
 import numpy as np
-from ultralytics import YOLO
 import cv2
 import matplotlib.pyplot as plt
 class Manage_Point_Oil_Detect: 
-
-    NAME_STATIC = "static"
-    NAME_FOLDER_DATA_INTERP = "Product_Data_Interp"
-    NAME_DATA = "data.json"
-    from folder_create import Create
-    folder = Create()
-    folder.get_data_grandaugter(NAME_DATA,NAME_FOLDER_DATA_INTERP,NAME_STATIC)
-    path_interp = folder.get_path_grandaugter(NAME_DATA,NAME_FOLDER_DATA_INTERP,NAME_STATIC)
-
-
-    def __init__(self,data=None):
+    # lớp này được tạo nhiều lần mỗi khi có dữ liệu mới cần kiểm tra
+    calib_Z = [0,1,2,3,4,5,6,7,8,9,10,11,12]         #Z (mm)
+    calib_scale =[0.02803687, 0.02819555, 0.02781955, 0.02737275, 0.02645114, 0.02617547, 0.02583149, 0.0253135, 0.02422303, 0.02326263, 0.02251462, 0.02176587, 0.02129404] #scale (mm/pixel)
+    def __init__(self,data=None,Z=None):
         self.data = data
         self.list_object_point = []  #danh sach doi tuong diem
         self.number_point = None #nhieu ham can 
-        self.Init_Object_Oil() #cu co danh sach diem dau duoc tao thi se tao ngay ra cac diem
-
+        self.Init_Object_Oil(Z) #cu co danh sach diem dau duoc tao thi se tao ngay ra cac diem # Chạy luôn thuộc tính diện tích để đối tượng từng khung master 1 có luôn diện tích
     def check_list_object_point(self):
         """Trả về True nếu tồn tại Ngược lại là False """
         return True if self.list_object_point else False
@@ -46,6 +37,18 @@ class Manage_Point_Oil_Detect:
                 return None
         else:
             print("data khong ton tai")
+    def get_object_index(self,index):
+        """Trả về đối tượng điểm thứ index"""
+        if self.list_object_point:
+            quanlity_object_oil =  len(self.list_object_point)
+            if quanlity_object_oil <= index:
+                print("Không tồn tại object tại index")
+                return None
+            else:
+                return  self.list_object_point[index]   
+        else:
+            print("Không tìm thấy dữ liệu nào")
+            return None
     def get_orig_shape(self)->tuple:
         """Trả về thông tin chiều shape của ảnh cho vào"""
         if self.data:
@@ -105,7 +108,7 @@ class Manage_Point_Oil_Detect:
     def get_contourn_polygon_standardization(self):
         """Trả về đường bao xung quanh nhiều điểm dầu chuẩn hóa để quyết định vi phạm hay không"""
         return  self.data[0].masks.xyn if self.data else  None
-    def Init_Object_Oil(self)->bool:
+    def Init_Object_Oil(self,z)->bool:
         """Hàm này trả True nếu khởi tạo thành công danh sách các điểm dầu, ngược lại trả False"""
         if self.data:
             data_tensor_data = self.get_data_tensor()
@@ -122,10 +125,19 @@ class Manage_Point_Oil_Detect:
                     for i in range(0,number_point[0]):
                         print(f"Khởi tạo điểm thứ {i+1}",)
                         point = point_oil_detect(conf = data_tensor_data[i],xyxyn = xyxyn_data[i],contourn_polygon = contourn_polygon_data[i],contourn_polygon_standardization = contourn_polygon_standardization_data[i], masks_data = masks_data[i])
-                        self.list_object_point.append(point)
                         # point.draw_mark_data()  # test ham nay oke
                         # point.get_predict_point_oil()
-                        # point.count_mask_white_pixels()
+                        # point.count_mask_max_pixels()
+                        reality_w , reality_h  = point.estimate_area_with_calib(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale)
+                        point.reality_w = reality_w  #  Gia tri ngoai doi ngoài cùng
+                        point.reality_h = reality_h  #  Gia tri ngoai doi khung bên ngoài cùng
+                        point.reality_area = reality_w*reality_h 
+                        point.area_region = point.estimate_area_while_with_calib(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale)  #vung tinh toan
+                        self.list_object_point.append(point)
+                        # point_detect.area_calculate = point_detect.get_bbox_area()  diện tích vùng khung trắng bên ngoài bao vật thể 
+                        # print("Số điểm khung màu trắng",point_detect.area_calculate)
+                        print("Số điểm vùng màu trắng",point.area_region)
+                        print("Chiều dài thực tế ",point.reality_w," mm","\n","Chiều cao thực tế ",point.reality_h," mm\n","Diện tích thực tế ",point.reality_area," mm\n")
                         print(f"Khởi tạo thành công điểm thứ {i+1}",)
                     print("Khởi tạo thành công danh sách điểm dầu")
                     return True
@@ -162,27 +174,8 @@ class Manage_Point_Oil_Detect:
         else:
             print("Mask rỗng, không thể hiển thị")
         
-    def read_interp_file(self):
-        return Manage_Point_Oil_Detect.folder.load_json(Manage_Point_Oil_Detect.path_interp)
-    
-    def write_inter_file(self,data):
-        Manage_Point_Oil_Detect.folder.save_json(data,Manage_Point_Oil_Detect.path_interp)
-        
-    def get_size_arr_point(self,z):
-        """Z là chiều cao của điểm dầu, cần phải hiệu chỉnh calib_Z và calib_scale cho chuẩn"""
-        if self.check_number_point() and self.check_data() and self.check_list_object_point():          
-             for point_detect in self.list_object_point:
-                size = point_detect.estimate_area_with_calib(z)
-                print("Dien Tich Thuc te cua diem dau la",size)
-        else:
-            print("Mot trong cac gia tri sai")
-    def area_correction(self,z):
-        data = self.read_interp_file()
-        if self.check_number_point() and self.check_data() and self.check_list_object_point():          
-             for point_detect in self.list_object_point:
-                 pass
-                 
 
+                 
 
 # manager = Manage_Point_Oil_Detect()
 # manager.area_correction(1)
@@ -220,7 +213,7 @@ class Manage_Point_Oil_Detect:
 
 
 
-# manager.get_size_arr_point(8)
+
 
 # manager  = Manage_Point_Oil_Detect(results) 
 # manager.draw_mark_data()

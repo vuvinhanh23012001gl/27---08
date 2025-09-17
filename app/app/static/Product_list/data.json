@@ -61,5 +61,98 @@
                 "brightness": 80
             }
         ]
+    },
+    "SP02": {
+        "type_id": "SP02",
+        "type_name": "STM32-F103C8T6",
+        "description": " Description deafaut ",
+        "len": 13,
+        "xyz": [
+            110,
+            75,
+            12
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP02.png",
+        "path_img_master": "static/Master_Photo/Master_SP02",
+        "point_check": [
+            {
+                "x": 50,
+                "y": 53,
+                "z": 0,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 1,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 2,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 3,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 4,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 6,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 7,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 8,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 9,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 10,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 11,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 12,
+                "brightness": 80
+            },
+            {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "brightness": 0
+            }
+        ]
     }
 }

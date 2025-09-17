@@ -1,10 +1,9 @@
 import cv2
 import numpy as np
 class point_oil_detect:
-    calib_Z = [1, 6, 12]         #Z (mm)
-    calib_scale = [2.0, 1.0, 0.5]  #scale (mm/pixel)
     def __init__(self,conf=None,xyxyn=None,contourn_polygon=None, contourn_polygon_standardization = None,masks_data = None):
         """
+        lớp này được tạo nhiều lần mỗi khi có dữ liệu mới cần kiểm tra
         - xywh: [x_center, y_center, width, height] (pixel)
         - xyxy: [x1, y1, x2, y2] (pixel)
         - xyxyn: [x1/W, y1/H, x2/W, y2/H]
@@ -18,14 +17,23 @@ class point_oil_detect:
         self.contourn_polygon_standardization = contourn_polygon_standardization
         self.masks_data = masks_data
 
+        self.reality_w = None             # Giá trị khung điểm dầu ngoài thực tế cùng
+        self.reality_h = None             # Giá trị khung điểm dầu ngoài thực tế cùng
+        self.reality_area = None          # Giá trị khung điểm dầu ngoài thực tế cùng
+
+        self.area_calculate = None             # Giá trị khung điểm dầu tính toán
+        self.area_region = None             # Giá trị vùng tính toán điểm dầu
+  
+
     def check_condition_conf(self):
         return True if self.conf else False
     def check_condition_xyxyn(self):
         return True if self.conf else False
     def check_condition_contourn_polygon(self):
-        return True if self.contourn_polygon else False
+        return self.contourn_polygon is not None and self.contourn_polygon.size > 0
     def check_condition_contourn_polygon_standardization(self):
-        return True if self.contourn_polygon_standardization else False
+        return self.contourn_polygon_standardization is not None and self.contourn_polygon_standardization.size > 0
+
     def get_predict_point_oil(self):
         if self.check_condition_conf():
             print("ty le nhan dien diem dau",self.conf[4])
@@ -36,18 +44,18 @@ class point_oil_detect:
     def get_sum_area(self):
         """Hàm trả về sum arae tính theo pixel """
         return self.sum_area if self.sum_area else None
-    
-    def count_mask_white_pixels(self):
+
+    def count_mask_max_pixels(self):
         """
-        mask: có thể là Tensor hoặc ndarray
-        Trả về: (count_zero, count_one, ratio)
+        Trả về (width, height) theo pixel từ contour chuẩn hóa theo chiều dài và rộng của ảnh xuất ra ở đây là mình dùng 1920x1200
         """
-        # Nếu là tensor PyTorch, chuyển về numpy
-        mask0 = self.masks_data.cpu().numpy()
-        mask_img = (mask0 * 255).astype(np.uint8)  # 0-255
-        count_zero, count_one, ratio = self.count_mask_pixels(mask_img)
-        print(f"Pixel 0: {count_zero}, Pixel 1: {count_one}, Tỷ lệ: {ratio:.2%}")
-        return count_zero, count_one, ratio
+        if not self.check_condition_contourn_polygon():
+            print("Dữ liệu contour không tồn tại")
+            return None, None
+        x, y, w, h = cv2.boundingRect(self.contourn_polygon)
+        print(f"Chiều rộng (px): {w}, Chiều cao (px): {h}")
+        return x, y,w, h
+
     def draw_mark_data(self) -> None:
         """Vẽ từng điểm dầu"""
         mask0 = self.masks_data.cpu().numpy()
@@ -81,22 +89,53 @@ class point_oil_detect:
         total = binary_mask.size
         count_zero = total - count_one
         ratio = count_one / total if total > 0 else 0
-        
         return count_zero, count_one, ratio
-    def estimate_area_with_calib(self,Z):
+    
+
+    def estimate_area_with_calib(self,Z:int,calib_Z:list,calib_scale:list):
         """
         Tính diện tích thật (tương đối) từ mask và Z
         """
-        area_pixel = self.count_mask_white_pixels()
-        scale = point_oil_detect.get_scale_from_calib(Z,point_oil_detect.calib_Z,point_oil_detect.calib_scale)
-        area_mm2 = area_pixel[1] * (scale ** 2)
-        return area_mm2
-    @staticmethod
-    def get_scale_from_calib(Z, calib_Z, calib_scale):
+        x, y, w, h = self.count_mask_max_pixels()
+        scale = np.interp(Z, calib_Z, calib_scale)
+        reality_w = w * scale 
+        reality_h = h * scale 
+        return reality_w , reality_h
+
+    def count_mask_white_pixels(self, width=1920, height=1200):
+        if not self.check_condition_contourn_polygon():
+            print("Dữ liệu contour không tồn tại")
+            return 0
+
+        if self.contourn_polygon is None or len(self.contourn_polygon) == 0:
+            print("Contour rỗng")
+            return 0
+
+        mask = np.zeros((height, width), dtype=np.uint8)
+        contour_int = np.array(self.contourn_polygon, dtype=np.int32)
+        cv2.drawContours(mask, [contour_int], -1, color=255, thickness=-1)
+        white_pixels = cv2.countNonZero(mask)
+        # cv2.imshow("Processing IMG",mask)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+        return white_pixels
+    def estimate_area_while_with_calib(self,Z:int,calib_Z:list,calib_scale:list):
         """
-        Trả về scale (mm/pixel) tại Z bằng nội suy tuyến tính
+        Tính diện tích thật (tương đối) từ mask và Z
         """
-        return np.interp(Z, calib_Z, calib_scale)
+        area_white = self.count_mask_white_pixels()
+        scale = np.interp(Z, calib_Z, calib_scale)
+        return area_white
+    def get_bbox_area(self):
+        """
+        Tính diện tích bounding box (px²) bao ngoài contour
+        """
+        if not self.check_condition_contourn_polygon():
+            print("Dữ liệu contour không tồn tại")
+            return None
+
+        x, y, w, h = cv2.boundingRect(self.contourn_polygon)
+        return w * h
     # def get_conf(self):
     #     print("Contour border xy:", self.contour_border_xy)
     #     return self.contour_border_xy
