@@ -21,9 +21,13 @@ class Master_Rect_Shape:
         self.compatible_max = None
         self.compatible_min = None
         self.Init()
+    def set_name(self, name: str):
+        self.name = name
+    # getter
+    def get_name(self) -> str:
+        return self.name
     def draw(self, img, color=(255, 0, 0)):
         h, w = img.shape[:2]
-        print("self.corners", self.corners)
 
         if self.corners and self.corners != -1:
             # Lấy 4 điểm corners (chuẩn hóa -> pixel)
@@ -38,7 +42,7 @@ class Master_Rect_Shape:
             # Vẽ tên tại đỉnh đầu tiên
             cv2.putText(img, func.remove_vietnamese_tone(self.name), (cx-10, cy-10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
-
+            return img
         else:
             # Vẽ bounding box nếu không có corners
             x1, y1 = int(self.x1 * w), int(self.y1 * h)
@@ -46,7 +50,7 @@ class Master_Rect_Shape:
             cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
             cv2.putText(img, func.remove_vietnamese_tone(self.name), (x1, y1 - 5),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
-
+            return img
     def Init(self):
         self.name = self.shape.get("ten_hinh_min",-1)
         self.x1 = self.shape.get("x1",-1)
@@ -60,12 +64,77 @@ class Master_Rect_Shape:
         self.size_max = self.shape.get("kich_thuoc_max",-1)
         self.size_min = self.shape.get("kich_thuoc_min",-1)
 
-        self.compatible_max = self.shape.get("tuong_thich_max",-1)
-        self.compatible_min = self.shape.get("tuong_thich_min",-1)
+        self.number_point = self.shape.get("so_diem_dau",-1)
+
         
         if(self.corners == -1):
             print(f"Hình {self.name} không xoay")
-        if( self.name  == -1 or self.x1 ==-1 or self.y1 == -1 or self.x2  == -1 or self.y2   == -1 or self.size_max  == -1 or self.size_min  == -1 or  self.compatible_max  == -1 or  self.compatible_min  == -1 ):
+        if( self.name  == -1 or self.x1 ==-1 or self.y1 == -1 or self.x2  == -1 or self.y2   == -1 or self.size_max  == -1 or self.size_min  == -1 or  self.number_point == -1):
             print("Lỗi init dũ liệu hình vuông không đúng")
         else:
             print(f"Init thành công điểm {self.name}")
+    def area(self, img_shape=None):
+        """
+        Tính diện tích hình chữ nhật (pixel^2)
+        - img_shape: (height, width) hoặc numpy.ndarray (ảnh)
+        """
+        # Xác định h, w từ tham số truyền vào
+        if isinstance(img_shape, np.ndarray):          # Nếu truyền vào cả ảnh
+            h, w = img_shape.shape[:2]
+        elif isinstance(img_shape, (tuple, list)):     # Nếu truyền vào tuple (h, w)
+            h, w = img_shape
+        else:                                          # Nếu không truyền gì
+            h, w = (1, 1)
+
+        # Nếu có corners (hình xoay / polygon)
+        if self.corners and self.corners != -1:
+            pts = np.array(
+                [[int(c["x"] * w), int(c["y"] * h)] for c in self.corners],
+                dtype=np.float32
+            )
+            x = pts[:, 0]
+            y = pts[:, 1]
+            area = 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
+            return {"area":area,"shape":"rect"}
+        else:
+            # Bounding box không xoay
+            x1, y1 = int(self.x1 * w), int(self.y1 * h)
+            x2, y2 = int(self.x2 * w), int(self.y2 * h)
+            area = abs((x2 - x1) * (y2 - y1))
+
+            return {"area":area,"shape":"rect"}
+    
+    def contains_polygon(self, polygon, img_shape):
+        """
+        Kiểm tra polygon có nằm trọn trong hình chữ nhật hay không
+        - polygon: list hoặc np.ndarray Nx2 (tọa độ normalized [0-1])
+        - img_shape: (H, W) hoặc numpy.ndarray (ảnh)
+        """
+        if isinstance(img_shape, np.ndarray):
+            h, w = img_shape.shape[:2]
+        else:
+            h, w = img_shape
+
+        # Nếu có corners (rect xoay)
+        if self.corners and self.corners != -1:
+            rect_pts = np.array(
+                [[int(c["x"] * w), int(c["y"] * h)] for c in self.corners],
+                dtype=np.int32
+            ).reshape((-1, 1, 2))
+        else:
+            x1, y1 = int(self.x1 * w), int(self.y1 * h)
+            x2, y2 = int(self.x2 * w), int(self.y2 * h)
+            rect_pts = np.array(
+                [[x1, y1], [x2, y1], [x2, y2], [x1, y2]],
+                dtype=np.int32
+            ).reshape((-1, 1, 2))
+
+        # Scale polygon sang pixel
+        poly_pts = np.array([[int(x * w), int(y * h)] for x, y in polygon])
+
+        # Kiểm tra từng điểm của polygon có nằm trong rect không
+        for pt in poly_pts:
+            inside = cv2.pointPolygonTest(rect_pts, (float(pt[0]), float(pt[1])), False)
+            if inside < 0:   # <0 tức là điểm nằm ngoài
+                return False
+        return True

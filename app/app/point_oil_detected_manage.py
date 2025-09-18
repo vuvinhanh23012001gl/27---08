@@ -49,6 +49,18 @@ class Manage_Point_Oil_Detect:
         else:
             print("Không tìm thấy dữ liệu nào")
             return None
+    def get_object_index_area_while(self,index):
+        """Trả về đối tượng điểm thứ index"""
+        if self.list_object_point:
+            quanlity_object_oil =  len(self.list_object_point)
+            if quanlity_object_oil <= index:
+                print("Không tồn tại object tại index")
+                return None
+            else:
+                return  self.list_object_point[index]
+        else:
+            print("Không tìm thấy dữ liệu nào")
+            return None
     def get_orig_shape(self)->tuple:
         """Trả về thông tin chiều shape của ảnh cho vào"""
         if self.data:

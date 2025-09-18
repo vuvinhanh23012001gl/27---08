@@ -306,7 +306,7 @@ function handleCanvasDoubleClick(event) {
       if (shape.mode === "max") {
         labels = ["Tên khung max", "Số điểm dầu quy định"];
       } else if (shape.mode === "min") {
-        labels = ["Tên hình min", "Số điểm dầu quy định","Kích thước min","Kích thước max","Tương thích min","Tương thích max"];
+        labels = ["Tên hình", "Số điểm dầu quy định","Kích thước điểm dầu nhỏ nhất","Kích thước điểm dầu lớn nhất"];
       }
 
       // Tạo bảng
@@ -331,11 +331,9 @@ function handleCanvasDoubleClick(event) {
         const labelToKey = {
           "Tên khung max": "ten_khung_max",
           "Số điểm dầu quy định": "so_diem_dau",
-          "Tên hình min": "ten_hinh_min",
-          "Kích thước min": "kich_thuoc_min",
-          "Kích thước max": "kich_thuoc_max",
-          "Tương thích min": "tuong_thich_min",
-          "Tương thích max": "tuong_thich_max"
+          "Tên hình": "ten_hinh_min",
+          "Kích thước điểm dầu nhỏ nhất": "kich_thuoc_min",
+          "Kích thước điểm dầu lớn nhất": "kich_thuoc_max"
         };
         const key = labelToKey[label];
         if (key && shape[key] !== undefined) {
@@ -355,7 +353,7 @@ function handleCanvasDoubleClick(event) {
       if (shape.mode === "max") {
         labels = ["Tên khung max", "Số điểm dầu quy định"];
       } else if (shape.mode === "min") {
-        labels = ["Tên hình min", "Số điểm dầu quy định","Kích thước min","Kích thước max","Tương thích min","Tương thích max"];
+        labels = ["Tên hình", "Số điểm dầu quy định","Kích thước điểm dầu nhỏ nhất","Kích thước điểm dầu lớn nhất"];
       }
 
       // Tạo bảng
@@ -380,11 +378,9 @@ function handleCanvasDoubleClick(event) {
         const labelToKey = {
           "Tên khung max": "ten_khung_max",
           "Số điểm dầu quy định": "so_diem_dau",
-          "Tên hình min": "ten_hinh_min",
-          "Kích thước min": "kich_thuoc_min",
-          "Kích thước max": "kich_thuoc_max",
-          "Tương thích min": "tuong_thich_min",
-          "Tương thích max": "tuong_thich_max"
+          "Tên hình": "ten_hinh_min",
+          "Kích thước điểm dầu nhỏ nhất": "kich_thuoc_min",
+          "Kích thước điểm dầu lớn nhất": "kich_thuoc_max"
         };
         const key = labelToKey[label];
         if (key && shape[key] !== undefined) {
@@ -417,20 +413,16 @@ function handleCanvasDoubleClick(event) {
     const labelToKey = {
       "Tên khung max": "ten_khung_max",
       "Số điểm dầu quy định": "so_diem_dau",
-      "Tên hình min": "ten_hinh_min",
-      "Kích thước min": "kich_thuoc_min",
-      "Kích thước max": "kich_thuoc_max",
-      "Tương thích min": "tuong_thich_min",
-      "Tương thích max": "tuong_thich_max"
+      "Tên hình": "ten_hinh_min",
+      "Kích thước điểm dầu nhỏ nhất": "kich_thuoc_min",
+      "Kích thước điểm dầu lớn nhất": "kich_thuoc_max"
     };
 
     // Chỉ các key này mới phải là số nguyên
     const integerKeys = [
       "so_diem_dau",
       "kich_thuoc_min",
-      "kich_thuoc_max",
-      "tuong_thich_min",
-      "tuong_thich_max"
+      "kich_thuoc_max"
     ];
 
     const rows = table_write_data.querySelectorAll("tr");
@@ -516,8 +508,6 @@ function handleCanvasDoubleClick(event) {
           j["so_diem_dau"] = data.so_diem_dau;
           j["kich_thuoc_min"] = data.kich_thuoc_min;
           j["kich_thuoc_max"] = data.kich_thuoc_max;
-          j["tuong_thich_min"] = data.tuong_thich_min;
-          j["tuong_thich_max"] = data.tuong_thich_max;
         }
       }
     }

@@ -1,6 +1,5 @@
 import json
 from folder_create import Create
-import cv2
 class Proces_Shape_Master():
     NAME_FOLDER_SAVE_DATA_MASTER = "Master_Regulations"
     NAME_FILE_SAVE_MASTER_REGULATIONS = "data_regulations.json"
