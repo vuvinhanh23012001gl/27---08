@@ -59,27 +59,51 @@ class Master_Circle_Shape():
 
     def contains_polygon(self, polygon, img_shape):
         """
-        Kiểm tra polygon có nằm trọn trong hình tròn hay không
+        Kiểm tra polygon nằm trong / ngoài / một phần trong hình tròn
         - polygon: list hoặc np.ndarray Nx2 (tọa độ normalized [0-1])
         - img_shape: (H, W) hoặc numpy.ndarray (ảnh)
+        
+        Trả về dict:
+        {
+            "status": "inside" | "partial" | "outside",
+            "inside_percent": float  (0-100 % polygon nằm trong)
+        }
         """
+        import numpy as np
+
         # Lấy kích thước ảnh
         if isinstance(img_shape, np.ndarray):
             h, w = img_shape.shape[:2]
         else:
             h, w = img_shape
 
-        # Tâm & bán kính theo pixel
+        # Tâm & bán kính theo pixel (dùng min để tránh méo)
+        scale = min(w, h)
         cx, cy = int(self.x * w), int(self.y * h)
-        r_pixel = self.r * w   # bán kính theo width
+        r_pixel = self.r * scale
 
         # Scale polygon sang pixel
         poly_pts = np.array([[int(x * w), int(y * h)] for x, y in polygon])
 
-        # Kiểm tra từng điểm có nằm trong hình tròn
+        # Kiểm tra từng điểm
+        inside_count = 0
         for (px, py) in poly_pts:
             dist = np.sqrt((px - cx) ** 2 + (py - cy) ** 2)
-            if dist > r_pixel:
-                return False  # Có điểm nằm ngoài → polygon không nằm trọn trong hình tròn
+            if dist <= r_pixel:
+                inside_count += 1
 
-        return True  # Tất cả điểm đều nằm trong hình tròn
+        # Tính % nằm trong
+        inside_percent = inside_count / len(poly_pts) * 100
+
+        # Quyết định trạng thái
+        if inside_percent == 100:
+            status = "inside"
+        elif inside_percent == 0:
+            status = "outside"
+        else:
+            status = "partial"
+
+        return {
+            "status": status,
+            "inside_percent": inside_percent
+        }

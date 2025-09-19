@@ -11,6 +11,10 @@ import time
 import func
 import os
 
+# Model → load 1 lần duy nhất khi khởi động phần mềm.
+# Master data (shape, quy định) → load khi chọn ID sản phẩm hoặc khi người dùng thay đổi quy chuẩn.
+# Detection data (kết quả model trên từng ảnh) → luôn tạo mới cho từng ảnh.
+
 # main_pc.click_page_html = 4  --> Là vào thêm sản phẩm mới
 # main_pc.click_page_html = 1  --> Là vào trang main chính
 # main_pc.click_page_html = 3  --> Là lấy master 
@@ -34,7 +38,8 @@ app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 manage_product = ProductTypeManager()
 shape_master = Proces_Shape_Master()
-cam_basler = None
+
+
 
 #-------open thread--------
 OPEN_THREAD_LOG =  True
@@ -528,9 +533,13 @@ app.register_blueprint(api_run_application, url_prefix="/api_run_application")
 app.register_blueprint(api_new_product, url_prefix="/api_new_product") 
 app.register_blueprint(api_add_master, url_prefix="/api_add_master") 
 
+
 from shared_queue import queue_accept_capture
 cam_basler = BaslerCamera(queue_accept_capture, socketio, config_file="Camera_25129678.pfs")
+
+print("doi tuong cam ---------------runnnnnnnnnnnnn--------------",cam_basler)
 if __name__ == "__main__":
+  
     import main_pc
     from shared_queue import queue_rx_web_api,queue_tx_web_log,queue_tx_web_main
     import threading

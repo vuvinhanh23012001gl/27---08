@@ -53,6 +53,7 @@ class Master_Rect_Shape:
             return img
     def Init(self):
         self.name = self.shape.get("ten_hinh_min",-1)
+        print(f"----------------------Khởi tạo master tên {self.name}-----------------------")
         self.x1 = self.shape.get("x1",-1)
         self.y1 = self.shape.get("y1",-1)
         self.x2 = self.shape.get("x2",-1)
@@ -69,6 +70,8 @@ class Master_Rect_Shape:
         
         if(self.corners == -1):
             print(f"Hình {self.name} không xoay")
+        else:
+            print(f"Hình {self.name} xoay")
         if( self.name  == -1 or self.x1 ==-1 or self.y1 == -1 or self.x2  == -1 or self.y2   == -1 or self.size_max  == -1 or self.size_min  == -1 or  self.number_point == -1):
             print("Lỗi init dũ liệu hình vuông không đúng")
         else:
@@ -106,10 +109,20 @@ class Master_Rect_Shape:
     
     def contains_polygon(self, polygon, img_shape):
         """
-        Kiểm tra polygon có nằm trọn trong hình chữ nhật hay không
+        Kiểm tra polygon nằm trong / ngoài / một phần trong hình chữ nhật
         - polygon: list hoặc np.ndarray Nx2 (tọa độ normalized [0-1])
         - img_shape: (H, W) hoặc numpy.ndarray (ảnh)
+
+        Trả về dict:
+        {
+            "status": "inside" | "partial" | "outside",
+            "inside_percent": float  (0-100 % polygon nằm trong)
+        }
         """
+        import numpy as np
+        import cv2
+
+        # Lấy kích thước ảnh
         if isinstance(img_shape, np.ndarray):
             h, w = img_shape.shape[:2]
         else:
@@ -133,8 +146,23 @@ class Master_Rect_Shape:
         poly_pts = np.array([[int(x * w), int(y * h)] for x, y in polygon])
 
         # Kiểm tra từng điểm của polygon có nằm trong rect không
+        inside_count = 0
         for pt in poly_pts:
             inside = cv2.pointPolygonTest(rect_pts, (float(pt[0]), float(pt[1])), False)
-            if inside < 0:   # <0 tức là điểm nằm ngoài
-                return False
-        return True
+            if inside >= 0:
+                inside_count += 1
+
+        inside_percent = inside_count / len(poly_pts) * 100
+
+        # Quyết định trạng thái
+        if inside_percent == 100:
+            status = "inside"
+        elif inside_percent == 0:
+            status = "outside"
+        else:
+            status = "partial"
+
+        return {
+            "status": status,
+            "inside_percent": inside_percent
+        }

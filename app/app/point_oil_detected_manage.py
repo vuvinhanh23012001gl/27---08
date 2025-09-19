@@ -129,13 +129,13 @@ class Manage_Point_Oil_Detect:
             contourn_polygon_standardization_data= self.get_contourn_polygon_standardization()
             masks_data = self.get_masks_data()
             if (data_tensor_data and xyxyn_data and contourn_polygon_data and contourn_polygon_standardization_data and masks_data) is not None:
-                print("Tiến hành khởi tạo danh sách các Point Detect")
+                print("---------------------------- Tiến hành khởi tạo danh sách các điểm mô hình phát hiện ----------------------------")
                 number_point = self.get_number_object_detect_and_number_data() 
                 self.number_point = number_point[0]
                 if number_point:
-                    print("Số lượng điểm phát hiện:",number_point[0],"Độ dài Data",number_point[1])
+                    print("Số lượng điểm phát hiện:",number_point[0])
                     for i in range(0,number_point[0]):
-                        print(f"Khởi tạo điểm thứ {i+1}",)
+                        print(f"--------Khởi tạo điểm thứ {i+1}----------")
                         point = point_oil_detect(conf = data_tensor_data[i],xyxyn = xyxyn_data[i],contourn_polygon = contourn_polygon_data[i],contourn_polygon_standardization = contourn_polygon_standardization_data[i], masks_data = masks_data[i])
                         # point.draw_mark_data()  # test ham nay oke
                         # point.get_predict_point_oil()
@@ -148,10 +148,9 @@ class Manage_Point_Oil_Detect:
                         self.list_object_point.append(point)
                         # point_detect.area_calculate = point_detect.get_bbox_area()  diện tích vùng khung trắng bên ngoài bao vật thể 
                         # print("Số điểm khung màu trắng",point_detect.area_calculate)
-                        print("Số điểm vùng màu trắng",point.area_region)
-                        print("Chiều dài thực tế ",point.reality_w," mm","\n","Chiều cao thực tế ",point.reality_h," mm\n","Diện tích thực tế ",point.reality_area," mm\n")
-                        print(f"Khởi tạo thành công điểm thứ {i+1}",)
-                    print("Khởi tạo thành công danh sách điểm dầu")
+                        print("Số điểm vùng màu trắng :",point.area_region)
+                        print(f"Chiều dài thực tế :{point.reality_w}mm \r\nChiều cao thực tế :{point.reality_h}mm \r\nDiện tích thực tế :{point.reality_area}mm")
+                    print("-------------------Khởi tạo thành công danh sách điểm dầu----------------------")
                     return True
                 else:
                     print("Giá trị điểm Number point không tồn tại")

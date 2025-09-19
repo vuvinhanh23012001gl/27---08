@@ -94,7 +94,7 @@ def fuc_main_process():
                                 time.sleep(0.5)
                               
                 case 1:
-                    import run 
+         
                     print("Đang Xử Lý Trang Main")
                     if flag_the_firts_connect :
                         flag_the_firts_connect = False
@@ -102,7 +102,6 @@ def fuc_main_process():
                     # else:
                     #     #  print("Cam đã kết nối")
                     if(is_run == 1): 
-                        run.cam_basler.initialize_camera()
                         is_run = 0  #tat de khong vao lai
                         obj_manager_serial.clear_rx_queue()
                         obj_manager_serial.clear_tx_queue()
@@ -114,10 +113,9 @@ def fuc_main_process():
                         name_product       = manage_product_type.get_product_name_find_id(choose_master_index.strip())
                         #    print("arr Point",arr_point)
                         #    print("name product",name_product)
-                        
                         if arr_point is not None and name_product is not None :
                                 print("Quá trình chạy các điểm")
-                                func.run_and_capture(name_product,arr_point,obj_manager_serial,run.cam_basler)
+                                func.run_and_capture(name_product,arr_point,obj_manager_serial)
                         else:
                                 print("Không tìm thấy ID danh sách điểm để chạy")
                                 

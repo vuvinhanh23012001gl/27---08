@@ -1,11 +1,10 @@
 import time
 import queue
-from flask import Flask,request,jsonify
 import json
 import queue
 import os
-import numpy as np
 import cv2 
+
 
 SIZE_X_MAX =  110
 SIZE_X_MIN = 0
@@ -18,7 +17,7 @@ SIZE_K_MIN = 0
 SIZE_SHIFT_MAX = 10
 SIZE_SHIFT_MIN = 0
 TIME_OUT_WAIT_ARM_RESEND = 4
-from  shared_queue import queue_accept_capture,queue_tx_web_main
+from  shared_queue import queue_accept_capture,queue_tx_web_main,process_capture_detect
 def clear_queue(q):
     print(f"❌ Xoa queue {q}")
     while not q.empty():
@@ -236,7 +235,7 @@ def prcess_check_run_train(name_protype:str,shiftx:int, shifty:int, shiftz:int, 
                     print("✅ Chạy lại điểm phụ thành công") if status_send_arm else print("❌ Chạy lại điểm  phụ không thành công điểm chính ")
                     data = {'productname':name_protype,'index':i,'lengt_index':len_arr_xyz,'training':1}
                     queue_accept_capture.put(data)
-def run_and_capture(name_product,List_point,obj_manager_serial,cam_basler):
+def run_and_capture(name_product,List_point,obj_manager_serial):
     """Trả về False nếu đã cố gắng chạy nhưng không thành công trả về true nếu chạy thành công"""
     print("name_product",name_product)
     print("List_point",List_point)
@@ -249,26 +248,28 @@ def run_and_capture(name_product,List_point,obj_manager_serial,cam_basler):
         obj_manager_serial.send_data(from_data_send_run)
         status_send_arm = wait_for_specific_data(obj_manager_serial,from_data_send_run)
         if status_send_arm :
-            print("✅Điểm Thành Công")
-            img = cam_basler.capture_one_frame()
-            cv2.imshow("anh1",img)
-            cv2.waitKey(1)
-            try:
-                convert_jpg = frame_to_jpeg_bytes(img)
-                if convert_jpg:
-                    data_point = {
-                        'index':i,
-                        'length':length_list_point,
-                        'img':convert_jpg
-                    }
-                    try:
-                        queue_tx_web_main.put(data_point, timeout=0.1)
-                        print("✅ Đưa ảnh vào queue thành công")
-                    except queue.Full:
-                        print("⚠️ Queue đầy, bỏ qua frame này")
-                    print("ConVert gửi trong queue Thành công!")
-            except:
-                print("Có lỗi gì ở bước chuyển ảnh")
+                print("✅Điểm Thành Công")
+                queue_accept_capture.put({"training":3,"capture_detect":1})
+                img = process_capture_detect.get(block=True,timeout=1)
+                # cv2.imshow("anh1",img)
+                # cv2.waitKey(1)
+                try:
+                    convert_jpg = frame_to_jpeg_bytes(img)
+                    if convert_jpg:
+                        data_point = {
+                            'index':i,
+                            'length':length_list_point,
+                            'img':convert_jpg
+                        }
+                        try:
+                            queue_tx_web_main.put(data_point, timeout=0.1)
+                            print("✅ Đưa ảnh vào queue thành công")
+                        except queue.Full:
+                            print("⚠️ Queue đầy, bỏ qua frame này")
+                        print("ConVert gửi trong queue Thành công!")
+                except:
+                    print("Có lỗi gì ở bước chuyển ảnh")
+
         else :
             print("❌ Chạy lại điểm  phụ không thành công điểm chính ")
            
