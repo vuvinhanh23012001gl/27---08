@@ -1,11 +1,11 @@
 from point_oil import PointOil
+from common_value import NAME_FILE_STATIC
 import os
-
 
 class ProductType:
     #Variable
     NAME_FILE_PRODUCT_PHOTO = "Product_Photo"
-    NAME_FILE_STATIC = "static"
+    NAME_FILE_STATIC_CLASS = NAME_FILE_STATIC
     NAME_FILE_IMG_RETRAINING = "Product_Img_Retraining"
     NAME_FILE_MASTER_PHOTO = "Master_Photo"
     def __init__(self, type_id:str, type_name:str,xyz:list):
@@ -31,7 +31,7 @@ class ProductType:
     def Init_path(self):
         """Tao ra cac duong dan neu co roi thi thoi khong thong bao loi"""
         name_file_parent = os.path.dirname(os.path.abspath(__file__))
-        static = os.path.join(name_file_parent,ProductType.NAME_FILE_STATIC)
+        static = os.path.join(name_file_parent,ProductType.NAME_FILE_STATIC_CLASS)
         path_product = os.path.join(static,ProductType.NAME_FILE_PRODUCT_PHOTO )  #tao ra duong dan chuan Product_Photo
         path_img_retraining = os.path.join(static,ProductType.NAME_FILE_IMG_RETRAINING)  #tao ra duong dan chuan Product_Photo
         path_master = os.path.join(static,ProductType.NAME_FILE_MASTER_PHOTO)   #tao ra duong dan chuan Master_Photo
@@ -99,7 +99,7 @@ class ProductType:
         }
     def get_path_name_folder_product_img(self):  #
                 file_path = os.path.abspath(__file__)
-                path_static = os.path.join(file_path,ProductType.NAME_FILE_STATIC)
+                path_static = os.path.join(file_path,ProductType.NAME_FILE_STATIC_CLASS)
                 path_Product_Photo = os.path.join(path_static,ProductType.NAME_FILE_PRODUCT_PHOTO )
                 path_img = os.path.join(path_Product_Photo,f"IMG_{self.type_id}.png".replace(" ", ""))
                 path_img_ok = self.get_path_from_static(path_img)
@@ -109,9 +109,9 @@ class ProductType:
                 return path_img_ok.replace('\\', '/')
     
     def get_path_from_static(self,full_path):
-        parts = full_path.split(ProductType.NAME_FILE_STATIC, 1)
+        parts = full_path.split(ProductType.NAME_FILE_STATIC_CLASS, 1)
         if len(parts) > 1:
-            return ProductType.NAME_FILE_STATIC + parts[1]
+            return ProductType.NAME_FILE_STATIC_CLASS + parts[1]
         else:
             return None
     def get_list_point(self)->list[set]:

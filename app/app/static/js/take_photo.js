@@ -3,6 +3,7 @@ let Limit_x = 0;
 let Limit_y = 0;
 let Limit_z = 0;
 let Limit_k = 0;
+
 const videoSocket = io("/video");
 videoSocket.on("camera_frame", function (data) {
     document.getElementById("cam_feed").src = "data:image/jpeg;base64," + data.image;

@@ -1,26 +1,33 @@
 
-import threading
-import time
+
 from manager_serial import ManagerSerial
+from producttypemanager import ProductTypeManager
+from judget_product import Judget_Product
+from process_master import Proces_Shape_Master
 import func
 import queue    
-from shared_queue import queue_rx_web_api,queue_tx_web_main,queue_rx_web_main,queue_tx_web_log
-from producttypemanager import ProductTypeManager
-from connect_camera import  BaslerCamera
+import threading
+import time
+
+
+from shared_queue import queue_rx_web_api,queue_rx_web_main,queue_tx_web_log
+
+
+
+
 #---lock doi tuong-----
 manage_product_type = ProductTypeManager()
-manage_product_type_lock = threading.Lock()
-Object_BaslerCamera = None
 click_page_html = threading.Lock()     #1 la dang o file chinh  2 la o fine traing_model 3 la file cau hinh cam hay lmj do
+judget_product = Judget_Product()  #Lop phan dinh
+object_shape_master = Proces_Shape_Master()
+
 click_page_html = 0
-flask_training_erase_queue = 1
 is_data_train = 0
 is_run = 0
 #-------------------------------------------------
 STATUS_CHECK_CONNECT = 2         #trang thai cho ket noi
 SIZE_SEND_THE_FIRST_CONNECT = 2
 # SIZE_SEND_THE_FIRST_CONNECT_WEB_API_INF_MODEL = 1
-TIME_RETURN_TO_ORIGIN = 10
 SIZE_QUEUE_RX_ARM = 50
 SIZE_QUEUE_TX_ARM = 50
 NAME_FILE_CHOOSE_MASTER = "choose_master"   #Tránh import nhiều lần nên đặt biến luôn . khi thay đổi đường dẫn nhớ thay đổi cả file run và file main_pc giống nhau
@@ -72,8 +79,8 @@ def fuc_main_process():
                                  obj_manager_serial.send_data("cmd:0,0,0,0")
                                  time.sleep(1)   
             # print("----------------- Bắt đầu điều khiển với ARM -------------------")
-            #click_page_html  ==  2 vao che do trainning san pham
-            #click_page_html  ==  1 Vào Chế độ main  show
+            # click_page_html  ==  2 vao che do trainning san pham
+            # click_page_html  ==  1 Vào Chế độ main  show
             STATUS_CHECK_CONNECT = 1
             match click_page_html:
                 case 2|6:
@@ -108,14 +115,20 @@ def fuc_main_process():
                         print("Bắt đầu chạy các điểm")
                         func.create_choose_master(NAME_FILE_CHOOSE_MASTER) # tạo file choose_master nếu tạo rồi thì thôi
                         choose_master_index = func.read_data_from_file(NAME_FILE_CHOOSE_MASTER) # đọc lại file choose master cũ xem lần trước  người dùng chọn gì
-                        print("Chạy với ID là :",choose_master_index)
-                        arr_point = manage_product_type.get_list_point_find_id(choose_master_index.strip())
-                        name_product       = manage_product_type.get_product_name_find_id(choose_master_index.strip())
-                        #    print("arr Point",arr_point)
-                        #    print("name product",name_product)
+                        choose_master_index =  choose_master_index.strip()
+                        print("Chạy với ID là :",)
+                        arr_point = manage_product_type.get_list_point_find_id(choose_master_index)
+                        name_product       = manage_product_type.get_product_name_find_id(choose_master_index)
+                        shape_master =  object_shape_master.get_data_is_id(choose_master_index)        
+                        print("shape_master",shape_master)
+                        print("arr Point",arr_point)
+                        print("name product",name_product)
                         if arr_point is not None and name_product is not None :
                                 print("Quá trình chạy các điểm")
-                                func.run_and_capture(name_product,arr_point,obj_manager_serial)
+                                # func.run_and_capture(name_product,arr_point,obj_manager_serial)
+                                func.run_and_capture_copy(choose_master_index,name_product,arr_point,judget_product,object_shape_master,obj_manager_serial)
+ 
+
                         else:
                                 print("Không tìm thấy ID danh sách điểm để chạy")
                                 

@@ -1,9 +1,10 @@
 import json
 from folder_create import Create
+from common_value import NAME_FILE_STATIC
 class Proces_Shape_Master():
     NAME_FOLDER_SAVE_DATA_MASTER = "Master_Regulations"
     NAME_FILE_SAVE_MASTER_REGULATIONS = "data_regulations.json"
-    NAME_FOLDER_STATIC = "static"
+    NAME_FOLDER_STATIC = NAME_FILE_STATIC
     HEIGHT_CONVERT = 830
     WIDTH_CONVERT  = 1328
     def __init__(self):

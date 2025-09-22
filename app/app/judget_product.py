@@ -4,10 +4,10 @@ from ultralytics import YOLO
 from folder_create import Create
 from master_circle_shape import  Master_Circle_Shape
 from master_rect_shape import  Master_Rect_Shape
-import cv2
 import numpy as np
-class Judget_Product:
+import cv2
 
+class Judget_Product:
     """Lớp này chỉ phán định sản phẩm có 
     lớp này chỉ khởi tạo 1 lần
     OK hay NG"""
@@ -18,8 +18,109 @@ class Judget_Product:
 
     def __init__(self):
         pass
+    def judget_img(self,atitude_z,index_picture,img:np.ndarray,data_one_point_master):
+                # ✅ Kiểm tra giá trị đầu vào
+                if img is None:
+                    print(f"Lỗi: Ảnh đầu vào None tại index_picture: {index_picture}")
+                    return False
+
+                if atitude_z is None:
+                    print("Lỗi: Giá trị atitude_z None")
+                    return False
+
+                if index_picture is None:
+                    print("Lỗi: index_picture None")
+                    return False
+            # ========================= BẮT ĐẦU XỬ LÝ ========================= #
+                """Khi cho 1 bức ảnh vào thì nó sẽ phán định ok hay ng"""
+                print("data_one_point_master sau",data_one_point_master)
+            
+                data_regulation = Judget_Product.model(img)                                                  # Dữ liệu đi ra từ mô hình 
+                object_one_point_detect = Manage_Point_Oil_Detect(data_regulation,atitude_z)                 # Đưa vào đối tượng điểm của mô hình
+                polygons = object_one_point_detect.get_contourn_polygon_standardization()                    # Lấy các điểm bao 
+                if not polygons:
+                    print(f"Không có điểm dầu hoặc không phát hiện điểm dầu trong ảnh thứ:{index_picture} của")
+                    #Phan nay cần phải thêm Logic xem điểm dầu hợp lệ hay không
+                # object_one_point_detect.draw_all()                                                         # Vẽ các điểm dầu
+                # print(data_one_point_master)
+                # img = self.draw_polylines_on_image(img,polygons)   
+                arr_object_shape = [] 
+                if not data_one_point_master:
+                    print("Dữ liệu không đúng")
+                    return False                 
+                for shape in data_one_point_master:
+                    if shape["type"] == "circle":
+                        shape_object = Master_Circle_Shape(shape)
+                                #  img  = shape_object.draw(img)
+                        arr_object_shape.append(shape_object)
+                    elif shape["type"] == "rect":
+                        shape_object = Master_Rect_Shape(shape)
+                                #  img  = shape_object.draw(img)
+                        arr_object_shape.append(shape_object)
+                is_frame_ok = True
+                for shape_master in arr_object_shape:
+                     arr_specified_size_data = []
+                    #  img  = shape_master.draw(img)
+                     name = shape_master.get_name()
+                     data_area = shape_master.area(img)
+                     print(f"------------------------Kiểm tra vùng  Master:{name}-------------------------------")
+                     is_inside = True         
+                     index_detect_point = 0
+                     count_oil_in_point = 0
+                     for poly in polygons:   
+                        object_point = object_one_point_detect.get_object_index_area_while(index_detect_point) #Trả về đối tượng từng điểm ảnh phát hiện đc
+                        index_detect_point += 1
+                        dict_data_detect = shape_master.contains_polygon(poly, img)
+                        status = dict_data_detect.get("status",-1)
+                        inside_percent = dict_data_detect.get("inside_percent",-1)
+                        if inside_percent == -1 or status == -1:
+                            print("Lỗi dữ liệu output")
+                        if status == "inside":
+                            print(f"--Thuộc tính điểm thứ {count_oil_in_point + 1} phát hiện ra--")
+                            width_reality = max(object_point.estimate_area_with_calib(atitude_z,object_one_point_detect.calib_Z,object_one_point_detect.calib_scale))
+                            print("--Vật thể")
+                            print(f"Khung {name} có điểm {count_oil_in_point + 1} max đường kính thực tế của vật thể :{width_reality} mm")
+                            print(f"Khung {name} có điểm {count_oil_in_point + 1} số px trắng phát hiện là :{object_point.count_mask_white_pixels()} px")
+                            print("--Master quy định")
+                            print(f"Kích thước điểm dầu MIN :{shape_master.size_min} MAX: {shape_master.size_max}")
+                            if(width_reality >shape_master.size_max or width_reality < shape_master.size_min):
+                                specified_size_data = {"name_master":name,"name_point":count_oil_in_point + 1}
+                                arr_specified_size_data.append(specified_size_data)
+                            print(f"Khung {name} có điểm {count_oil_in_point + 1} master quy định nằm trong hình:{data_area["shape"]} có diện tích khung là:{data_area["area"]} px")
+                            print("Phán định")
+                            print(f"Tỷ lệ chiếm của điểm {count_oil_in_point + 1} với khung master :{self.calc_area_percentage(object_point.count_mask_white_pixels(),data_area["area"])} %")
+                            print(f"{inside_percent} % nằm trọn trong khung")
+                            print(f"==> Điểm {count_oil_in_point + 1} nằm trong khung {name}")
+                            count_oil_in_point +=1
+                            is_inside =  True
+                        if status == "partial":
+                             print(f"Khung {name} phát hiện {inside_percent} % nằm một phần trong khung")
+                     if not is_inside:
+                        print(f"Hình {name} có không có Polygon nằm trong")
+                     print(f"Khung {name} số lượng điểm phát hiện nằm trong là :{count_oil_in_point} và master đặt là:{shape_master.number_point}")
+                     if count_oil_in_point != shape_master.number_point:
+                         print(f"=>Số lượng điểm phát hiện khác với quy định")
+                         is_frame_ok =  False
+                     else:
+                          print(f"=>Số lượng điểm phát hiện giống với quy định")
+                          if len(arr_specified_size_data) > 0:
+                              print("Tìm được những điểm dầu sau không đúng với kích thước quy định",arr_specified_size_data)
+                              is_frame_ok =  False
+                     print("------------------------END master-------------------------------")
+                if is_frame_ok:
+                     print("=======================> Bức Hình OK")
+                else:
+                     print("=======================> Bức Hình NG")
+                # cv2.imshow("Processing IMG",img)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
+        
+
     def judget(self,ID:str,atitude_z,index_picture,img:np.ndarray,master_shape:Proces_Shape_Master):
-            """Khi cho 1 bức ảnh vào thì nó sẽ phán định ok hay ng"""
+            """Khi cho 1 bức ảnh vào thì nó sẽ 
+            phán định ok hay ng
+            hàm này để test phán định
+            """
             print(f"Phán định ID{ID} tại Index:{index_picture}")
             data_id = master_shape.get_data_is_id(ID)
             if data_id:

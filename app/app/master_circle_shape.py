@@ -1,7 +1,7 @@
 import cv2
 import func
 import math
-import numpy as np
+
 class Master_Circle_Shape():
     def __init__(self,shape):
         self.shape =  shape

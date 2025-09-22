@@ -1,7 +1,8 @@
 from point_oil_detected import point_oil_detect
+import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+
 class Manage_Point_Oil_Detect: 
     # lớp này được tạo nhiều lần mỗi khi có dữ liệu mới cần kiểm tra
     calib_Z = [0,1,2,3,4,5,6,7,8,9,10,11,12]         #Z (mm)
@@ -144,7 +145,8 @@ class Manage_Point_Oil_Detect:
                         point.reality_w = reality_w  #  Gia tri ngoai doi ngoài cùng
                         point.reality_h = reality_h  #  Gia tri ngoai doi khung bên ngoài cùng
                         point.reality_area = reality_w*reality_h 
-                        point.area_region = point.estimate_area_while_with_calib(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale)  #vung tinh toan
+                        point.area_region = point.estimate_area_while_with_calib(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale)  # vung tinh toan
+                        # point.scale = point.get_scale(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale) #lay ty le
                         self.list_object_point.append(point)
                         # point_detect.area_calculate = point_detect.get_bbox_area()  diện tích vùng khung trắng bên ngoài bao vật thể 
                         # print("Số điểm khung màu trắng",point_detect.area_calculate)

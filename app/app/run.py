@@ -6,25 +6,21 @@ from connect_camera import BaslerCamera
 from flask import redirect, url_for
 from producttypemanager import ProductTypeManager
 from process_master import Proces_Shape_Master
+
+from common_value import NAME_FILE_CHOOSE_MASTER
 import threading
 import time
 import func
 import os
 
-# Model → load 1 lần duy nhất khi khởi động phần mềm.
-# Master data (shape, quy định) → load khi chọn ID sản phẩm hoặc khi người dùng thay đổi quy chuẩn.
-# Detection data (kết quả model trên từng ảnh) → luôn tạo mới cho từng ảnh.
 
-# main_pc.click_page_html = 4  --> Là vào thêm sản phẩm mới
-# main_pc.click_page_html = 1  --> Là vào trang main chính
-# main_pc.click_page_html = 3  --> Là lấy master 
-# main_pc.click_page_html = 2  --> Training model
-# main_pc.click_page_html = 5  --> Choose master
-# main_pc.click_page_html = 6  --> Add master
 
-#static varialble--------------
-NAME_FILE_CHOOSE_MASTER = "choose_master"
-#Class -------------------------
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+manage_product = ProductTypeManager()
+shape_master = Proces_Shape_Master()
+
+
 main_html = Blueprint("main",__name__)
 api = Blueprint("api",__name__)
 api_new_model = Blueprint("api_new_model",__name__)
@@ -34,31 +30,13 @@ api_run_application = Blueprint("api_run_application",__name__)
 api_new_product = Blueprint("api_new_product",__name__)
 api_add_master = Blueprint("api_add_master",__name__)
 
-app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
-manage_product = ProductTypeManager()
-shape_master = Proces_Shape_Master()
-
-
-
 #-------open thread--------
 OPEN_THREAD_LOG =  True
 OPEN_THREAD_STREAM =  True
 OPEN_THREAD_IMG = True
-#soket io
-@main_html.route("/empty_page.html")
-def already_open():
-    # Đây là trang báo lỗi khi user mở tab thứ 2
-    return render_template("empty_page.html")
-@socketio.on('connect', namespace='/video')
-def handle_video_connect():
-    print("📡 Client connected to /video")
-@socketio.on('connect', namespace='/log') 
-def handle_log_connect():
-    print("📡 Client connected to /log") 
-@socketio.on('connect',namespace='/data_clinet_show')  #'/data_clinet_show' img + loction point,... 
-def handle_data_send_connect():
-    print("📡 Client connect to /data_clinet_show") #img hiển thị hình ảnh sản phẩm
+
+
+# -----------------------Task-----------------------------------------------
 def stream_frames():
     while OPEN_THREAD_STREAM:
          cam_basler.run_cam_html()
@@ -66,17 +44,17 @@ def stream_frames():
     cam_basler.release()
     print("Thoát luồng gửi video thành công")
  
-#queue_tx_web_main
-def stream_img():
+
+def stream_img(): # queue_tx_web_main gồm ảnh và data
     global OPEN_THREAD_IMG
     while OPEN_THREAD_IMG:
         if queue_tx_web_main.qsize() > 0:
             data = queue_tx_web_main.get(block=False)
-            socketio.emit("photo_taken", data, namespace="/video")
+            socketio.emit("photo_taken", data, namespace="/img_and_data")
         time.sleep(0.1)
 
     
-def stream_logs():
+def stream_logs(): # gồm các loại log
     while OPEN_THREAD_LOG:
             match main_pc.click_page_html:
                 case 4: 
@@ -89,8 +67,31 @@ def stream_logs():
                 case 2:
                     if not queue_tx_web_log.empty():
                         socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')    #Gửi log cho File Training
+                case 1: # main
+                    if not queue_tx_web_log.empty():
+                        socketio.emit("log_message_judment", {"data": f"{queue_tx_web_log.get()}"}, namespace='/log')
             print(main_pc.click_page_html)
             time.sleep(1)
+
+# -----------------------End Task-----------------------------------------------
+
+
+@main_html.route("/empty_page.html")
+def already_open():
+    # Đây là trang báo lỗi khi user mở tab thứ 2
+    return render_template("empty_page.html")
+@socketio.on('connect', namespace='/video')
+def video_connect():
+    print("Client connected to /video")
+@socketio.on('connect', namespace='/img_and_data')
+def handle_video_connect():
+    print("📡 Client connected to /img_and_data")
+@socketio.on('connect', namespace='/log') 
+def handle_log_connect():
+    print("📡 Client connected to /log") 
+@socketio.on('connect',namespace='/data_add_master')  #'/data_add_master' img + loction point,... 
+def handle_data_send_connect():
+    print("📡 Client connect to /data_add_master") #img hiển thị hình ảnh sản phẩm
 
 # Blueprint main---------------------------------------------------------------------------------
 @main_html.route("/")
@@ -351,7 +352,7 @@ def api_add_master_tree():
             "path_arr_img": path_arr_img,
             "arr_point": arr_point,
             "inf_product": inf_product
-        },namespace='/data_clinet_show')   
+        },namespace='/data_add_master')   
         return {"path_arr_img": path_arr_img,"arr_point":arr_point,"inf_product":inf_product} 
     return {"path_arr_img": None,"arr_point":None,"inf_product":None}
 
@@ -375,7 +376,7 @@ def erase_index():
                             "path_arr_img": path_arr_img,
                             "arr_point": arr_point,
                             "inf_product": inf_product
-                    },namespace='/data_clinet_show')  
+                    },namespace='/data_add_master')  
     return jsonify({"message":"OK"})
 
 
@@ -423,7 +424,7 @@ def capture_master():
                             "path_arr_img": path_arr_img,
                             "arr_point": arr_point,
                             "inf_product": inf_product
-                    },namespace='/data_clinet_show')   
+                    },namespace='/data_add_master')   
                                     
 
                     # 
@@ -535,7 +536,7 @@ app.register_blueprint(api_add_master, url_prefix="/api_add_master")
 
 
 from shared_queue import queue_accept_capture
-cam_basler = BaslerCamera(queue_accept_capture, socketio, config_file="Camera_25129678.pfs")
+cam_basler = BaslerCamera(queue_accept_capture,socketio,config_file="Camera_25129678.pfs")
 
 print("doi tuong cam ---------------runnnnnnnnnnnnn--------------",cam_basler)
 if __name__ == "__main__":

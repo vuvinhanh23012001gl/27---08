@@ -1,11 +1,12 @@
 import {
     postData,headerMasterAdd,current_panner,setCurrentPanner,
-    scroll_content,set_Z_index_canvas_show,canvas_show,ctx_show,ctx,videoSocket,log
-    
+    scroll_content,set_Z_index_canvas_show,canvas_show,ctx_show,ctx,logSocket
 } from "./show_main_status.js";
 
-const socket_realtime = io("/data_clinet_show");
-const logSocket = io("/log");
+
+const socket_realtime = io("/data_add_master");
+const videoSocket = io("/video");
+
 const btn_add_master = document.getElementById("btn-add-master");
 const log_master =  document.getElementById("log_add_master");
 const anonymous =  document.getElementById("anonymous");
@@ -20,7 +21,6 @@ let Max_Y = 0;
 let Max_Z = 0;
 let Max_K= 0;
 
-
 run_all_master.addEventListener("click",()=>{
   postData("api_add_master/run_all_master", { "status": "run"}).then(data => {
           if(data.status_run == "oke"){
@@ -30,6 +30,7 @@ run_all_master.addEventListener("click",()=>{
             console.log("Chạy all không thành công");
           }
           videoSocket.on("camera_frame", function(data) {
+            console.log("ewqeewewewewewqewqewqewq");
     if(isOpenShowCamVideo){                          // data.image là base64
           const img = new Image();
           img.onload = () => {                                             // Khởi tạo canvas kích thước phù hợp
@@ -39,11 +40,12 @@ run_all_master.addEventListener("click",()=>{
                 if (prevUrl) URL.revokeObjectURL(prevUrl);
           };
           img.src = "data:image/jpeg;base64," + data.image;
+          console.log("wqewqeqwewewq",img.src);
       }
     });
   });
 });
-
+     
 
 exit_add_master.addEventListener("click",()=>{
       fetch('/api_add_master/exit')
@@ -397,6 +399,7 @@ function HandleClickBtnRun(input_x_value,input_y_value,input_z_value,input_k_val
     isOpenShowCamVideo = true;         
       //nao xong sẽ sưa phần nến có kết nối với cam thì show video nếu không có thì show ảnh hiện có
     videoSocket.on("camera_frame", function(data) {
+        console.log("ewqeewewewewewqewqewqewq");
         if(isOpenShowCamVideo){                          // data.image là base64
             const img = new Image();
             img.onload = () => {                                             // Khởi tạo canvas kích thước phù hợp

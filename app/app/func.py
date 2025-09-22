@@ -1,3 +1,5 @@
+from  shared_queue import queue_accept_capture,queue_tx_web_main,process_capture_detect
+from common_value import NAME_FILE_STATIC
 import time
 import queue
 import json
@@ -6,6 +8,7 @@ import os
 import cv2 
 
 
+FILE_SATTIC_NAME = NAME_FILE_STATIC
 SIZE_X_MAX =  110
 SIZE_X_MIN = 0
 SIZE_Y_MAX = 75
@@ -17,7 +20,7 @@ SIZE_K_MIN = 0
 SIZE_SHIFT_MAX = 10
 SIZE_SHIFT_MIN = 0
 TIME_OUT_WAIT_ARM_RESEND = 4
-from  shared_queue import queue_accept_capture,queue_tx_web_main,process_capture_detect
+
 def clear_queue(q):
     print(f"❌ Xoa queue {q}")
     while not q.empty():
@@ -66,6 +69,7 @@ def wait_for_specific_data(obj_manager_serial, expected_message_1, timeout=TIME_
 
     print(f"❌ Timeout: Không nhận được tín hiệu trong {timeout} giây.")
     return False
+
 def is_all_int_strings(lst):
     try:
         return all(isinstance(int(item), int) for item in lst)
@@ -99,12 +103,14 @@ def data_format(arr_check):
     else:
         print("❌ Không phải dữ liệu tọa độ (không bắt đầu bằng 'cmd:')")
         return False
+    
 def is_integer(s):
     try:
         int(s)
         return True
     except (ValueError, TypeError):
         return False
+    
 def Check_form_data(data_form):
     """Hàm này trả về ID của sản phẩm nến dữ liêu vượt qua bài kiểm tra dữ liệu vào, 
     nếu id sai thì sẽ trả lại  -1
@@ -190,6 +196,7 @@ def return_point_change(point_current: int, shift_point: int, Min_type: int, Max
         point_current - shift_point
     ]
     return arr_return
+
 def prcess_check_run_train(name_protype:str,shiftx:int, shifty:int, shiftz:int, arr_xyz, len_arr_xyz:int,queue_send_arm:queue,obj_manager_serial,data_web_rx, max_x = SIZE_X_MAX, min_x = SIZE_X_MIN, max_y = SIZE_Y_MAX, min_y = SIZE_Y_MIN, max_z = SIZE_Z_MAX, min_z = SIZE_Z_MIN):
     for i in range(len_arr_xyz):
         print(f"\n🔹 Chạy điểm dầu chính: x={arr_xyz[i]['x']}, y={arr_xyz[i]['y']}, z={arr_xyz[i]['z']} k ={arr_xyz[i]['k']}")
@@ -235,6 +242,7 @@ def prcess_check_run_train(name_protype:str,shiftx:int, shifty:int, shiftz:int, 
                     print("✅ Chạy lại điểm phụ thành công") if status_send_arm else print("❌ Chạy lại điểm  phụ không thành công điểm chính ")
                     data = {'productname':name_protype,'index':i,'lengt_index':len_arr_xyz,'training':1}
                     queue_accept_capture.put(data)
+                    
 def run_and_capture(name_product,List_point,obj_manager_serial):
     """Trả về False nếu đã cố gắng chạy nhưng không thành công trả về true nếu chạy thành công"""
     print("name_product",name_product)
@@ -253,6 +261,52 @@ def run_and_capture(name_product,List_point,obj_manager_serial):
                 img = process_capture_detect.get(block=True,timeout=1)
                 # cv2.imshow("anh1",img)
                 # cv2.waitKey(1)
+
+                try:
+                    convert_jpg = frame_to_jpeg_bytes(img)
+                    if convert_jpg:
+                        data_point = {
+                            'index':i,
+                            'length':length_list_point,
+                            'img':convert_jpg
+                        }
+                        try:
+                            queue_tx_web_main.put(data_point, timeout=0.1)
+                            print("✅ Đưa ảnh vào queue thành công")
+                        except queue.Full:
+                            print("⚠️ Queue đầy, bỏ qua frame này")
+                        print("ConVert gửi trong queue Thành công!")
+                except:
+                    print("Có lỗi gì ở bước chuyển ảnh")
+
+        else :
+            print("❌ Chạy lại điểm  phụ không thành công điểm chính ")
+
+def run_and_capture_copy(ID,name_product,List_point,judget_product,object_shape_master,obj_manager_serial):  #def run_and_capture_copy(name_product,List_point,obj_manager_serial):
+    """Trả về False nếu đã cố gắng chạy nhưng không thành công trả về true nếu chạy thành công"""
+    print("name_product",name_product)
+    print("List_point",List_point)
+    length_list_point =  len(List_point)
+    obj_manager_serial.clear_rx_queue()
+    obj_manager_serial.clear_tx_queue()
+    for i in range(length_list_point):
+        from_data_send_run = f"cmd:{List_point[i].x},{List_point[i].y},{List_point[i].z},{List_point[i].brightness}"
+        print(f"-------------------------------------Chạy lần thứ {i + 1 }-----------------------------")
+        # judget_product.judget
+        print(from_data_send_run)
+        print(f"Phán định ID{ID} tại Index:{i}")
+        data_one_point_master = object_shape_master.get_data_shape_of_location_point(ID,i)
+        
+        obj_manager_serial.send_data(from_data_send_run)
+        status_send_arm = wait_for_specific_data(obj_manager_serial,from_data_send_run)
+        if status_send_arm :
+                print("✅Điểm Thành Công")
+                queue_accept_capture.put({"training":3,"capture_detect":1})
+                img = process_capture_detect.get(block=True,timeout=1)
+                # cv2.imshow("anh1",img)
+                # cv2.waitKey(1)
+                print("data_one_point_master truoc",data_one_point_master)
+                judget_product.judget_img(int(List_point[i].z),i,img,data_one_point_master)
                 try:
                     convert_jpg = frame_to_jpeg_bytes(img)
                     if convert_jpg:
@@ -273,6 +327,7 @@ def run_and_capture(name_product,List_point,obj_manager_serial):
         else :
             print("❌ Chạy lại điểm  phụ không thành công điểm chính ")
            
+        
        
 
 def frame_to_jpeg_bytes(frame, quality=90) -> bytes:
@@ -285,9 +340,9 @@ def frame_to_jpeg_bytes(frame, quality=90) -> bytes:
 
     
 def get_path_from_static(full_path):
-        parts = full_path.split("static", 1)
+        parts = full_path.split(FILE_SATTIC_NAME, 1)
         if len(parts) > 1:
-            return "static" + parts[1]
+            return FILE_SATTIC_NAME + parts[1]
         else:
             return None
 def read_file_training(name_file:str,queue_send_arm:queue,obj_manager_serial,data_web_rx):
@@ -315,7 +370,7 @@ def read_file_training(name_file:str,queue_send_arm:queue,obj_manager_serial,dat
 def create_folder_in_static(subfolder_name: str) -> str:
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    static_dir = os.path.join(current_dir, "static")
+    static_dir = os.path.join(current_dir,FILE_SATTIC_NAME)
     subfolder_path = os.path.join(static_dir, subfolder_name)
 
     # Tạo folder cha (static) và folder con
@@ -328,7 +383,7 @@ def create_choose_master(name_location_save_in_static: str):
     ban đầu là 0 nếu có rồi thì nó sẽ không làm gì cả
     """
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    static_dir = os.path.join(current_dir, "static")
+    static_dir = os.path.join(current_dir, FILE_SATTIC_NAME)
     os.makedirs(static_dir, exist_ok=True)
     file_path = os.path.join(static_dir, name_location_save_in_static)
     if not os.path.exists(file_path):
@@ -345,7 +400,7 @@ def write_data_to_file(filename: str, content: str, append: bool = False) -> Non
     """
     try:
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        static_dir = os.path.join(current_dir, "static")
+        static_dir = os.path.join(current_dir, FILE_SATTIC_NAME)
         os.makedirs(static_dir, exist_ok=True)
         file_path = os.path.join(static_dir, filename)
         mode = "a" if append else "w"
@@ -361,7 +416,7 @@ def clear_file_content(filename: str) -> None:
     Làm rỗng nội dung file (giữ lại file nhưng xóa toàn bộ dữ liệu bên trong).
     """
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    static_dir = os.path.join(current_dir, "static")
+    static_dir = os.path.join(current_dir, FILE_SATTIC_NAME)
     file_path = os.path.join(static_dir, filename)
 
     if os.path.exists(file_path):
@@ -376,7 +431,7 @@ def read_data_from_file(filename: str) -> str:
     Trả về chuỗi nội dung, hoặc chuỗi rỗng nếu file không tồn tại.
     """
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    static_dir = os.path.join(current_dir, "static")
+    static_dir = os.path.join(current_dir, FILE_SATTIC_NAME)
     file_path = os.path.join(static_dir, filename)
     if not os.path.exists(file_path):
         print(f"❌ File '{filename}' không tồn tại.")

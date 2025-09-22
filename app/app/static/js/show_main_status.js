@@ -38,19 +38,24 @@ export const ctx = canvas_img_show.getContext("2d");
 export const canvas_img_show_oke = document.getElementById("canvas-img");
 export const ctx_oke = canvas_img_show_oke.getContext("2d");
 
-export const videoSocket = io("/video");
+
+export const logSocket = io("/log");
 
 export const canvas_show = document.getElementById("canvas-img-show-add-master");
 export const ctx_show = canvas_show.getContext("2d");
 export function set_Z_index_canvas_show(z_Index) {
   canvas_show.style.zIndex = z_Index;
+   canvas_img_show_oke.width = 0;
+   canvas_img_show_oke.height = 0;
+   ctx_oke.width = 0;
+   ctx_oke.height = 0;
 }
 
 export function setCurrentPanner(panner) {
   current_panner = panner;
 }
 export function set_index_img_current(index) {
-  index_img_current = index;
+  index_img_current = index;      
 }
 
 

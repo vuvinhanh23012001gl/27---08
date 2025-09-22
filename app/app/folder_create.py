@@ -63,6 +63,7 @@ class Create:
                     json.dump({}, f, ensure_ascii=False, indent=4)
                     print(f"📄 Tạo file JSON mới: {file_json}")
             return file_json 
+
     def delete_folder(self,file_path):
         """
         Xóa file hoặc thư mục nếu tồn tại.

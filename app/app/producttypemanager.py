@@ -2,18 +2,20 @@ from producttype import ProductType
 from typing import Dict,Any,List
 from folder_create import Create
 from process_master import Proces_Shape_Master
+from common_value import NAME_FILE_STATIC,NAME_FILE_CHOOSE_MASTER
 import json
 import os
 import func
-NAME_FILE_CHOOSE_MASTER = "choose_master"
-Proces_Shape = Proces_Shape_Master()
+
+
 class ProductTypeManager:
-    NAME_FILE_STATIC  = "static"
+    
+    FILE_NAME_STATIC  = NAME_FILE_STATIC
     NAME_FOLDER_PRODUCT_LIST = "Product_list"
     NAME_DATA_PRODUCT_LIST = "data.json"
+    Proces_Shape = Proces_Shape_Master()
 
     def __init__(self):
-
         self.product_types = {}
         self.path_product_list = self.get_patd_datajson()    # Trả về đường dẫn của dẫn tới nơi lưu dữ liệu data.json
         self.data = self.get_file_data()                     # Lấy dữ liệu từ File đấy ra
@@ -22,7 +24,7 @@ class ProductTypeManager:
     def get_patd_datajson(self):
         """"Hàm này trả về đường dẫn,dẫn tới data.json"""
         object_folder = Create()
-        return object_folder.get_path_grandaugter(ProductTypeManager.NAME_DATA_PRODUCT_LIST,ProductTypeManager.NAME_FOLDER_PRODUCT_LIST,ProductTypeManager.NAME_FILE_STATIC)
+        return object_folder.get_path_grandaugter(ProductTypeManager.NAME_DATA_PRODUCT_LIST,ProductTypeManager.NAME_FOLDER_PRODUCT_LIST,ProductTypeManager.FILE_NAME_STATIC)
 
     def load_from_file(self):
         """Load File vào trong đối tượng Point dầu"""
@@ -98,7 +100,7 @@ class ProductTypeManager:
            Trả về rỗng nếu không có dữ liệu trong file
         """
         object_folder = Create()
-        return object_folder.get_data_grandaugter(ProductTypeManager.NAME_DATA_PRODUCT_LIST,ProductTypeManager.NAME_FOLDER_PRODUCT_LIST,ProductTypeManager.NAME_FILE_STATIC)
+        return object_folder.get_data_grandaugter(ProductTypeManager.NAME_DATA_PRODUCT_LIST,ProductTypeManager.NAME_FOLDER_PRODUCT_LIST,ProductTypeManager.FILE_NAME_STATIC)
 
     def check_id_in_data(self, id: str) -> bool:
             """Trả về -1 nếu File trắng trả về 1 nếu có , trả về 0 nếu k có"""
@@ -346,8 +348,8 @@ class ProductTypeManager:
                         print("Không tìm thấy File ảnh lưu sản phẩm xóa ảnh chưa đc")
                 else:
                     print("Đường dẫn tới Product_Photo không tồn tại")
-                Proces_Shape.get_file_data_json()  #Dam bao tat ca du lieu la moi nhat
-                status_erase_master = Proces_Shape.erase_product_master(type_id)
+                ProductTypeManager.Proces_Shape.get_file_data_json()  #Dam bao tat ca du lieu la moi nhat
+                status_erase_master = ProductTypeManager.Proces_Shape.erase_product_master(type_id)
                 status = self.remove_product_in_file_data(type_id)
                 if status !=False  and status_erase_master != False:
                     print("Xóa thành công 4 File")
@@ -467,7 +469,7 @@ class ProductTypeManager:
     def remove_all_master_index(self,ID:str,index:int):
         print("--------------------------------------Remove All Master Index ------------------------------------")
         print("--------------------------------------Cần theo dõi hàm này ------------------------------------")
-        statuse_erase_master_index = Proces_Shape.erase_master_index(ID,index)
+        statuse_erase_master_index = ProductTypeManager.Proces_Shape.erase_master_index(ID,index)
         print("--------------------------------------Kết thúc theo dõi hàm này ------------------------------------")
         statuse_erase_img = self.remove_img_master_index_of_product(ID,index)
         statuse_erase_data = self.remove_data_index_of_product(ID,index)

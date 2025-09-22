@@ -27,9 +27,10 @@ import {
   setCurrentPanner,
   index_img_current,
   set_index_img_current,
-  set_Z_index_canvas_show,canvas_img_show,ctx,canvas_img_show_oke,ctx_oke,videoSocket
+  set_Z_index_canvas_show,canvas_img_show,ctx,canvas_img_show_oke,ctx_oke 
 } from "./show_main_status.js";
-// CONSTANT
+//logSocket se nhan tin hieu server nhận dữ liệu thành công hiển thị lên log
+// CONSTANT    
 const SCROLL_STEP = 300;
 //
 let index_point_current = 0
@@ -710,6 +711,7 @@ canvas_img_show.addEventListener("dblclick", handleCanvasDoubleClick);
 // ==========================
 // 6. Init (DOMContentLoaded)
 // ==========================
+
 document.addEventListener("DOMContentLoaded", () => {
   const dataImg = scroll_content.dataset.img;
   const imgList = JSON.parse(dataImg);
@@ -811,59 +813,6 @@ else{
 }
 
 
-videoSocket.on("connect", () => {
-            console.log("Đã kết nối server namespace /video");
-});
-videoSocket.on("photo_taken", (data) => {
-    // Lấy chỉ số điểm và tổng số điểm
-    console.log("Index:", data.index);
-    console.log("Total length:", data.length);
-
-    // Nếu muốn hiện lên giao diện
-    // document.getElementById("index_label").innerText = `Điểm: ${data.index}/${data.length}`;  //thay label
-
-    // Phần xử lý ảnh giữ nguyên như trước
-    let arrayBuffer;
-    if (data.img instanceof ArrayBuffer) {
-        arrayBuffer = data.img;
-    } else if (data.img && data.img.data) {
-        arrayBuffer = new Uint8Array(data.img.data).buffer;
-    } else {
-        console.error("Không nhận được dữ liệu ảnh hợp lệ:", data);
-        return;
-    }
-
-    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
-    const imgUrl = URL.createObjectURL(blob);
-
-
-      const img = new Image();
-  img.onload = () => {
-    canvas_img_show_oke.width = 1328;
-    canvas_img_show_oke.height = 830;
-    ctx_oke.drawImage(img, 0, 0, 1328, 830);
-    if (prevUrl) URL.revokeObjectURL(prevUrl);
-    prevUrl = imgUrl;
-  };
-  img.src = imgUrl;
-});
-
-// videoSocket.on("camera_frame", function(data) {
-//     // data.image là base64
-//     const img = new Image();
-//     img.onload = () => {
-//         // Khởi tạo canvas kích thước phù hợp
-//         canvas_img_show_oke.width = 1328; // hoặc img.width
-//         canvas_img_show_oke.height = 830;  // hoặc img.height
-
-//         // Vẽ ảnh lên canvas
-//         ctx_oke.drawImage(img, 0, 0, canvas_img_show_oke.width , canvas_img_show_oke.height);
-        
-//         // Giải phóng URL cũ nếu có (nếu dùng URL.createObjectURL)
-//         if (prevUrl) URL.revokeObjectURL(prevUrl);
-//     };
-//     img.src = "data:image/jpeg;base64," + data.image;
-// });
 
 // =========================
 // 2. HÀM TIỆN ÍCH (UTILITIES)

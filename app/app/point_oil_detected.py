@@ -16,7 +16,8 @@ class point_oil_detect:
         self.contourn_polygon = contourn_polygon
         self.contourn_polygon_standardization = contourn_polygon_standardization
         self.masks_data = masks_data
-
+        
+        self.scale = None
         self.reality_w = None             # Giá trị khung điểm dầu ngoài thực tế cùng
         self.reality_h = None             # Giá trị khung điểm dầu ngoài thực tế cùng
         self.reality_area = None          # Giá trị khung điểm dầu ngoài thực tế cùng
@@ -102,6 +103,9 @@ class point_oil_detect:
         reality_h = h * scale 
         return reality_w , reality_h
 
+    def get_scale(self,Z:int,calib_Z:list,calib_scale:list):
+        scale = np.interp(Z, calib_Z, calib_scale)
+        return scale
     def count_mask_white_pixels(self, width=1920, height=1200):
         if not self.check_condition_contourn_polygon():
             print("Dữ liệu contour không tồn tại")
@@ -136,6 +140,14 @@ class point_oil_detect:
 
         x, y, w, h = cv2.boundingRect(self.contourn_polygon)
         return w * h
+    def to_dict_need_data(self):
+        """
+        Trả về dictionary chứa toàn bộ thông tin vùng tính toán và thực tế
+        """
+        return {
+            "area_reality": self.reality_area,
+            "area_calculate": self.area_calculate,
+        }
     # def get_conf(self):
     #     print("Contour border xy:", self.contour_border_xy)
     #     return self.contour_border_xy
