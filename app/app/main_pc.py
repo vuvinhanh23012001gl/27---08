@@ -2,14 +2,11 @@
 
 from manager_serial import ManagerSerial
 from producttypemanager import ProductTypeManager
-from judget_product import Judget_Product
 from process_master import Proces_Shape_Master
 import func
 import queue    
 import threading
 import time
-
-
 from shared_queue import queue_rx_web_api,queue_rx_web_main,queue_tx_web_log
 
 
@@ -18,7 +15,7 @@ from shared_queue import queue_rx_web_api,queue_rx_web_main,queue_tx_web_log
 #---lock doi tuong-----
 manage_product_type = ProductTypeManager()
 click_page_html = threading.Lock()     #1 la dang o file chinh  2 la o fine traing_model 3 la file cau hinh cam hay lmj do
-judget_product = Judget_Product()  #Lop phan dinh
+#   #Lop phan dinh
 object_shape_master = Proces_Shape_Master()
 
 click_page_html = 0
@@ -39,6 +36,8 @@ queue_rx_arm = queue.Queue(maxsize = SIZE_QUEUE_RX_ARM)
 print("queue_rx_arm:", queue_rx_arm)
 #-------------------------------------------------
 def fuc_main_process():
+    from judget_product import Judget_Product
+    judget_product = Judget_Product()
     global STATUS_CHECK_CONNECT
     global is_data_train 
     global click_page_html

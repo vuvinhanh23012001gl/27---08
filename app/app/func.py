@@ -306,7 +306,9 @@ def run_and_capture_copy(ID,name_product,List_point,judget_product,object_shape_
                 # cv2.imshow("anh1",img)
                 # cv2.waitKey(1)
                 print("data_one_point_master truoc",data_one_point_master)
-                judget_product.judget_img(int(List_point[i].z),i,img,data_one_point_master)
+                print(f"Phán định tại Index:{i}")
+                judget_product.judget(int(List_point[i].z),img,data_one_point_master)
+                # judget_product.judget_img(int(List_point[i].z),i,img,data_one_point_master)
                 try:
                     convert_jpg = frame_to_jpeg_bytes(img)
                     if convert_jpg:

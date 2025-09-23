@@ -53,7 +53,7 @@ class Master_Rect_Shape:
             return img
     def Init(self):
         self.name = self.shape.get("ten_hinh_min",-1)
-        print(f"----------------------Khởi tạo master tên {self.name}-----------------------")
+        print(f"--Khởi tạo master tên {self.name}-")
         self.x1 = self.shape.get("x1",-1)
         self.y1 = self.shape.get("y1",-1)
         self.x2 = self.shape.get("x2",-1)
@@ -68,10 +68,10 @@ class Master_Rect_Shape:
         self.number_point = self.shape.get("so_diem_dau",-1)
 
         
-        if(self.corners == -1):
-            print(f"Hình {self.name} không xoay")
-        else:
-            print(f"Hình {self.name} xoay")
+        # if(self.corners == -1):
+        #     print(f"Hình {self.name} không xoay")
+        # else:
+        #     print(f"Hình {self.name} xoay")
         if( self.name  == -1 or self.x1 ==-1 or self.y1 == -1 or self.x2  == -1 or self.y2   == -1 or self.size_max  == -1 or self.size_min  == -1 or  self.number_point == -1):
             print("Lỗi init dũ liệu hình vuông không đúng")
         else:

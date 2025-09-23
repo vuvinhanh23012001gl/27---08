@@ -145,14 +145,14 @@ class Manage_Point_Oil_Detect:
                         point.reality_w = reality_w  #  Gia tri ngoai doi ngoài cùng
                         point.reality_h = reality_h  #  Gia tri ngoai doi khung bên ngoài cùng
                         point.reality_area = reality_w*reality_h 
-                        point.area_region = point.estimate_area_while_with_calib(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale)  # vung tinh toan
+                        point.area_region = point.count_mask_white_pixels()  # vung tinh toan
                         # point.scale = point.get_scale(z,Manage_Point_Oil_Detect.calib_Z,Manage_Point_Oil_Detect.calib_scale) #lay ty le
                         self.list_object_point.append(point)
                         # point_detect.area_calculate = point_detect.get_bbox_area()  diện tích vùng khung trắng bên ngoài bao vật thể 
                         # print("Số điểm khung màu trắng",point_detect.area_calculate)
                         print("Số điểm vùng màu trắng :",point.area_region)
                         print(f"Chiều dài thực tế :{point.reality_w}mm \r\nChiều cao thực tế :{point.reality_h}mm \r\nDiện tích thực tế :{point.reality_area}mm")
-                    print("-------------------Khởi tạo thành công danh sách điểm dầu----------------------")
+                    print("Khởi tạo thành công danh sách điểm dầu")
                     return True
                 else:
                     print("Giá trị điểm Number point không tồn tại")

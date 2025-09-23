@@ -20,6 +20,7 @@ class Master_Circle_Shape():
         return self.name
     def init(self):
          self.name = self.shape.get("ten_hinh_min",-1)
+         print(f"--Khởi tạo master tên {self.name}-")
          self.x = self.shape.get("cx",-1)
          self.y = self.shape.get("cy",-1)
          self.r = self.shape.get("r",-1)

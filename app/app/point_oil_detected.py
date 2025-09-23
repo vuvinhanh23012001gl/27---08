@@ -93,16 +93,16 @@ class point_oil_detect:
         return count_zero, count_one, ratio
     
 
-    def estimate_area_with_calib(self,Z:int,calib_Z:list,calib_scale:list):
+    def estimate_area_with_calib(self, Z: int, calib_Z: list, calib_scale: list):
         """
         Tính diện tích thật (tương đối) từ mask và Z
+        Trả về kích thước (w, h) với 1 chữ số thập phân
         """
         x, y, w, h = self.count_mask_max_pixels()
         scale = np.interp(Z, calib_Z, calib_scale)
-        reality_w = w * scale 
-        reality_h = h * scale 
-        return reality_w , reality_h
-
+        reality_w = round(w * scale, 1)
+        reality_h = round(h * scale, 1)
+        return reality_w, reality_h
     def get_scale(self,Z:int,calib_Z:list,calib_scale:list):
         scale = np.interp(Z, calib_Z, calib_scale)
         return scale
@@ -129,7 +129,7 @@ class point_oil_detect:
         """
         area_white = self.count_mask_white_pixels()
         scale = np.interp(Z, calib_Z, calib_scale)
-        return area_white
+        return area_white * scale
     def get_bbox_area(self):
         """
         Tính diện tích bounding box (px²) bao ngoài contour
