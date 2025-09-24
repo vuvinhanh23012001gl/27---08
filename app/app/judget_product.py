@@ -4,9 +4,9 @@ from ultralytics import YOLO
 from folder_create import Create
 from master_circle_shape import  Master_Circle_Shape
 from master_rect_shape import  Master_Rect_Shape
+from process_master import Proces_Shape_Master
 import numpy as np
 import cv2
-import torch
 class Judget_Product:
     """Lớp này chỉ phán định sản phẩm có 
     lớp này chỉ khởi tạo 1 lần
@@ -16,7 +16,7 @@ class Judget_Product:
     file_path = folder.create_file_in_folder_two("best.pt","model")
     img = np.zeros((640,480,3),dtype= np.uint8)
     model = YOLO(file_path)
-    model(img)
+    # model(img)
 
     def __init__(self):
         pass
@@ -126,10 +126,10 @@ class Judget_Product:
             object_frame_detect = Manage_Point_Oil_Detect(data_model_output,atitude_z)                 # Đưa vào đối tượng điểm của mô hình
             # object_frame_detect.draw_all()
             polygons = object_frame_detect.get_contourn_polygon_standardization()                    # Lấy các điểm bao 
-            # img = self.draw_polylines_on_image(img,polygons)   
+            img = self.draw_polylines_on_image(img,polygons)   
             arr_shape_master = self.setting_object_master(data_one_point_master,img)
             self.process_judment(object_frame_detect,img,atitude_z,polygons,arr_shape_master)
-            # self.show_image(img)
+            self.show_image(img)
 
     def setting_object_master(self,data_one_point_master,img=None):  
         """Hàm này setting các đối tượng điểm master 
@@ -145,12 +145,12 @@ class Judget_Product:
             type_shape = shape.get("type",-1)
             if type_shape == "circle":
                 shape_object = Master_Circle_Shape(shape) #  
-                # img  = shape_object.draw(img)
+                img  = shape_object.draw(img)
                 arr_object_shape.append(shape_object)
             elif type_shape == "rect":
                 shape_object = Master_Rect_Shape(shape)
                 arr_object_shape.append(shape_object)   # 
-                # img  = shape_object.draw(img)
+                img  = shape_object.draw(img)
         print("Khởi tạo thành công Master")
         return arr_object_shape
     def process_judment(self,object_frame_detect,img,atitude_z,polygons,arr_shape_master):
@@ -173,13 +173,13 @@ class Judget_Product:
                         inside_percent = dict_data_detect.get("inside_percent",-1)
                         # print(dict_data_detect)
                         if status_detect_shape == "inside" or status_detect_shape == "partial":
-                            # print(f"--Điểm:{index_point_detect} nằm trong khung master:{name_master}--")
+                            print(f"--Điểm:{index_point_detect} nằm trong khung master:{name_master}--")
                             width_reality = object_point.estimate_area_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)
                             take_max_width_or_height = max(width_reality[0],width_reality[1])
-                            # print("-- Vật thể--")
-                            # print(f"Khung master:{name_master} có điểm {index_point_detect} Chiều dài {width_reality[0]} mm Chiều rộng {width_reality[1]} mm")
-                            # print(f"Số px trắng phát hiện là :{object_point.count_mask_white_pixels()} px")
-                            # print(f"Quy ra mm :{object_point.estimate_area_while_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)}mm")
+                            print("-- Vật thể--")
+                            print(f"Khung master:{name_master} có điểm {index_point_detect} Chiều dài {width_reality[0]} mm Chiều rộng {width_reality[1]} mm")
+                            print(f"Số px trắng phát hiện là :{object_point.count_mask_white_pixels()} px")
+                            print(f"Quy ra mm :{object_point.estimate_area_while_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)}mm")
                             # occupancy_rate = self.calc_area_percentage(object_point.count_mask_white_pixels(),area_master["area"])
                             # print(f"Tỷ lệ chiếm trong khung master:{occupancy_rate} %")
                             if status_detect_shape == "inside":
@@ -300,21 +300,16 @@ class Judget_Product:
 
        
     
-# index_picture  =  5
-# PATH_MODEL = r"C:\Users\anhuv\Desktop\26_08\25-08\app\app\static\Master_Photo\Master_SP01\img_5.png"  
-# img = cv2.imread(PATH_MODEL)  
-# class_regulation = Proces_Shape_Master()
-# master_one_frame =  class_regulation.get_data_shape_of_location_point("SP01",index_picture)
-# # print(master_one_frame)
-# judget1 = Judget_Product()
-# print(f"Phán định tại Index:{index_picture}")
-# judget1.judget(2,img,master_one_frame)
+index_picture  =  0
+PATH_MODEL = r"C:\Users\anhuv\Desktop\26_08\25-08\app\app\static\Master_Photo\Master_SP01\img_0.png"  
+img = cv2.imread(PATH_MODEL)  
+class_regulation = Proces_Shape_Master()
+master_one_frame =  class_regulation.get_data_shape_of_location_point("SP01",index_picture)
+print(master_one_frame)
+judget1 = Judget_Product()
+print(f"Phán định tại Index:{index_picture}")
+judget1.judget(2,img,master_one_frame)
 
-
-
-# judget1 = Judget_Product(class_regulation)
-# list_id = judget1.get_list_id()
-# print(list_id)
 
 
 

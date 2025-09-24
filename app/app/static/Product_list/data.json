@@ -1,67 +1,4 @@
 {
-    "SP01": {
-        "type_id": "SP01",
-        "type_name": "STM32-F103C8T6",
-        "description": " Description deafaut ",
-        "len": 8,
-        "xyz": [
-            110,
-            75,
-            12
-        ],
-        "path_img_product": "static/Product_Photo/IMG_SP01.png",
-        "path_img_master": "static/Master_Photo/Master_SP01",
-        "point_check": [
-            {
-                "x": 34,
-                "y": 40,
-                "z": 2,
-                "brightness": 80
-            },
-            {
-                "x": 35,
-                "y": 43,
-                "z": 2,
-                "brightness": 80
-            },
-            {
-                "x": 41,
-                "y": 47,
-                "z": 2,
-                "brightness": 80
-            },
-            {
-                "x": 50,
-                "y": 54,
-                "z": 4,
-                "brightness": 80
-            },
-            {
-                "x": 46,
-                "y": 60,
-                "z": 8,
-                "brightness": 80
-            },
-            {
-                "x": 61,
-                "y": 58,
-                "z": 10,
-                "brightness": 80
-            },
-            {
-                "x": 69,
-                "y": 67,
-                "z": 0,
-                "brightness": 80
-            },
-            {
-                "x": 48,
-                "y": 49,
-                "z": 10,
-                "brightness": 80
-            }
-        ]
-    },
     "SP02": {
         "type_id": "SP02",
         "type_name": "STM32-F103C8T6",
@@ -152,6 +89,69 @@
                 "y": 0,
                 "z": 0,
                 "brightness": 0
+            }
+        ]
+    },
+    "SP01": {
+        "type_id": "SP01",
+        "type_name": "STM32-F103C8T6",
+        "description": " Description deafaut ",
+        "len": 8,
+        "xyz": [
+            110,
+            75,
+            12
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP01.png",
+        "path_img_master": "static/Master_Photo/Master_SP01",
+        "point_check": [
+            {
+                "x": 34,
+                "y": 40,
+                "z": 2,
+                "brightness": 80
+            },
+            {
+                "x": 41,
+                "y": 48,
+                "z": 2,
+                "brightness": 80
+            },
+            {
+                "x": 47,
+                "y": 48,
+                "z": 10,
+                "brightness": 80
+            },
+            {
+                "x": 50,
+                "y": 53,
+                "z": 4,
+                "brightness": 80
+            },
+            {
+                "x": 46,
+                "y": 60,
+                "z": 8,
+                "brightness": 80
+            },
+            {
+                "x": 61,
+                "y": 58,
+                "z": 10,
+                "brightness": 80
+            },
+            {
+                "x": 69,
+                "y": 67,
+                "z": 0,
+                "brightness": 80
+            },
+            {
+                "x": 74,
+                "y": 50,
+                "z": 4,
+                "brightness": 80
             }
         ]
     }
