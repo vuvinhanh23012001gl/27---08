@@ -54,7 +54,7 @@ class point_oil_detect:
             print("Dữ liệu contour không tồn tại")
             return None, None
         x, y, w, h = cv2.boundingRect(self.contourn_polygon)
-        print(f"Chiều rộng (px): {w}, Chiều cao (px): {h}")
+        # print(f"Chiều rộng (px): {w}, Chiều cao (px): {h}")
         return x, y,w, h
 
     def draw_mark_data(self) -> None:

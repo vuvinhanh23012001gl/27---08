@@ -698,17 +698,7 @@ margin-left:60%;
    color: white;
 }
 
-.header-show-item-conect {
-  margin-top: 5px;
-  padding: 5px;
-  font-size: 0.6rem;
-  font-weight: 100;
-  display: flex;
-  align-items: center;
-  color: white;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
+
 
 .header-show-circle {
   width: 12px;
@@ -839,16 +829,139 @@ button.btn:hover {
 }
 
 
+/* 🌑 KHUNG TỔNG */
+.paner-main-table-show-point {
+  width: 100%;
+  max-width: 1200px;            /* Giới hạn chiều ngang tối đa */
+  max-height: 75vh;             /* Giới hạn chiều cao để cuộn */
+  overflow-y: auto;             /* ✅ Chỉ cuộn dọc */
+  overflow-x: hidden;           /* ❌ Ẩn cuộn ngang */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  box-sizing: border-box;
+}
 
+/* KHUNG CHỨA BẢNG */
+#table-show-point-detect {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background: transparent;      /* Để nền đồng nhất với khung */
+  border-radius: 10px;
 
+}
 
+/* 🌟 BẢNG MASTER */
+.master-table {
+  width: 100%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: #292929;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease;
+}
+.master-table:hover {
+  transform: translateY(-2px);
+}
 
+/* Ô chung */
+.master-table td, .master-table th,
+.point-table td, .point-table th {
+  border: 1px solid #3a3a3a;
+  padding: 12px 16px;
+  color: #e6e6e6;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
+}
 
+/* Tiêu đề Master */
+.master-header {
+  background: linear-gradient(135deg, #3d3d3d, #505050);
+  color: #ffffff;
+  font-weight: 600;
+  text-align: left;
+  padding: 14px 18px;
+  letter-spacing: 0.5px;
+  font-size: 15px;
+}
 
+/* 🌟 BẢNG CON (Chi tiết Point) */
+.point-table {
+  width: 100%;
+  margin: 12px auto;
+  border-collapse: collapse;
+  background: #1c1c1c;
+  border-radius: 6px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.4);
+}
 
+.point-table th {
+  background: #333;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #f0f0f0;
+  padding: 10px 14px;
+}
 
+.point-table td {
+  padding: 10px 14px;
+  white-space: nowrap;          /* Giữ chữ trên 1 dòng */
+}
 
+/* Hover hàng Point */
+.point-table tr:hover td {
+  background: rgba(100,100,100,0.25);
+  transition: background 0.2s ease;
+  cursor: default;
+}
 
+/* 🎯 Thanh cuộn tinh tế (Chrome/Edge/Safari) */
+.paner-main-table-show-point::-webkit-scrollbar {
+  width: 8px;
+}
+.paner-main-table-show-point::-webkit-scrollbar-track {
+  background: #2d2727;
+  border-radius: 8px;
+}
+.paner-main-table-show-point::-webkit-scrollbar-thumb {
+ background: #d0cece;  
+  border-radius: 8px;
+}
+.paner-main-table-show-point::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+.toggle-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #004085;
+  border: none;
+  border-radius: 15px;            /* Bo tròn dạng pill */
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+.header-show-item-conect {
+  height:34px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 0.6rem;
+  font-weight: 100;
+  display: flex;
+  align-items: center;
+  color: white;
+  border-radius: 15px;   
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
 
+.toggle-btn:hover {
+  transform: translateY(-2px);
+}
 
-
+.toggle-btn.active {
+  background-color: rgb(24, 107, 201);
+}

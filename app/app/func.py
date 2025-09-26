@@ -1,4 +1,4 @@
-from  shared_queue import queue_accept_capture,queue_tx_web_main,process_capture_detect
+from  shared_queue import queue_accept_capture,queue_tx_web_main,process_capture_detect,queue_data_detect_send_client
 from common_value import NAME_FILE_STATIC
 import time
 import queue
@@ -289,14 +289,13 @@ def run_and_capture_copy(ID,name_product,List_point,judget_product,object_shape_
     length_list_point =  len(List_point)
     obj_manager_serial.clear_rx_queue()
     obj_manager_serial.clear_tx_queue()
+    arr_is_frame = []
     for i in range(length_list_point):
         from_data_send_run = f"cmd:{List_point[i].x},{List_point[i].y},{List_point[i].z},{List_point[i].brightness}"
         print(f"-------------------------------------Chạy lần thứ {i + 1 }-----------------------------")
-        # judget_product.judget
         print(from_data_send_run)
         print(f"Phán định ID{ID} tại Index:{i}")
         data_one_point_master = object_shape_master.get_data_shape_of_location_point(ID,i)
-        
         obj_manager_serial.send_data(from_data_send_run)
         status_send_arm = wait_for_specific_data(obj_manager_serial,from_data_send_run)
         if status_send_arm :
@@ -305,12 +304,14 @@ def run_and_capture_copy(ID,name_product,List_point,judget_product,object_shape_
                 img = process_capture_detect.get(block=True,timeout=1)
                 # cv2.imshow("anh1",img)
                 # cv2.waitKey(1)
-                print("data_one_point_master truoc",data_one_point_master)
-                print(f"Phán định tại Index:{i}")
-                judget_product.judget(int(List_point[i].z),img,data_one_point_master)
+                # print("data_one_point_master truoc",data_one_point_master)
+                # print(f"Phán định tại Index:{i}")
+                data_show_table , img_detect,is_frame_ok = judget_product.judget(int(List_point[i].z),img,data_one_point_master)
+                arr_is_frame.append(is_frame_ok)
+                data = {f"{i}":data_show_table}
                 # judget_product.judget_img(int(List_point[i].z),i,img,data_one_point_master)
                 try:
-                    convert_jpg = frame_to_jpeg_bytes(img)
+                    convert_jpg = frame_to_jpeg_bytes(img_detect)
                     if convert_jpg:
                         data_point = {
                             'index':i,
@@ -318,6 +319,7 @@ def run_and_capture_copy(ID,name_product,List_point,judget_product,object_shape_
                             'img':convert_jpg
                         }
                         try:
+                            queue_data_detect_send_client.put(data, timeout=0.1)
                             queue_tx_web_main.put(data_point, timeout=0.1)
                             print("✅ Đưa ảnh vào queue thành công")
                         except queue.Full:
@@ -328,7 +330,13 @@ def run_and_capture_copy(ID,name_product,List_point,judget_product,object_shape_
 
         else :
             print("❌ Chạy lại điểm  phụ không thành công điểm chính ")
-           
+    for status in arr_is_frame:
+        if status == False:
+            queue_data_detect_send_client.put({"status":False}, timeout=0.1)
+            return False
+    queue_data_detect_send_client.put({"status":True}, timeout=0.1)
+    return True
+
         
        
 

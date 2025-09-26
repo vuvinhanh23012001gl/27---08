@@ -712,60 +712,60 @@ canvas_img_show.addEventListener("dblclick", handleCanvasDoubleClick);
 // 6. Init (DOMContentLoaded)
 // ==========================
 
-document.addEventListener("DOMContentLoaded", () => {
-  const dataImg = scroll_content.dataset.img;
-  const imgList = JSON.parse(dataImg);
-  console.log("Danh sách ảnh:", imgList);
+// document.addEventListener("DOMContentLoaded", () => {
+//   const dataImg = scroll_content.dataset.img;
+//   const imgList = JSON.parse(dataImg);
+//   console.log("Danh sách ảnh:", imgList);
 
-  imgList.forEach((imgPath, index) => {
-    index_point_current =  index; 
-    number_img_receive = number_img_receive + 1;
-    const div_create = document.createElement("div");
-    div_create.className = "div-index-img-mater";
+//   imgList.forEach((imgPath, index) => {
+//     index_point_current =  index; 
+//     number_img_receive = number_img_receive + 1;
+//     const div_create = document.createElement("div");
+//     div_create.className = "div-index-img-mater";
 
-    const h_create = document.createElement("p");
-    h_create.innerText = `Ảnh master ${index}`;
-    h_create.className = "p-index-img-master";
+//     const h_create = document.createElement("p");
+//     h_create.innerText = `Ảnh master ${index}`;
+//     h_create.className = "p-index-img-master";
 
-    const img = document.createElement("img");
-    img.src = imgPath;
-    img.alt = "Ảnh sản phẩm";
-    img.style.width = "200px";
-    img.style.margin = "10px";
+//     const img = document.createElement("img");
+//     img.src = imgPath;
+//     img.alt = "Ảnh sản phẩm";
+//     img.style.width = "200px";
+//     img.style.margin = "10px";
 
-    div_create.appendChild(img);
-    div_create.appendChild(h_create);
-    scroll_content.appendChild(div_create);
-    div_create.addEventListener("click", () => {
-      set_index_img_current(index);
-      log.textContent = "";
-      hidden_table_and_button(table_write_data,part_table_log);
-      console.log("number_img_receive",number_img_receive);
-      document.querySelectorAll(".div-index-img-mater").forEach(d => {
-        d.style.border = "none";
-      });
-      div_create.style.border ="5px solid green";
-      if(flag_index_choose_last==1){
-        index_choose_last = index;  //cai dat index lan dau
-        flag_index_choose_last = 0;
-      }
-       console.log("btn_accept_and_send" + index_point_current);   // index dem tu so 0
-      console.log("Bạn đã nhấn vào index thứ " + index);   // index dem tu so 0
-      next_page_img(index,index_choose_last);
-      index_choose_last = index;
-      canvas_img_show.width = 1328;
-      canvas_img_show.height = 830;
-      canvas_img_show_oke.width = 1328;
-      canvas_img_show_oke.height = 830;
-      const show_img = new Image();
-      show_img.src = imgPath;
-      show_img.onload = () => {
-        ctx_oke.drawImage(show_img, 0, 0, 1328, 830);
-      };
-      redrawAll();
-    });
-  });
-});
+//     div_create.appendChild(img);
+//     div_create.appendChild(h_create);
+//     scroll_content.appendChild(div_create);
+//     div_create.addEventListener("click", () => {
+//       set_index_img_current(index);
+//       log.textContent = "";
+//       hidden_table_and_button(table_write_data,part_table_log);
+//       console.log("number_img_receive",number_img_receive);
+//       document.querySelectorAll(".div-index-img-mater").forEach(d => {
+//         d.style.border = "none";
+//       });
+//       div_create.style.border ="5px solid green";
+//       if(flag_index_choose_last==1){
+//         index_choose_last = index;  //cai dat index lan dau
+//         flag_index_choose_last = 0;
+//       }
+//        console.log("btn_accept_and_send" + index_point_current);   // index dem tu so 0
+//       console.log("Bạn đã nhấn vào index thứ " + index);   // index dem tu so 0
+//       next_page_img(index,index_choose_last);
+//       index_choose_last = index;
+//       canvas_img_show.width = 1328;
+//       canvas_img_show.height = 830;
+//       canvas_img_show_oke.width = 1328;
+//       canvas_img_show_oke.height = 830;
+//       const show_img = new Image();
+//       show_img.src = imgPath;
+//       show_img.onload = () => {
+//         ctx_oke.drawImage(show_img, 0, 0, 1328, 830);
+//       };
+//       redrawAll();
+//     });
+//   });
+// });
 function delete_page_img(index) {
     if (shapes_all.hasOwnProperty(`${index}`)) {
         delete shapes_all[`${index}`]; // Xóa key trong dict

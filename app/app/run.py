@@ -12,7 +12,62 @@ import threading
 import time
 import func
 import os
-
+import numpy as np
+import cv2
+data_test = {
+    '0': {
+        'name_master': 'điểm0',
+        'number_point': 1,
+        'max_point': 5,
+        'min_point': 1,
+        'arr_pointr': [
+            {
+                'name': 'Point7',
+                'width_reality': np.float64(4.0),
+                'height_reality': np.float64(2.8),
+                'inside_percent': 99.9613952102451,
+                'status_oil': 'NG'
+            }
+        ]
+    },
+    '1': {
+        'name_master': 'điểm1',
+        'number_point': 1,
+        'max_point': 2,
+        'min_point': 1,
+        'arr_pointr': [
+            {
+                'name': 'Point6',
+                'width_reality': np.float64(4.8),
+                'height_reality': np.float64(3.3),
+                'inside_percent': 97.61904761904762,
+                'status_oil': 'NG'
+            }
+        ]
+    },
+    '2': {
+        'name_master': 'điểm 0',
+        'number_point': 1,
+        'max_point': 5,
+        'min_point': 1,
+        'arr_pointr': [
+            {
+                'name': 'Point4',
+                'width_reality': np.float64(3.3),
+                'height_reality': np.float64(3.5),
+                'inside_percent': 100.0,
+                'status_oil': 'OK'
+            },
+            {
+                'name': 'Point5',
+                'width_reality': np.float64(1.6),
+                'height_reality': np.float64(3.3),
+                'inside_percent': 13.043478260869565,
+                'status_oil': 'NG'
+            }
+        ]
+    }
+}
 
 
 app = Flask(__name__)
@@ -45,15 +100,61 @@ def stream_frames():
     print("Thoát luồng gửi video thành công")
  
 
+# def stream_img(): # queue_tx_web_main gồm ảnh và data
+#     global OPEN_THREAD_IMG
+#     tang = 0
+#     while OPEN_THREAD_IMG:
+#         if queue_tx_web_main.qsize() > 0:
+#             data = queue_tx_web_main.get(block=False)
+#             socketio.emit("photo_taken", data, namespace="/img_and_data")
+        
+#         time.sleep(0.1)
+#         data = {f"{tang}":data_test}
+#         print(data)
+#         socketio.emit("data_detect", data, namespace="/img_and_data")
+#         tang += 1
+#         time.sleep(7)
+
+
 def stream_img(): # queue_tx_web_main gồm ảnh và data
     global OPEN_THREAD_IMG
+    # PATH_MODEL = r"C:\Users\anhuv\Desktop\26_08\25-08\app\app\static\Master_Photo\Master_SP01\img_4.png"  
+    # img = cv2.imread(PATH_MODEL)  
+    # convert_jpg = func.frame_to_jpeg_bytes(img)
     while OPEN_THREAD_IMG:
+        # if convert_jpg:
+        #     data_poi = {
+        #                     'index':0,
+        #                     'img':convert_jpg
+        #                 }
+        # queue_tx_web_main.put(data_poi, timeout=0.1)
+
         if queue_tx_web_main.qsize() > 0:
-            data = queue_tx_web_main.get(block=False)
-            socketio.emit("photo_taken", data, namespace="/img_and_data")
+            data_img_detect = queue_tx_web_main.get(block=False)
+            socketio.emit("photo_taken",data_img_detect, namespace="/img_and_data")
+        if queue_data_detect_send_client.qsize() > 0:
+            data_detect = queue_data_detect_send_client.get(block=False)
+            status  = data_detect.get("status",-1)
+            if status != -1:
+                socketio.emit("data_status", data_detect, namespace="/img_and_data")  #gui data trang thai
+            else :
+                socketio.emit("data_detect", data_detect, namespace="/img_and_data")  #gui data diem
+
+            
+
+
+
+
+
+
+
+
+            
         time.sleep(0.1)
 
-    
+       
+      
+
 def stream_logs(): # gồm các loại log
     while OPEN_THREAD_LOG:
             match main_pc.click_page_html:
@@ -69,7 +170,8 @@ def stream_logs(): # gồm các loại log
                         socketio.emit("log_message", {"log_training": f"{queue_tx_web_log.get()}"}, namespace='/log')    #Gửi log cho File Training
                 case 1: # main
                     if not queue_tx_web_log.empty():
-                        socketio.emit("log_message_judment", {"data": f"{queue_tx_web_log.get()}"}, namespace='/log')
+                        socketio.emit("log_message_judment", {"log_data": f"{queue_tx_web_log.get()}"}, namespace='/log')
+            queue_tx_web_log.put("xin chao ban")
             print(main_pc.click_page_html)
             time.sleep(1)
 
@@ -125,7 +227,7 @@ def out_app():
     func = request.environ.get("werkzeug.server.shutdown")
     if func is None:
         raise RuntimeError("Server không hỗ trợ shutdown trực tiếp")
-    func()
+   
    
   
     
@@ -540,9 +642,8 @@ cam_basler = BaslerCamera(queue_accept_capture,socketio,config_file="Camera_2512
 
 print("doi tuong cam ---------------runnnnnnnnnnnnn--------------",cam_basler)
 if __name__ == "__main__":
-  
     import main_pc
-    from shared_queue import queue_rx_web_api,queue_tx_web_log,queue_tx_web_main
+    from shared_queue import queue_rx_web_api,queue_tx_web_log,queue_tx_web_main,queue_data_detect_send_client
     import threading
     threading.Thread(target=stream_logs,daemon = True).start()
     threading.Thread(target=stream_img,daemon = True).start()

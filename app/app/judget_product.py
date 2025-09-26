@@ -16,7 +16,7 @@ class Judget_Product:
     file_path = folder.create_file_in_folder_two("best.pt","model")
     img = np.zeros((640,480,3),dtype= np.uint8)
     model = YOLO(file_path)
-    # model(img)
+    model(img)
 
     def __init__(self):
         pass
@@ -128,8 +128,9 @@ class Judget_Product:
             polygons = object_frame_detect.get_contourn_polygon_standardization()                    # Lấy các điểm bao 
             img = self.draw_polylines_on_image(img,polygons)   
             arr_shape_master = self.setting_object_master(data_one_point_master,img)
-            self.process_judment(object_frame_detect,img,atitude_z,polygons,arr_shape_master)
-            self.show_image(img)
+            data_send_detect,is_frame_ok = self.process_judment(object_frame_detect,img,atitude_z,polygons,arr_shape_master)
+            # self.show_image(img)
+            return data_send_detect,img,is_frame_ok
 
     def setting_object_master(self,data_one_point_master,img=None):  
         """Hàm này setting các đối tượng điểm master 
@@ -157,40 +158,47 @@ class Judget_Product:
         print("-----------------------Bắt đầu phán định-----------------------")
         data_send_server_judgement = {}
         is_frame_ok =  True
+
         for index,shape_master in enumerate(arr_shape_master):
+                count_oil_point_avaiable = 0
+                count_oil_points_inside_master = 0
                 # area_master = shape_master.area(img)
                 name_master = shape_master.get_name()
                 index_point_detect = 0
                 # print(name_master)
-                count_oil_point_avaiable = 0
-                count_oil_points_inside_master = 0
                 arr_point_detect_send_server = []
                 for poly in polygons:    
-                        object_point = object_frame_detect.get_object_index_area_while(index_point_detect) #Trả về đối tượng từng điểm ảnh phát hiện đc  print(object_point)
-                        index_point_detect+=1
-                        dict_data_detect = shape_master.contains_polygon(poly,img)                    # Trả về các phán định thuộc tính của các điểm nhận đc 
-                        status_detect_shape = dict_data_detect.get("status",-1)  
-                        inside_percent = dict_data_detect.get("inside_percent",-1)
-                        # print(dict_data_detect)
-                        if status_detect_shape == "inside" or status_detect_shape == "partial":
-                            print(f"--Điểm:{index_point_detect} nằm trong khung master:{name_master}--")
-                            width_reality = object_point.estimate_area_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)
-                            take_max_width_or_height = max(width_reality[0],width_reality[1])
-                            print("-- Vật thể--")
-                            print(f"Khung master:{name_master} có điểm {index_point_detect} Chiều dài {width_reality[0]} mm Chiều rộng {width_reality[1]} mm")
-                            print(f"Số px trắng phát hiện là :{object_point.count_mask_white_pixels()} px")
-                            print(f"Quy ra mm :{object_point.estimate_area_while_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)}mm")
-                            # occupancy_rate = self.calc_area_percentage(object_point.count_mask_white_pixels(),area_master["area"])
-                            # print(f"Tỷ lệ chiếm trong khung master:{occupancy_rate} %")
+                            object_point = object_frame_detect.get_object_index_area_while(index_point_detect) #Trả về đối tượng từng điểm ảnh phát hiện đc  print(object_point)
+                            index_point_detect+=1
+                            dict_data_detect = shape_master.contains_polygon(poly,img)                    # Trả về các phán định thuộc tính của các điểm nhận đc 
+                            status_detect_shape = dict_data_detect.get("status",-1)  
+                            inside_percent = dict_data_detect.get("inside_percent",-1)
+                            # print(dict_data_detect)
                             if status_detect_shape == "inside":
+                                # print(f"Số px trắng phát hiện là :{object_point.count_mask_white_pixels()} px")
+                                # print(f"Quy ra mm :{object_point.estimate_area_while_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)}mm")
+                                # occupancy_rate = self.calc_area_percentage(object_point.count_mask_white_pixels(),area_master["area"])
+                                # print(f"Tỷ lệ chiếm trong khung master:{occupancy_rate} %")
+                                width_reality = object_point.estimate_area_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)
+                                take_max_width_or_height = max(width_reality[0],width_reality[1])
+                                print(f"--Điểm:{index_point_detect} nằm trong khung master:{name_master}--")
+                                print(f"Điểm phát hiện {index_point_detect} Chiều dài {width_reality[0]} mm Chiều rộng {width_reality[1]} mm")
                                 count_oil_points_inside_master += 1
                                 properties_oil = self.create_properties_oil(index_point_detect,width_reality,inside_percent,True)
                                 arr_point_detect_send_server.append(properties_oil)
-                                if(take_max_width_or_height <= shape_master.size_max or take_max_width_or_height >= shape_master.size_min):
+                    
+                                if(take_max_width_or_height <= shape_master.size_max and  take_max_width_or_height >= shape_master.size_min):
+                                    print(f"Điểm phát hiện {index_point_detect} có size hợp lệ MIN:{shape_master.size_min} Thực tế:{take_max_width_or_height} MAX:{shape_master.size_max}")
                                     count_oil_point_avaiable += 1
-                            else:
+                            elif status_detect_shape == "partial":
+                                width_reality = object_point.estimate_area_with_calib(atitude_z,object_frame_detect.calib_Z,object_frame_detect.calib_scale)
+                                take_max_width_or_height = max(width_reality[0],width_reality[1])
+                                print(f"--Điểm phát hiện {index_point_detect} nằm trên viền khung Master {name_master}--")
+                                print(f"Điểm phát hiện {index_point_detect} Chiều dài {width_reality[0]} mm Chiều rộng {width_reality[1]} mm")
+                                print(f"Không xét size điểm {index_point_detect}")
                                 properties_oil = self.create_properties_oil(index_point_detect,width_reality,inside_percent,False)
                                 arr_point_detect_send_server.append(properties_oil)
+                               
                 data_send_server_judgement.update({ 
                     f"{index}":{
                     "name_master":name_master,
@@ -199,23 +207,44 @@ class Judget_Product:
                     "min_point":shape_master.size_min,
                     "arr_pointr":arr_point_detect_send_server
                     }
-                }) 
+                })
+                
+                check_all_point = False
+                check_size_point = False
                 statuse_check_number_oil_in_master = self.check_number_oil_inside_master(shape_master.number_point,count_oil_points_inside_master)
-                print(f"Dữ số điểm master quy định {shape_master.number_point},Mô hình tìm được {count_oil_points_inside_master}==>NG")if (not statuse_check_number_oil_in_master) else None
-    
-                statuse_check_size_oil_in_master  = self.check_number_oil_inside_master(shape_master.number_point,count_oil_point_avaiable)
-                print(f"Size quy định không hợp lệ")if (not statuse_check_number_oil_in_master) else None
-
-                if statuse_check_number_oil_in_master and statuse_check_size_oil_in_master:
-                    is_frame_ok =  True
+                if not statuse_check_number_oil_in_master :
+                    print(f"Tổng số điểm nằm trong master quy định {shape_master.number_point},Tổng số điểm nằm trong hợp lệ {count_oil_points_inside_master}==>NG")
                 else :
-                    is_frame_ok = False
-        print(data_send_server_judgement)
+                    check_all_point = True
+                print("count_oil_points_inside_master",count_oil_points_inside_master,"count_oil_point_avaiable",count_oil_point_avaiable)
+                statuse_check_size_oil_in_master  = self.check_number_oil_inside_master(count_oil_points_inside_master,count_oil_point_avaiable)
+                if not statuse_check_size_oil_in_master:
+                    print(f"Tổng số size đúng master {shape_master.number_point},Tổng số size đúng hợp lệ{count_oil_point_avaiable}==>NG")
+                else :
+                    check_size_point = True
+                if check_all_point and check_size_point:
+                     print(f"Master {name_master} OK")
+                else:
+                    if not  check_all_point:
+                            is_frame_ok = False
+                            print(f"Master {name_master} lỗi do số điểm")
+                    if not check_size_point :
+                            is_frame_ok = False
+                            print(f"Master {name_master} lỗi do size ")
+                    print(f"Master {name_master} NG")
+                     
+        # print(data_send_server_judgement)
+        # import json
+        # json_str = json.dumps(data_send_server_judgement, ensure_ascii=False, indent=4,
+        #               default=lambda x: float(x) if isinstance(x, np.floating) else x)
+
+        # print(json_str)
         if is_frame_ok:
             print("=====>>  OK") 
         else:
             print("=====>>  NG")  
         print("-----------------------Kết thúc phán định-----------------------")
+        return data_send_server_judgement,is_frame_ok
     def create_properties_oil(self,index_point_detect, width_reality, inside_percent, status_oil: bool):
         """
         Trả về dict properties_oil.
@@ -285,30 +314,43 @@ class Judget_Product:
     def draw_polylines_on_image(self, image, polygons=None):
         """
         image: numpy array (H, W, 3) ảnh RGB
-        shapes: list chứa dict (rect hoặc circle)
         polygons: list các contour (numpy array Nx2) giá trị normalized [0-1]
         """
         h, w = image.shape[:2]
         result = image.copy()
-        # Vẽ polygons nếu có
+
         if polygons is not None:
-            for poly in polygons:
+            for idx, poly in enumerate(polygons, start=1):
+                # Chuyển normalized -> pixel
                 pts = np.array([[int(x * w), int(y * h)] for x, y in poly], dtype=np.int32)
                 pts = pts.reshape((-1, 1, 2))
-                cv2.polylines(result, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
-            return result
 
+                # Vẽ đường polygon
+                cv2.polylines(result, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
+
+                # Tính tâm polygon (centroid)
+                centroid = np.mean(pts.reshape(-1, 2), axis=0).astype(int)
+                cx, cy = centroid
+
+                # Ghi số thứ tự (1,2,3,...)
+                cv2.putText(result, str(idx), (cx, cy),
+                            cv2.FONT_HERSHEY_SIMPLEX,   # font
+                            1,                          # scale
+                            (0, 0, 255),                # màu đỏ
+                            2,                          # độ dày
+                            cv2.LINE_AA)
+        return result
        
     
-index_picture  =  0
-PATH_MODEL = r"C:\Users\anhuv\Desktop\26_08\25-08\app\app\static\Master_Photo\Master_SP01\img_0.png"  
-img = cv2.imread(PATH_MODEL)  
-class_regulation = Proces_Shape_Master()
-master_one_frame =  class_regulation.get_data_shape_of_location_point("SP01",index_picture)
-print(master_one_frame)
-judget1 = Judget_Product()
-print(f"Phán định tại Index:{index_picture}")
-judget1.judget(2,img,master_one_frame)
+# index_picture  =  4
+# PATH_MODEL = r"C:\Users\anhuv\Desktop\26_08\25-08\app\app\static\Master_Photo\Master_SP01\img_4.png"  
+# img = cv2.imread(PATH_MODEL)  
+# class_regulation = Proces_Shape_Master()
+# master_one_frame =  class_regulation.get_data_shape_of_location_point("SP01",index_picture)
+# print(master_one_frame)
+# judget1 = Judget_Product()
+# print(f"Phán định tại Index:{index_picture}")
+# judget1.judget(2,img,master_one_frame)
 
 
 

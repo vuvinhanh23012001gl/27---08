@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blase Camera Setup</title>
+  <link rel="stylesheet" href="../static/css/show_inf_camera.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Blase Camera Dashboard</h1>
+        <p class="lead">Theo dõi thông tin & cấu hình camera hãng Blase</p>
+      </div>
+      <div class="controls">
+        <button class="primary" id="btn-connect">Kết nối</button>
+        <button id="btn-refresh">Làm mới</button>
+      </div>
+    </header>
+
+    <div class="grid grid-2">
+      <!-- Thông tin camera -->
+      <section class="card">
+        <h2>Thông tin Camera</h2>
+        <ul class="info-list">
+          <li><span class="label">Model:</span> <span id="cam-model">Blase X1000</span></li>
+          <li><span class="label">Serial:</span> <span id="cam-serial">BL-2025-0001</span></li>
+          <li><span class="label">Địa chỉ IP:</span> <span id="cam-ip">192.168.1.50</span></li>
+          <li><span class="label">Trạng thái:</span> <span id="cam-status" class="status offline">Offline</span></li>
+        </ul>
+        <div class="preview-wrap">
+          <video id="cam-preview" autoplay playsinline></video>
+        </div>
+      </section>
+
+      <!-- Cấu hình camera -->
+      <section class="card">
+        <h2>Cấu hình</h2>
+        <form id="config-form">
+          <label>
+            Địa chỉ IP
+            <input type="text" name="ip" value="192.168.1.50" placeholder="192.168.x.x">
+          </label>
+
+          <label>
+            Độ phân giải
+            <select name="resolution">
+              <option>1920 x 1080</option>
+              <option>1280 x 720</option>
+              <option>640 x 480</option>
+            </select>
+          </label>
+
+          <label>
+            FPS
+            <input type="number" name="fps" min="1" max="60" value="30">
+          </label>
+
+          <label>
+            Độ sáng
+            <input type="range" name="brightness" min="0" max="100" value="50">
+          </label>
+
+          <label>
+            Tương phản
+            <input type="range" name="contrast" min="0" max="100" value="50">
+          </label>
+
+          <div class="row">
+            <button type="submit" class="primary">Lưu cấu hình</button>
+            <button type="button" id="btn-reset">Khôi phục</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <footer>© 2025 Blase Camera</footer>
+  </div>
+
+  <script>
+    // Demo logic kết nối camera (giả lập)
+    const statusEl = document.getElementById('cam-status');
+    document.getElementById('btn-connect').onclick = () => {
+      statusEl.textContent = 'Online';
+      statusEl.classList.remove('offline');
+      statusEl.classList.add('online');
+    };
+
+    document.getElementById('config-form').onsubmit = e => {
+      e.preventDefault();
+      alert('Đã lưu cấu hình camera!');
+    };
+
+    document.getElementById('btn-reset').onclick = () => {
+      document.getElementById('config-form').reset();
+    };
+  </script>
+</body>
+</html>
