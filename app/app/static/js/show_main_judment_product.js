@@ -8,6 +8,7 @@ const table_show_point_detect = document.getElementById("table-show-point-detect
 const toggleBtn = document.getElementById("toggleBtn");
 const status_judment = document.querySelector(".paner-main-status-product");
 const log_judment   = document.getElementById("log_judment");
+ const run_btn = document.getElementById("api-run");
 
 let index_current_click =  0;  //Nơi lưu nhấn vào div
 let imgPath_current = null;   // nơi lưu link ảnh show hiện tại
@@ -26,12 +27,29 @@ logSocket.on("log_message_judment",(data)=>{
 });
 
 
+run_btn.addEventListener('click',()=>{
+       status_judment.innerHTML = "--";
+      fetch('/api_run_application/run_application')
+      .then(response => response.json())
+      .then(data => {
+        console.log("Dữ liệu nhận sau click Run"+ data);
+        if(data.status  == "OK"){
+          console.log("Gửi dữ liệu Run Thành công đến Server"+ data);
+        }
+      })
+      .catch(err => {
+        console.error('❌ Lỗi khi gửi Run GET:', err);
+      });
+});
 io_img_and_data.on("data_detect",(data)=>{
   console.log("emit da nhan data_detect");
   console.log(data);
+  let du_lieu_bang = Object.values(data)[0]
+  show_table(du_lieu_bang)
   data_table_browse.push(data)
   if (data?.[reset_data_table] == 0){
     data_table_browse = [];
+   
   }
 
 
@@ -116,80 +134,82 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     img.src = capturedImages[index].url; 
     }
-  console.log("du_lieu_bang",du_lieu_bang);
-       
-  table_show_point_detect.innerHTML = "";
-  if (du_lieu_bang) {
-  // Duyệt qua từng Master
-  Object.values(du_lieu_bang).forEach(master=>{
-      // Bảng master
-      const masterTable = document.createElement("table");
-      masterTable.className = "master-table";
-
-      // Tiêu đề Master
-      const headerRow = masterTable.insertRow();
-      const masterCell = headerRow.insertCell();
-      masterCell.className = "master-header";
-      masterCell.textContent = `Tên master: ${master.name_master}`;
-
-      const pointCell = headerRow.insertCell();
-      pointCell.className = "master-header";
-      pointCell.textContent = "Chi tiết điểm phát hiện";
-
-      // Hàng thông tin Master
-      const infoRow = masterTable.insertRow();
-      const masterInfo = infoRow.insertCell();
-      masterInfo.innerHTML = `
-        Số lượng: ${master.number_point}<br>
-        Max: ${master.max_point}mm <br>Min: ${master.min_point}mm
-      `;
-      console.log("master.arr_pointreeqweqwewwewewq",master.arr_pointr)
-
-      const pointInfo = infoRow.insertCell();
-      pointInfo.appendChild(createPointTable(master.arr_pointr));
-
-      table_show_point_detect.appendChild(masterTable);
-  });
-
-
-
-  // === Hàm tạo bảng con Point ===
-  function createPointTable(points){
-      const table = document.createElement("table");
-      table.className = "point-table";
-
-      // Header
-      const head = table.insertRow();
-      ["Tên","Chiều dài","Chiều cao","%Chiếm","Trạng thái"].forEach(t=>{
-          const th = document.createElement("th");
-          th.textContent = t;
-          head.appendChild(th);
-      });
-
-      // Dữ liệu
-      points.forEach(p=>{
-          const row = table.insertRow();
-          [
-            p.name,
-            p.width_reality,
-            p.height_reality,
-            p.inside_percent.toFixed(2),
-            p.status_oil
-          ].forEach(val=>{
-              const td = document.createElement("td");
-              td.textContent = val;
-              row.appendChild(td);
-          });
-      });
-      return table;
-  }
-};
-  
+    show_table(du_lieu_bang)
     });
   });
 });
+
+function show_table(data){
+      //  console.log("du_lieu_bang",data);
+      table_show_point_detect.innerHTML = "";
+      if (data) {
+      // Duyệt qua từng Master
+      Object.values(data).forEach(master=>{
+          // Bảng master
+          const masterTable = document.createElement("table");
+          masterTable.className = "master-table";
+
+          // Tiêu đề Master
+          const headerRow = masterTable.insertRow();
+          const masterCell = headerRow.insertCell();
+          masterCell.className = "master-header";
+          masterCell.textContent = `Tên master: ${master.name_master}`;
+
+          const pointCell = headerRow.insertCell();
+          pointCell.className = "master-header";
+          pointCell.textContent = "Chi tiết điểm phát hiện";
+
+          // Hàng thông tin Master
+          const infoRow = masterTable.insertRow();
+          const masterInfo = infoRow.insertCell();
+          masterInfo.innerHTML = `
+            Số lượng: ${master.number_point}<br>
+            Max: ${master.max_point}mm <br>Min: ${master.min_point}mm
+          `;
+          console.log("master.arr_pointreeqweqwewwewewq",master.arr_pointr)
+
+          const pointInfo = infoRow.insertCell();
+          pointInfo.appendChild(createPointTable(master.arr_pointr));
+
+          table_show_point_detect.appendChild(masterTable);
+      });
+
+
+
+      // === Hàm tạo bảng con Point ===
+      function createPointTable(points){
+          const table = document.createElement("table");
+          table.className = "point-table";
+
+          // Header
+          const head = table.insertRow();
+          ["Tên","Chiều dài","Chiều cao","%Chiếm","Trạng thái"].forEach(t=>{
+              const th = document.createElement("th");
+              th.textContent = t;
+              head.appendChild(th);
+          });
+
+          // Dữ liệu
+          points.forEach(p=>{
+              const row = table.insertRow();
+              [
+                p.name,
+                p.width_reality,
+                p.height_reality,
+                p.inside_percent.toFixed(2),
+                p.status_oil
+              ].forEach(val=>{
+                  const td = document.createElement("td");
+                  td.textContent = val;
+                  row.appendChild(td);
+              });
+          });
+          return table;
+      }
+    };
+    }
 io_img_and_data.on("data_status", (data) => {
-  data_status = data?.status;
+ let  data_status = data?.status;
   if (data_status == true){
       status_judment.innerHTML ="OK";
   }

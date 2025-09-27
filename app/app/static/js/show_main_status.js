@@ -5,7 +5,7 @@ export const headerMasterTake = document.getElementById("header-ul-li-master-tak
 
 export const btn_close = document.getElementById("btn-close");
 
-export const run_btn = document.getElementById("api-run");
+
 export const add_product = document.getElementById("add-product");
 export const out_app = document.getElementById("out-app");
 

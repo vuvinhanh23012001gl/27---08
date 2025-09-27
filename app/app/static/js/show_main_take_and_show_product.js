@@ -3,7 +3,6 @@ import {
   chooseProductBtn,
   headerMasterTake,
   btn_close,
-  run_btn,
   add_product,
   out_app,
   coordinate,
@@ -1434,19 +1433,7 @@ function addShape(shape) {
   shapes.push(shape);
   return true;
 }
-run_btn.addEventListener('click',()=>{
-      fetch('/api_run_application/run_application')
-      .then(response => response.json())
-      .then(data => {
-        console.log("Dữ liệu nhận sau click Run"+ data);
-        if(data.status  == "OK"){
-          console.log("Gửi dữ liệu Run Thành công đến Server"+ data);
-        }
-      })
-      .catch(err => {
-        console.error('❌ Lỗi khi gửi Run GET:', err);
-      });
-});
+
 
 out_app.addEventListener('click',()=>{
   window.close();

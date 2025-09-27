@@ -154,5 +154,44 @@
                 "brightness": 80
             }
         ]
+    },
+    "SP03": {
+        "type_id": "SP03",
+        "type_name": "GAT-123.124",
+        "description": " Description deafaut ",
+        "len": 2,
+        "xyz": [
+            110,
+            75,
+            12
+        ],
+        "path_img_product": "static/Product_Photo/IMG_SP03.png",
+        "path_img_master": "static/Master_Photo/Master_SP03",
+        "point_check": [
+            {
+                "x": 36,
+                "y": 43,
+                "z": 4,
+                "brightness": 80
+            },
+                        {
+                "x": 36,
+                "y": 43,
+                "z": 4,
+                "brightness": 80
+            },
+                        {
+                "x": 36,
+                "y": 43,
+                "z": 4,
+                "brightness": 80
+            },
+                        {
+                "x": 36,
+                "y": 43,
+                "z": 4,
+                "brightness": 80
+            }
+        ]
     }
 }
