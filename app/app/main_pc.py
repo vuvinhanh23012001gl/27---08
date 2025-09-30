@@ -77,6 +77,9 @@ def fuc_main_process():
                             else:
                                  obj_manager_serial.send_data("cmd:0,0,0,0")
                                  time.sleep(1)   
+                else:
+                     print("Giao thức kết nối ban đầu chưa thành công")
+                     time.sleep(1)
             # print("----------------- Bắt đầu điều khiển với ARM -------------------")
             # click_page_html  ==  2 vao che do trainning san pham
             # click_page_html  ==  1 Vào Chế độ main  show
@@ -137,13 +140,11 @@ def fuc_main_process():
                
 
                     time.sleep(0.5)         
-            time.sleep(0.5)
-                         
+            time.sleep(0.5)            
         else:
             the_first_connect = True
-            func.clear_queue(queue_rx_web_main)
-            print("❌ Không tìm thấy cổng Serial. Vui lòng kiểm tra kết nối.")
-            print("Xin chao")
+            # func.clear_queue(queue_rx_web_main)
+            # print("❌ Không tìm thấy cổng Serial. Vui lòng kiểm tra kết nối.")
             time.sleep(1)
        
 main_process = threading.Thread(target=fuc_main_process,daemon=True)

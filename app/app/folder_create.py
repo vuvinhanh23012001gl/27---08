@@ -154,6 +154,29 @@ class Create:
         except Exception as e:
             print(f"❌ Không thể tạo file: {e}")
             return False
+    def get_or_create_json(self, name_file: str, name_folder: str) -> str:
+        """
+        Kiểm tra nếu file JSON đã tồn tại thì trả về đường dẫn.
+        Nếu chưa có: tạo folder, tạo file và ghi {} rỗng.
+        """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        target_dir  = os.path.join(current_dir, name_folder)
+        os.makedirs(target_dir, exist_ok=True)  # đảm bảo folder tồn tại
+
+        file_path = os.path.join(target_dir, name_file)
+
+        if not os.path.exists(file_path):
+            print(f"📂 Chưa có file, tạo mới: {file_path}")
+            try:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    json.dump({}, f, ensure_ascii=False, indent=4)
+                print("✅ Đã tạo file JSON rỗng {}")
+            except Exception as e:
+                print("❌ Lỗi khi tạo file JSON:", e)
+        else:
+            print(f"✅ File đã tồn tại: {file_path}")
+
+        return file_path
     def create_file_in_folder_two(self,name_file: str, name_folder: str):
             """Tạo ra 1 foder nếu có rồi thì vào đó tạo ra 1 file
              trả về đường dẫn đến file nằm trong folder
@@ -170,6 +193,66 @@ class Create:
                     print("File rỗng")
                     f.write(b"")                   
             return file_path
+    def write_data_to_file(self, file_path: str, data: bytes, mode: str = "ab"):
+        """
+        Ghi dữ liệu vào file.
+        - file_path: đường dẫn đến file
+        - data: dữ liệu cần ghi (bytes hoặc string)
+        - mode: chế độ ghi ('ab' = append binary, 'wb' = ghi đè binary)
+        """
+        try:
+            # Đảm bảo thư mục tồn tại
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+            # Nếu là string thì encode sang bytes
+            if isinstance(data, str):
+                data = data.encode("utf-8")
+
+            with open(file_path, mode) as f:
+                f.write(data)
+                print(f"✅ Đã ghi {len(data)} byte vào: {file_path}")
+
+        except Exception as e:
+            print(f"❌ Lỗi khi ghi file: {e}")
+    def read_json_from_file(self, file_path: str) -> dict:
+        """
+        Đọc dữ liệu JSON từ file và trả về dạng dict.
+        - file_path: đường dẫn tới file JSON
+        """
+        try:
+            # Nếu file chưa tồn tại -> trả về dict rỗng
+            if not os.path.exists(file_path):
+                print(f"⚠️ File không tồn tại: {file_path}")
+                return {}
+
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                print(f"✅ Đã đọc JSON từ: {file_path}")
+                return data
+
+        except json.JSONDecodeError as e:
+            print(f"❌ Lỗi định dạng JSON ({file_path}): {e}")
+            return {}
+        except Exception as e:
+            print(f"❌ Lỗi khi đọc file JSON: {e}")
+            return {}
+    def write_json_to_file(self, file_path: str, data: dict, indent: int = 4):
+        """
+        Ghi dữ liệu dạng JSON vào file.
+        - file_path: đường dẫn tới file json
+        - data: dict hoặc list cần lưu
+        - indent: số khoảng trắng khi format cho dễ đọc
+        """
+        try:
+            # Đảm bảo thư mục tồn tại
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=indent)
+                print(f"✅ Đã ghi JSON vào: {file_path}")
+
+        except Exception as e:
+            print(f"❌ Lỗi khi ghi file JSON: {e}")
     def create_folder(self,folder_path: str):
         """
         Tạo 1 folder theo đường dẫn.
