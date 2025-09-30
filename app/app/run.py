@@ -84,7 +84,9 @@ api_take_master = Blueprint("api_take_master",__name__)
 api_run_application = Blueprint("api_run_application",__name__)
 api_new_product = Blueprint("api_new_product",__name__)
 api_add_master = Blueprint("api_add_master",__name__)
-
+api_config_camera = Blueprint("api_config_camera",__name__)
+api_config_com = Blueprint("api_config_com",__name__)
+api_config_software = Blueprint("api_config_software",__name__)
 #-------open thread--------
 OPEN_THREAD_LOG =  True
 OPEN_THREAD_STREAM =  True
@@ -540,12 +542,44 @@ def capture_master():
            print("Không tìm thấy sản phẩm có ID trong danh sách ID đã lưu để chụp ảnh\n")
        return jsonify({'status':"200OK"})
 
+#----------------------------------------------------api_config_camera-------------------------------------------
+@api_config_camera.route("/exit")
+def exit_api_config_camera():
+    response = {
+        'redirect_url':'/'
+    }
+    return jsonify(response)  
 
 
 
 
 
 
+
+@api_config_software.route("/exit")
+def exit_api_config_software():
+    response = {
+        'redirect_url':'/'
+    }
+    return jsonify(response)  
+
+
+
+
+@api_config_com.route("/exit")
+def exit_api_config_com():
+    response = {
+        'redirect_url':'/'
+    }
+    return jsonify(response)     
+
+@api_config_com.route("/get_list_com",strict_slashes=False)
+def get_list_com():
+    main_pc.click_page_html = 7 # Câu hình cổng com
+    
+
+    return jsonify({"msg": "Xin chào từ Flask!"})
+    
 
 
 
@@ -635,6 +669,9 @@ app.register_blueprint(api_take_master, url_prefix="/api_take_master")
 app.register_blueprint(api_run_application, url_prefix="/api_run_application") 
 app.register_blueprint(api_new_product, url_prefix="/api_new_product") 
 app.register_blueprint(api_add_master, url_prefix="/api_add_master") 
+app.register_blueprint(api_config_camera, url_prefix="/api_config_camera")    
+app.register_blueprint(api_config_com, url_prefix="/api_config_com") 
+app.register_blueprint(api_config_software, url_prefix="/api_config_software") 
 
 
 from shared_queue import queue_accept_capture

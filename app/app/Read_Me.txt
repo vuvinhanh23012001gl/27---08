@@ -8,3 +8,4 @@
 # main_pc.click_page_html = 2  --> Training model
 # main_pc.click_page_html = 5  --> Choose master
 # main_pc.click_page_html = 6  --> Add master
+# main_pc.click_page_html = 7  --> Thay đổi cồng COM

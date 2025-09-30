@@ -58,7 +58,7 @@ io_img_and_data.on("data_detect",(data)=>{
 toggleBtn.addEventListener("click",()=>{
       status_view_master = !status_view_master;
     if(status_view_master){
-        toggleBtn.innerHTML = "Ảnh phán định";
+      toggleBtn.innerHTML = "Ảnh phán định";
       canvas_img_show_oke.width = 1328;
       canvas_img_show_oke.height = 830;
       const show_img = new Image();

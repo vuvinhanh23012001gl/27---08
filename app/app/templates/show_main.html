@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="../static/img/image.png">
         <link rel="stylesheet" href="../static/css/show_main.css">
+        <link rel="stylesheet" href="../static/css/config_camera.css">
+        <link rel="stylesheet" href="../static/css/config_com.css">
+        <link rel="stylesheet" href="../static/css/config-software.css">
         <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
         <title>Kiểm tra dầu</title>
         <!-- <script>
@@ -38,30 +41,33 @@
                     <li>Log thiết bị</li>
                  </ul>
             </li>
-            <li class="header-ul-li">Thông tin
-                 <ul class = "header-ul-li-infomation">
-                    <li>Thông tin camera</li>
-                    <li>Thông tin cổng COM</li>
-                    <li>Thông tin phầm mềm</li>
-                    <li>Hướng dẫn sử dụng </li>
-                    <li>Hướng dẫn training sản phẩm mới</li>
+            <li class="header-ul-li">Cấu hình
+                 <ul>
+                    <li id="btn-open-camera-config">Cấu hình camera</li>
+                    <li id="btn-open-com-config">Cấu hình cổng COM</li>
+                    <li id="btn-open-software-config">Cấu hình phần mềm</li>
                  </ul>
             </li>
-            <li id="api-training" class="header-ul-li training">Traning sản phẩm mới</li>
+            <li class="header-ul-li">Thông tin
+                  <ul>
+                    <li>Thông tin phầm mềm</li>
+                    <li>Hướng dẫn sử dụng </li>
+                 </ul>
+            </li>
             <li id="api-run" class="header-ul-li ">Chạy</li>   
             <li class="header-ul-li close" style="text-align: center;padding-left: 70px;" id="out-app">Thoát</li>
         </ul>
     </div>
     <div class="split-frame">
-        <div class = "show-screen">
+        <div class = "show-screen">   
                 <div class = "show-img-master">
-                      <button class="scroll-up">◀️</button>
+                      <button class="scroll-up" style="background-color: #004085">◀️</button>
                       <div class = "scroll-container">
                            <div id = "scroll-content" data-img='{{ path_arr_img | tojson | safe }}'>
                                <!-- Noi dung duoc chen o day -->
                            </div>
                       </div>
-                      <button class="scroll-down">▶️</button>
+                      <button class="scroll-down" style="background-color:#004085;">▶️</button>
                 </div>
                 <div class = "show-img">
                       <!-- <img id="show-img-preview" src="" alt="Ảnh preview" /> -->
@@ -71,16 +77,17 @@
                 </div>
                 <div class = "show-satus">
                     <p id = "coordinate"></p>
-                    <div class="header-show-item-conect item1">
-                        <p class="header-show-circle on"></p>    
-                        <h2  id="header-show-status">Chờ kết nối....</h2>
+                    <div class="cluster">
+                        <div class="header-show-item-conect item1">
+                            <p class="header-show-circle on"></p>    
+                            <h2  id="header-show-status">Chờ kết nối....</h2>
+                        </div>
+                        <div class="header-show-item-conect item2">
+                            <p class="header-show-circle off "></p>    
+                            <h2  id="header-show-status">Chờ kết nối....</h2>
+                        </div>
+                        <button id="toggleBtn" class="toggle-btn">Ảnh phán định</button>
                     </div>
-                    <div class="header-show-item-conect item2">
-                        <p class="header-show-circle off "></p>    
-                        <h2  id="header-show-status">Chờ kết nối....</h2>
-                    </div>
-                    <button id="toggleBtn" class="toggle-btn">Ảnh phán định</button>
-
                 </div>
         </div>
         <div class = "show-option">
@@ -150,7 +157,162 @@
                         </div>                    
                 </div>              
         </div>
-    </div> 
+    </div>
+    <!-- show thông tin cam và  -->
+    <div class="overlay_config_camera"> 
+        <div class="config-camera">
+            <!-- HEADER -->
+            <header class="app-header">
+            <div>
+                <h1 class="app-title">Blase Camera Dashboard</h1>
+                <p class="app-lead">Theo dõi thông tin & cấu hình camera hãng Blase</p>
+            </div>
+            </header>
+            <!-- MAIN CONTENT -->
+            <div class="grid grid-2">
+            <!-- Thông tin camera -->
+            <section class="card card-info">
+                <h2 class="card-title">Thông tin Camera</h2>
+                <ul class="info-list">
+                <li><span class="label">Model:</span> <span id="cam-model">Blase X1000</span></li>
+                <li><span class="label">Serial:</span> <span id="cam-serial">BL-2025-0001</span></li>
+                <li><span class="label">Địa chỉ IP:</span> <span id="cam-ip">192.168.1.50</span></li>
+                <li><span class="label">Trạng thái:</span> <span id="cam-status" class="status offline">Offline</span></li>
+                </ul>
+            </section>
+            <!-- Cấu hình camera -->
+            <section class="card card-config">
+                <h2 class="card-title">Cấu hình</h2>
+                <form class="config-form" id="config-form">
+                <label class="form-label">
+                    Địa chỉ IP
+                    <input class="form-input" type="text" name="ip" value="192.168.1.50" placeholder="192.168.x.x">
+                </label>
+
+                <label class="form-label">
+                    Độ phân giải
+                    <select class="form-input" name="resolution">
+                    <option>1920 x 1080</option>
+                    <option>1280 x 720</option>
+                    <option>640 x 480</option>
+                    </select>
+                </label>
+
+                <label class="form-label">
+                    FPS
+                    <input class="form-input" type="number" name="fps" min="1" max="60" value="30">
+                </label>
+
+                <div class="row">
+                    <button class="btn btn-primary" type="submit">Lưu cấu hình</button>
+                    <button  id="close-config-camera" class="btn btn-primary close" type="button">Thoát</button>
+                </div>
+                </form>
+            </section>
+            </div>
+        </div>
+    </div>
+    <!-- show thông tin cổng com -->
+    <div id = "overlay_config_com"> 
+       <div class="com-app">
+                <header class="com-header">
+                <div class="com-header-left">
+                    <h1 class="com-title">COM Ports Monitor</h1>
+                    <p class="com-lead">Hiển thị các cổng COM đang có/đang kết nối</p>
+                </div>
+                <div class="com-controls">
+                    <button id="com-close">Thoát</button>
+                </div>
+                </header>
+
+                <div class="com-grid">
+                <!-- Danh sách cổng COM -->
+                <section class="com-card com-ports-card">
+                    <h3 class="com-card-title">Danh sách cổng COM</h3>
+                    <ul id="com-ports-list" class="com-ports"></ul>
+                    <div class="com-small">
+                    Số cổng tìm thấy: <span id="com-ports-count">0</span>
+                    </div>
+                </section>
+
+                <!-- Thông tin COM -->
+                <aside class="com-card com-info-card">
+                    <h3 class="com-card-title">Thông tin cổng COM</h3>
+                    <form class="com-form">
+                    <label class="com-label">
+                        Cổng COM
+                        <select id="com-select" class="com-select">
+                        <option>Apple</option>
+                        <option>Banana</option>
+                        <option>Orange</option>
+                        </select>
+                    </label>
+
+                    <label class="com-label">
+                        Baudrate
+                        <select id="baud-select" class="com-select">
+                        <option>115200</option>
+                        <option>9600</option>
+                        <option>57600</option>
+                        <option>...</option>
+                        </select>
+                    </label>
+
+                    <button type="button" id="com-open" class="com-btn">Open</button>
+                    </form>
+                </aside>
+                </div>
+        </div>
+  </div>
+  <!-- show thong tin phan mem -->
+  <div id = "overlay_config_software"> 
+        
+            <div id="settings-box">
+                <h2 id="settings-title">Cấu hình phần mềm</h2>
+
+                <div class="setting-item">
+                <span class="setting-label">Âm thanh</span>
+                <label class="switch-small">
+                    <input type="checkbox" id="set-sound">
+                    <span class="switch-slider"></span>
+                </label>
+                </div>
+
+                <div class="setting-item">
+                <span class="setting-label">Thông báo</span>
+                <label class="switch-small">
+                    <input type="checkbox" id="set-notification">
+                    <span class="switch-slider"></span>
+                </label>
+                </div>
+
+                <div class="setting-item">
+                <span class="setting-label">Chế độ tối</span>
+                <label class="switch-small">
+                    <input type="checkbox" id="set-darkmode" checked>
+                    <span class="switch-slider"></span>
+                </label>
+                </div>
+
+                <div class="input-item">
+                <label for="set-username" class="input-label">Tên người dùng</label>
+                <input type="text" id="set-username" class="input-field" placeholder="Nhập tên...">
+                </div>
+
+                <div class="input-item">
+                <label for="set-updatetime" class="input-label">Giờ tự cập nhật</label>
+                <input type="time" id="set-updatetime" class="input-field">
+                </div>
+
+                <button id="save-settings">Lưu cấu hình</button>
+                <button id="close-settings">Thoát</button>
+            </div>
+       
+
+  </div>
+
+<script type="module" src="../static/js/show_main.js"></script>    
 </body>
- <script type="module" src="../static/js/show_main.js"></script>     
+  
 </html>
+

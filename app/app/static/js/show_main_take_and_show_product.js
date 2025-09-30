@@ -20,7 +20,6 @@ import {
   btn_check,
   select_min,
   btn_accept_and_send,
-  api_training,
   postData,
   current_panner,
   setCurrentPanner,
@@ -577,9 +576,7 @@ chooseProductBtn.addEventListener("click", () => {
   window.location.href = "/api_choose_master/chose_product";
   history.replaceState(null, "", "/api_choose_master/chose_product");
 });
-api_training.addEventListener("click", () => {
-  window.location.href = "/api_new_model/training-model";
-});
+
 
 function split_data_shapes(data){
    console.log("master_shapes_data----------------------------",data)

@@ -83,20 +83,7 @@ html, body {
 }
 
 
-.training, .close {
-  color: white;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  height: 100%;
-  cursor: pointer;
-  transition: background-color 0.2s;
 
-}
-.training:hover,
-.close:hover {
-  background-color: #0097a7;
-}
 
 .split-frame{
    width:100%;
@@ -684,14 +671,7 @@ button.active{
 .header-show-right {
   display: flex;
 }
-.header-show-item-conect.item1{
-background-color: #004085;
-margin-left:60%;
-}
-.header-show-item-conect.item2{
-  background-color: #004085;
-  margin-right: 2%;
-}
+
 #coordinate{
   padding: 5px;
   width:10%;
@@ -933,19 +913,19 @@ button.btn:hover {
 .paner-main-table-show-point::-webkit-scrollbar-thumb:hover {
   background: #777;
 }
-.toggle-btn {
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #004085;
-  border: none;
-  border-radius: 15px;            /* Bo tròn dạng pill */
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+.cluster{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  
+  width:38%;
+  height: 100%;
 }
+
 .header-show-item-conect {
+  text-align: center; 
+  background-color: #004085;
+  white-space: nowrap;
   height:34px;
   padding-left: 10px;
   padding-right: 10px;
@@ -957,11 +937,24 @@ button.btn:hover {
   border-radius: 15px;   
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-
+.toggle-btn {
+   text-align: center; 
+  white-space: nowrap;
+  margin-right: 20px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #004085;
+  border: none;
+  border-radius: 15px;            /* Bo tròn dạng pill */
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
 .toggle-btn:hover {
   transform: translateY(-2px);
 }
-
 .toggle-btn.active {
-  background-color: rgb(24, 107, 201);
+  background-color: rgb(10, 156, 149);
 }
